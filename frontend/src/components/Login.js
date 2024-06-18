@@ -23,7 +23,7 @@ function Login()
     {
         event.preventDefault();
 
-        var obj = {Login:loginName.value,Password:loginPassword.value};
+        var obj = {login:loginName.value,password:loginPassword.value};
         var js = JSON.stringify(obj);
 
         try
@@ -39,7 +39,7 @@ function Login()
             }
             else
             {
-                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+                var user = {firstname:res.firstname,lastname:res.lastname,id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
