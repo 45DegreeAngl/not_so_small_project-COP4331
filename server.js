@@ -198,7 +198,6 @@ app.post('/api/login', async (req, res, next) =>
     fn = results[0].firstname;
     ln = results[0].lastname;
   }
-  co
   var ret = { id:id, firstname:fn, lastname:ln, error:''};
   res.status(200).json(ret);
 });
