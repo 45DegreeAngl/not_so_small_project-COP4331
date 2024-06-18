@@ -156,7 +156,7 @@ app.post('/api/addcard', async (req, res, next) =>
 	
   const { UserId, Card } = req.body;
 
-  const newCard = {Card:card,UserId:userId};
+  const newCard = {Card:Card,UserId:UserId};
   var error = '';
 
   try
