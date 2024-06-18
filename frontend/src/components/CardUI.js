@@ -35,7 +35,7 @@ function CardUI()
 
         try
         {
-            const response = fetch(buildPath('api/addcard'),
+            const response = await fetch(buildPath('api/addcard'),
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var txt = response.text();
