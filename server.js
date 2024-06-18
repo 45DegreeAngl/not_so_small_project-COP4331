@@ -161,8 +161,8 @@ app.post('/api/addcard', async (req, res, next) =>
 
   try
   {
-    const db = client.db('COP4331Cards');
-    const result = db.collection('Cards').insertOne(newCard);
+    const db = client.db('mern-demo');
+    const result = db.collection('cards').insertOne(newCard);
   }
   catch(e)
   {
@@ -178,15 +178,15 @@ app.post('/api/addcard', async (req, res, next) =>
 app.post('/api/login', async (req, res, next) => 
 {
   // incoming: login, password
-  // outgoing: id, firstName, lastName, error
+  // outgoing: id, firstname, lastname, error
 	
  var error = '';
 
   const { login, password } = req.body;
 
-  const db = client.db('ganttify');
+  const db = client.db('mern-demo');
   const results = await db.collection('users').find({login:login,password:password}).toArray();
-  console.log("login: "+ login +" password: "+password);
+  //console.log("login: "+ login +" password: "+password);
 
   var id = -1;
   var fn = '';
@@ -213,8 +213,8 @@ app.post('/api/searchcards', async (req, res, next) =>
 
   var _search = search.trim();
   
-  const db = client.db('ganttify');
-  const results = await db.collection('Cards').find({"Card":{$regex:_search+'.*', $options:'i'}}).toArray();
+  const db = client.db('mern-demo');
+  const results = await db.collection('cards').find({"Card":{$regex:_search+'.*', $options:'i'}}).toArray();
   
   var _ret = [];
   for( var i=0; i<results.length; i++ )
