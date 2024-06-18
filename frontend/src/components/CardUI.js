@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-const app_name = 'mern-stack-demo'
+const app_name = 'mern-stack-demo-9c4a80ce2b68'
 function buildPath(route)
 {
     if (process.env.NODE_ENV === 'production') 
