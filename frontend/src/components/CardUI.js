@@ -1,4 +1,17 @@
 import React, {useState} from 'react';
+const app_name = 'mern-stack-demo'
+function buildPath(route)
+{
+    if (process.env.NODE_ENV === 'production') 
+    {
+        return 'https://' + app_name +  '.herokuapp.com/' + route;
+    }
+    else
+    {        
+        return 'http://localhost:5000/' + route;
+    }
+}
+
 
 function CardUI()
 {   var card = '';
@@ -22,10 +35,10 @@ function CardUI()
 
         try
         {
-            const response = await fetch('http://localhost:5000/api/addcard',
+            const response = fetch(buildPath('api/addcard'),
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-            var txt = await response.text();
+            var txt = response.text();
             var res = JSON.parse(txt);
 
             if( res.error.length > 0 )
@@ -53,7 +66,7 @@ function CardUI()
 
         try
         {
-            const response = await fetch('http://localhost:5000/api/searchcards',
+            const response = await fetch(buildPath('api/searchcards'),
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var txt = await response.text();
