@@ -213,7 +213,7 @@ app.post('/api/searchcards', async (req, res, next) =>
   var _search = search.trim();
   
   const db = client.db('mern-demo');
-  const results = await db.collection('cards').find({"Card":{$regex:_search+'.*', $options:'i'},"UserId":UserID}).toArray();
+  const results = await db.collection('cards').find({"Card":{$regex:_search+'.*', $options:'i'},"UserId":UserId}).toArray();
   
   var _ret = [];
   for( var i=0; i<results.length; i++ )
