@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-const app_name = 'mern-stack-demo-9c4a80ce2b68'
+const app_name = 'ganttify-5b581a9c8167'
 function buildPath(route)
 {
     if (process.env.NODE_ENV === 'production') 
