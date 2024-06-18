@@ -194,9 +194,9 @@ app.post('/api/login', async (req, res, next) =>
 
   if( results.length > 0 )
   {
-    id = results[0].UserId;
-    fn = results[0].FirstName;
-    ln = results[0].LastName;
+    id = results[0].id;
+    fn = results[0].firstname;
+    ln = results[0].lastname;
   }
 
   var ret = { id:id, firstName:fn, lastName:ln, error:''};
