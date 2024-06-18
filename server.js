@@ -184,8 +184,8 @@ app.post('/api/login', async (req, res, next) =>
 
   const { login, password } = req.body;
 
-  const db = client.db('COP4331Cards');
-  const results = await db.collection('Users').find({login:login,password:password}).toArray();
+  const db = client.db('ganttify');
+  const results = await db.collection('users').find({login:login,password:password}).toArray();
   console.log("login: "+ login +" password: "+password);
 
   var id = -1;
@@ -213,7 +213,7 @@ app.post('/api/searchcards', async (req, res, next) =>
 
   var _search = search.trim();
   
-  const db = client.db('COP4331Cards');
+  const db = client.db('ganttify');
   const results = await db.collection('Cards').find({"Card":{$regex:_search+'.*', $options:'i'}}).toArray();
   
   var _ret = [];
