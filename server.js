@@ -186,6 +186,7 @@ app.post('/api/login', async (req, res, next) =>
 
   const db = client.db('COP4331Cards');
   const results = await db.collection('Users').find({login:login,password:password}).toArray();
+  console.log("login: "+ login +" password: "+password);
 
   var id = -1;
   var fn = '';
