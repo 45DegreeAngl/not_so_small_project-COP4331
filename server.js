@@ -154,7 +154,7 @@ app.post('/api/addcard', async (req, res, next) =>
   // incoming: userId, color
   // outgoing: error
 	
-  const { userId, card } = req.body;
+  const { UserId, Card } = req.body;
 
   const newCard = {Card:card,UserId:userId};
   var error = '';
@@ -208,12 +208,12 @@ app.post('/api/searchcards', async (req, res, next) =>
 
   var error = '';
 
-  const { userId, search } = req.body;
+  const { UserId, search } = req.body;
 
   var _search = search.trim();
   
   const db = client.db('mern-demo');
-  const results = await db.collection('cards').find({"Card":{$regex:_search+'.*', $options:'i'}}).toArray();
+  const results = await db.collection('cards').find({"Card":{$regex:_search+'.*', $options:'i'},"UserId":UserID}).toArray();
   
   var _ret = [];
   for( var i=0; i<results.length; i++ )
@@ -221,7 +221,7 @@ app.post('/api/searchcards', async (req, res, next) =>
     _ret.push( results[i].Card );
   }
   
-  var ret = {results:_ret, error:error};
+  var ret =: {results:_ret, error:error};
   res.status(200).json(ret);
 });
 
