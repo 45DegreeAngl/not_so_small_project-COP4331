@@ -198,8 +198,8 @@ app.post('/api/login', async (req, res, next) =>
     fn = results[0].firstname;
     ln = results[0].lastname;
   }
-
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
+  co
+  var ret = { id:id, firstname:fn, lastname:ln, error:''};
   res.status(200).json(ret);
 });
 app.post('/api/searchcards', async (req, res, next) => 

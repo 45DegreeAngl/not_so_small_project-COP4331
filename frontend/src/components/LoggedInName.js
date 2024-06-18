@@ -8,7 +8,7 @@ function LoggedInName()
     var userId = ud.id;
     var firstName = ud.firstname;
     var lastName = ud.lastname;
-    console.log("FirstName: "+ firstName+" LastName: "+ lastName+"\n**************************************\n");
+    //console.log("FirstName: "+ firstName+" LastName: "+ lastName+"\n**************************************\n");
     const doLogout = event => 
     {
 	    event.preventDefault();
