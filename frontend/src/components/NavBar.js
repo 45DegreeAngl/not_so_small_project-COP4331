@@ -8,7 +8,7 @@ function NavBar()
 
     return(
         <div id="navBarDiv">
-            <h2 classname="base" style="background-color:#FDDC87">Ganttify</h2>
+            <h2 classname="base">Ganttify</h2>
         </div>
     );
 }
