@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-const app_name = 'ganttify-5b581a9c8167'
 import './NavBar.css';
+
+const app_name = 'ganttify-5b581a9c8167'
 function NavBar()
 {
 
