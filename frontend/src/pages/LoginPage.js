@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PageTitle from '../components/PageTitle';
+import NavBar from '../components/NavBar';
 import Login from '../components/Login';
 
 const LoginPage = () =>
@@ -8,7 +8,7 @@ const LoginPage = () =>
 
     return(
       <div>
-        <PageTitle />
+        <NavBar />
         <Login />
       </div>
     );
