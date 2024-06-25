@@ -8,7 +8,7 @@ const LoginPage = () =>
 
     return(
       <div>
-        <NavBar />
+        <NavBar pageTitle = "Ganttify" layout ={0}/>
         <Login />
       </div>
     );

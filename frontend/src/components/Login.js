@@ -14,6 +14,9 @@ function buildPath(route)
 
 function Login()
 {
+    const loginStlye = {
+        
+    };
     var loginName;
     var loginPassword;
 
