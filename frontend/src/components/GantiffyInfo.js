@@ -1,5 +1,3 @@
-import React, {useState} from 'react';
-const app_name = 'ganttify-5b581a9c8167'
 // add functions for each feeature to display? maybe have rotating carosuel of features?
 function featureOne(){
     return(

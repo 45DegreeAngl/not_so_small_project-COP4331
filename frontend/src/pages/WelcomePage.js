@@ -5,7 +5,7 @@ import Info from '../components/GantiffyInfo';
 import Welcome from '../components/Welcome'
 
 
-const WelcomPage = () =>{
+const WelcomePage = () =>{
 
     return(
         <div>
@@ -16,4 +16,4 @@ const WelcomPage = () =>{
     );
 }
 
-export default WelcomPage;
+export default WelcomePage;

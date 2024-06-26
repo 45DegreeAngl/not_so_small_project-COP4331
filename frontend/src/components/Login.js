@@ -74,9 +74,11 @@ function Login()
     return(
       <div id="loginDiv" style={baseStyle}>
         <h1 id="loginTitle">Login</h1>
-        <h3 id="inner-title">PLEASE LOG IN</h3>
+        <h3 id="loginDescription">For exsisting users only.</h3>
+        <h5 id="usernameTitle">Username</h5>
         <input type="text" id="loginName" placeholder="Username" 
-	    ref={(c) => loginName = c} /><br/>
+	    ref={(c) => loginName = c} />
+         <h5 id="passwordTitle">Password</h5>
 	<input type="password" id="loginPassword" placeholder="Password"
 	    ref={(c) => loginPassword = c} /><br/>
         <input type="submit" id="loginButton" style={loginButton} class="buttons" value = "Login"

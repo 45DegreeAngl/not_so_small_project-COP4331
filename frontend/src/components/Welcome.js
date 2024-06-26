@@ -1,5 +1,3 @@
-import React, {useState} from 'react';
-const app_name = 'ganttify-5b581a9c8167'
 const baseStyle = {
     textAlign:"center",
     fontSize:"60px"
