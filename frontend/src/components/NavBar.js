@@ -20,7 +20,8 @@ const buttonStyle ={
     backgroundColor:"#DC6B2C",
     color:"#ffffff",
     marginRight:"30px",
-    cursor:"pointer"
+    cursor:"pointer",
+    borderRadius:"7.5px"
 }
 
 function NavBar(props)
