@@ -6,6 +6,7 @@ import WelcomePage from './pages/WelcomePage';
 import LoginPage from './pages/LoginPage';
 import CardPage from './pages/CardPage';
 import RegisterPage from './pages/RegisterPage'
+import AboutUsPage from './pages/AboutUsPage';
 
 function App() {
   return (
@@ -15,10 +16,10 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cards" element={<CardPage />} />
         <Route path="/register" element={<RegisterPage />}/>
+        <Route path="/about-us" element={<AboutUsPage />} />
       </Routes>
     </BrowserRouter>
     );
 }
 
 export default App;
-
