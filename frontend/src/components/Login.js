@@ -6,8 +6,8 @@ const baseStyle ={
 const loginButton ={
     border:"none",
     textJustify:"center",
-    width:"120px",
-    height:"35px",
+    width:"300px",
+    height:"55px",
     backgroundColor:"#DC6B2C",
     color:"#ffffff",
     cursor:"pointer",
@@ -28,9 +28,6 @@ function buildPath(route)
 
 function Login()
 {
-    const loginStlye = {
-        
-    };
     var loginName;
     var loginPassword;
 

@@ -1,119 +1,25 @@
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
 const path = require('path');
+const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 5000;
+
 const app = express();
+
 app.set('port', (process.env.PORT || 5000));
+
 app.use(cors());
 app.use(bodyParser.json());
+
 require('dotenv').config();
 const url = process.env.MONGODB_URI;
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(url);
 client.connect();
-var cardList = 
-[
-  'Roy Campanella',
-  'Paul Molitor',
-  'Tony Gwynn',
-  'Dennis Eckersley',
-  'Reggie Jackson',
-  'Gaylord Perry',
-  'Buck Leonard',
-  'Rollie Fingers',
-  'Charlie Gehringer',
-  'Wade Boggs',
-  'Carl Hubbell',
-  'Dave Winfield',
-  'Jackie Robinson',
-  'Ken Griffey, Jr.',
-  'Al Simmons',
-  'Chuck Klein',
-  'Mel Ott',
-  'Mark McGwire',
-  'Nolan Ryan',
-  'Ralph Kiner',
-  'Yogi Berra',
-  'Goose Goslin',
-  'Greg Maddux',
-  'Frankie Frisch',
-  'Ernie Banks',
-  'Ozzie Smith',
-  'Hank Greenberg',
-  'Kirby Puckett',
-  'Bob Feller',
-  'Dizzy Dean',
-  'Joe Jackson',
-  'Sam Crawford',
-  'Barry Bonds',
-  'Duke Snider',
-  'George Sisler',
-  'Ed Walsh',
-  'Tom Seaver',
-  'Willie Stargell',
-  'Bob Gibson',
-  'Brooks Robinson',
-  'Steve Carlton',
-  'Joe Medwick',
-  'Nap Lajoie',
-  'Cal Ripken, Jr.',
-  'Mike Schmidt',
-  'Eddie Murray',
-  'Tris Speaker',
-  'Al Kaline',
-  'Sandy Koufax',
-  'Willie Keeler',
-  'Pete Rose',
-  'Robin Roberts',
-  'Eddie Collins',
-  'Lefty Gomez',
-  'Lefty Grove',
-  'Carl Yastrzemski',
-  'Frank Robinson',
-  'Juan Marichal',
-  'Warren Spahn',
-  'Pie Traynor',
-  'Roberto Clemente',
-  'Harmon Killebrew',
-  'Satchel Paige',
-  'Eddie Plank',
-  'Josh Gibson',
-  'Oscar Charleston',
-  'Mickey Mantle',
-  'Cool Papa Bell',
-  'Johnny Bench',
-  'Mickey Cochrane',
-  'Jimmie Foxx',
-  'Jim Palmer',
-  'Cy Young',
-  'Eddie Mathews',
-  'Honus Wagner',
-  'Paul Waner',
-  'Grover Alexander',
-  'Rod Carew',
-  'Joe DiMaggio',
-  'Joe Morgan',
-  'Stan Musial',
-  'Bill Terry',
-  'Rogers Hornsby',
-  'Lou Brock',
-  'Ted Williams',
-  'Bill Dickey',
-  'Christy Mathewson',
-  'Willie McCovey',
-  'Lou Gehrig',
-  'George Brett',
-  'Hank Aaron',
-  'Harry Heilmann',
-  'Walter Johnson',
-  'Roger Clemens',
-  'Ty Cobb',
-  'Whitey Ford',
-  'Willie Mays',
-  'Rickey Henderson',
-  'Babe Ruth'
-];
+
 
 app.use((req, res, next) => 
 {
@@ -133,6 +39,7 @@ app.listen(PORT, () =>
 {
   console.log('Server listening on port ' + PORT);
 });
+
 ///////////////////////////////////////////////////
 // For Heroku deployment
 
@@ -148,81 +55,111 @@ if (process.env.NODE_ENV === 'production')
   });
 }
 
+////////////////////ADDED////////////////////////
 
-app.post('/api/addcard', async (req, res, next) =>
-{
-  // incoming: userId, color
-  // outgoing: error
-	
-  const { UserId, Card } = req.body;
+// In-memory array to store users
+let userList = [];
 
-  const newCard = {Card:Card,UserId:UserId};
-  var error = '';
 
-  try
-  {
-    const db = client.db('mern-demo');
-    const result = db.collection('cards').insertOne(newCard);
-  }
-  catch(e)
-  {
-    error = e.toString();
+app.post('/api/register', async (req, res) => {
+  const { email, name, phone, password, username } = req.body;
+  let error = '';
+
+  if (!email || !name || !phone || !password || !username) {
+    error = 'All fields are required';
+    return res.status(400).json({ error });
   }
 
-  cardList.push( Card );
+  try {
+    await client.connect();
+    const db = client.db('ganttify');
+    const userCollection = db.collection('userAccounts');
 
-  var ret = { error: error };
-  res.status(200).json(ret);
-});
+    // Check if the user already exists
+    const existingUser = await userCollection.findOne({ email });
+    if (existingUser) {
+      error = 'User already exists';
+      return res.status(400).json({ error });
+    }
 
-app.post('/api/login', async (req, res, next) => 
-{
-  // incoming: login, password
-  // outgoing: id, firstname, lastname, error
-	
- var error = '';
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const { login, password } = req.body;
+    const newUser = {
+      email,
+      name,
+      phone,
+      password: hashedPassword,
+      username,
+      accountCreated: new Date(),
+      projects: [],
+      toDoList: []
+    };
 
-  const db = client.db('mern-demo');
-  const results = await db.collection('users').find({login:login,password:password}).toArray();
-  //console.log("login: "+ login +" password: "+password);
+    userList.push(newUser);
 
-  var id = -1;
-  var fn = '';
-  var ln = '';
+    await userCollection.insertOne(newUser);
 
-  if( results.length > 0 )
-  {
-    id = results[0].id;
-    fn = results[0].firstname;
-    ln = results[0].lastname;
+    res.status(201).json({ error: '' });
+  } catch (error) {
+    console.error('Registration error:', error);
+    error = 'Internal server error';
+    res.status(500).json({ error });
+  } finally {
+    await client.close();
   }
-  var ret = { id:id, firstname:fn, lastname:ln, error:''};
-  res.status(200).json(ret);
-});
-app.post('/api/searchcards', async (req, res, next) => 
-{
-  // incoming: userId, search
-  // outgoing: results[], error
-
-  var error = '';
-
-  const { UserId, search } = req.body;
-
-  var _search = search.trim();
-  
-  const db = client.db('mern-demo');
-  const results = await db.collection('cards').find({"Card":{$regex:_search+'.*', $options:'i'},"UserId":UserId}).toArray();
-  
-  var _ret = [];
-  for( var i=0; i<results.length; i++ )
-  {
-    _ret.push( results[i].Card );
-  }
-  
-  var ret = {results:_ret, error:error};
-  res.status(200).json(ret);
 });
 
 
+app.get('/api/userlist', (req, res) => {
+  res.status(200).json({ users: userList });
+});
+
+
+app.post('/api/login', async (req, res) => {
+      const { email, password } = req.body;
+      let error = '';
+
+      if (!email || !password) {
+        error = 'Email and password are required';
+        return res.status(400).json({ error });
+      }
+
+  try {
+      await client.connect();
+      const db = client.db('ganttify');
+      const results = db.collection('userAccounts');
+
+      //Find user by email
+      const user = await results.findOne({email});
+
+      if (user) {
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (isPasswordValid) {
+          res.status(200).json({
+            email: user.email,
+            name: user.name,
+            username: user.username,
+            phone: user.phone,
+            projects: user.projects,
+            toDoList: user.toDoList,
+            error: ''
+          });
+        } else {
+          error = 'User/Password combination incorrect';
+          res.status(401).json({ error });
+        }
+      } else {
+        error = 'User/Password combination incorrect';
+        res.status(401).json({ error });
+      }
+  } catch (error) {
+      console.error('Login error:', error);
+      error = 'Internal server error';
+      res.status(500).json({ error });
+  } finally {
+  await client.close();
+  }
+});
+
+//////////////////////////ADDED/////////////////////////////
