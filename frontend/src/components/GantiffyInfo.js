@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
-const app_name = 'ganttify-5b581a9c8167'
+const baseStyle={
+    marginLeft:"75px"
+}
 // add functions for each feeature to display? maybe have rotating carosuel of features?
 function featureOne(){
     return(
@@ -11,8 +12,8 @@ function featureOne(){
 
 function GantiffyInfo(){
     return(
-        <div>
-            <h1>Features (All for free, <b>FOREVER!</b>)</h1>
+        <div style={baseStyle}>
+            <h1>Features (all for free, <b>FOREVER!</b>)</h1>
         </div>
     );
 }

@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import {Link } from "react-router-dom";
 
 const app_name = 'ganttify-5b581a9c8167'
@@ -20,7 +19,8 @@ const buttonStyle ={
     backgroundColor:"#DC6B2C",
     color:"#ffffff",
     marginRight:"30px",
-    cursor:"pointer"
+    cursor:"pointer",
+    borderRadius:"7.5px"
 }
 
 function NavBar(props)
@@ -37,7 +37,7 @@ function NavBar(props)
             <div id="navBarDiv" style={baseStyle}>
                 <h3 id="appTitle">{props.pageTitle}</h3>
                 <Link to="/login"><button id = "login"  style = {buttonStyle} >Login</button></Link>
-                <button id = "creatAccount"  style = {buttonStyle} >Create Account</button>
+                <Link to="/register"><button id = "creatAccount"  style = {buttonStyle} >Create Account</button></Link>
                 <button id = "aboutUs"  style = {buttonStyle}>About Us</button>
                 
             </div>

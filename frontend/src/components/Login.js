@@ -1,5 +1,19 @@
 import React, {useState} from 'react';
 const app_name = 'ganttify-5b581a9c8167'
+const baseStyle ={
+    textAlign:"center"
+}
+const loginButton ={
+    border:"none",
+    textJustify:"center",
+    width:"300px",
+    height:"55px",
+    backgroundColor:"#DC6B2C",
+    color:"#ffffff",
+    cursor:"pointer",
+    borderRadius:"7.5px",
+    marginTop:"15px"
+}
 function buildPath(route)
 {
     if (process.env.NODE_ENV === 'production') 
@@ -14,9 +28,6 @@ function buildPath(route)
 
 function Login()
 {
-    const loginStlye = {
-        
-    };
     var loginName;
     var loginPassword;
 
@@ -58,14 +69,17 @@ function Login()
 
 
     return(
-      <div id="loginDiv">
-        <span id="inner-title">PLEASE LOG IN</span><br />
+      <div id="loginDiv" style={baseStyle}>
+        <h1 id="loginTitle">Login</h1>
+        <h3 id="loginDescription">For exsisting users only.</h3>
+        <h5 id="usernameTitle">Username</h5>
         <input type="text" id="loginName" placeholder="Username" 
 	    ref={(c) => loginName = c} />
+         <h5 id="passwordTitle">Password</h5>
 	<input type="password" id="loginPassword" placeholder="Password"
-	    ref={(c) => loginPassword = c} />
-        <input type="submit" id="loginButton" class="buttons" value = "Do It"
-          onClick={doLogin} />
+	    ref={(c) => loginPassword = c} /><br/>
+        <input type="submit" id="loginButton" style={loginButton} class="buttons" value = "Login"
+          onClick={doLogin} /><br/>
         <span id="loginResult">{message}</span>
      </div>
     );
