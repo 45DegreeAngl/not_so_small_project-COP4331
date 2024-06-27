@@ -38,7 +38,7 @@ function NavBar(props)
                 <h3 id="appTitle">{props.pageTitle}</h3>
                 <Link to="/login"><button id = "login"  style = {buttonStyle} >Login</button></Link>
                 <Link to="/register"><button id = "creatAccount"  style = {buttonStyle} >Create Account</button></Link>
-                <button id = "aboutUs"  style = {buttonStyle}>About Us</button>
+                <Link to="/about-us"> <button id = "about" style={buttonStyle}>About Us</button></Link>
                 
             </div>
         );
