@@ -1,38 +1,7 @@
 import React, {useState} from 'react';
+import './Register.css';
 const app_name = 'ganttify-5b581a9c8167'
 
-const divStyle={
-    marginTop:"100px",
-    textAlign:"center"
-}
-const titleStyle={
-    textAlign:"center",
-}
-const form={
-    width:"600px",
-    height:"60px",
-    borderRadius:"6px",
-    borderColor:"#E0E0E0",
-    borderStyle:"inset",
-    borderWidth:"thin",
-    marginTop:"10px",
-    marginBottom:"30px",
-    paddingLeft:"5px"
-}
-const formTitle={
-    textAlign:"left",
-    paddingLeft:"725px"
-}
-const registerButton ={
-    border:"none",
-    textJustify:"center",
-    width:"300x",
-    height:"55px",
-    backgroundColor:"#DC6B2C",
-    color:"#ffffff",
-    cursor:"pointer",
-    borderRadius:"7.5px",
-}
 function buildPath(route)
 {
     if (process.env.NODE_ENV === 'production') 
@@ -73,7 +42,7 @@ function Register(){
             var res = JSON.parse(txt);
 
             if( res.error.length > 0 ){
-                    setMessage( "API Error:" + res.error );
+                    setMessage(res.error);
             }
             else{
                 setMessage("Account created")
@@ -86,23 +55,27 @@ function Register(){
     }
 
     return(
-        <div style={divStyle}>
-            <h2 id="pageTitle" style={titleStyle}>Create an account</h2>
-            <div style={formTitle}><span id="nameTitle" ><b>Name*</b></span><br/></div>
-            <input type="text" id="accountName" placeholder='Name' style={form} ref={(c) => regName = c} input/><br/>
-            <div style={formTitle}><span id="phoneTitle" ><b>Phone</b></span><br/></div>
-            <input type="text" id="accountPhone" placeholder='Phone Number' style={form} ref={(c) => regPhone = c} input/><br/>
-            <div style={formTitle}><span id="emailTitle" ><b>Email*</b></span><br/></div>
-            <input type="text" id="accountEmail" placeholder='Email' style={form} ref={(c) => regEmail = c} input/><br/>
-            <div style={formTitle}><span id="userTitle" ><b>Username*</b></span><br/></div>
-            <input type="text" id="accountUsername" placeholder='Username' style={form} ref={(c) => regUser = c} input/><br/>
-            <div style={formTitle}><span id="passwordTitle" ><b>Password*</b></span><br/></div>
-            <input type="password" id="accountPassword" placeholder='Password' style={form} ref={(c) => regPassword = c} input/><br/>
-            <div style={formTitle}><span id="retypeTitle" ><b>Re-enter password*</b></span><br/></div>
-            <input type="password" id="accountPasswordVerify" placeholder='Password' style={form} ref={(c) => regPasswordVerify = c} input/><br/>
-            <input type="submit" id="registerButton" style={registerButton} class="buttons" 
-            value = "Create account" onClick={doRegister} /><br/>       
-            </div>
+        <div className="registerComponent">
+            <h2 id="pageTitle" className='registerTitle'>Create an account</h2>
+            <form onSubmit={doRegister}>
+                <div className='formTitle'><label for="accountName" id="nameTitle" ><b>Name*</b></label><br/></div>
+                <input required="" type="text" id="accountName" placeholder='Name' className='registerForm' ref={(c) => regName = c} /><br/>
+                <div className='formTitle'><label for="accountPhone" id="phoneTitle" ><b>Phone</b></label><br/></div>
+                <input type="tel" id="accountPhone" placeholder='Phone Number' className='registerForm' pattern="[0-9]{10}" title="Please enter a valid phone number" ref={(c) => regPhone = c}/><br/>
+                <div className='formTitle'><label for="accountEmail" id="emailTitle" ><b>Email*</b></label><br/></div>
+                <input required="" type="email" id="accountEmail" placeholder='Email' className='registerForm' ref={(c) => regEmail = c} /><br/>
+                <div className='formTitle'><label for="accountUsername" id="userTitle" ><b>Username*</b></label><br/></div>
+                <input required="" type="text" id="accountUsername" placeholder='Username' className='registerForm' ref={(c) => regUser = c} /><br/>
+                <div className='formTitle'><label for="accountPassword" id="passwordTitle" ><b>Password*</b></label><br/></div>
+                <input required type="password" id="accountPassword" placeholder='Password' className='registerForm' title="Password must be at least 8 characters and contain at least one capital letter, number and symbol" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"  onchange="try{setCustomValidity('')}catch(e){}" oninput="setCustomValidity('')" ref={(c) => regPassword = c} /><br/>
+                <div className='formTitle'><label for="accountPasswordVerify" id="retypeTitle" ><b>Re-enter password*</b></label><br/></div>
+                <input required="" type="password" id="accountPasswordVerify" placeholder='Password' className='registerForm' title="Password must be at least 8 characters and contain at least one capital letter, number and symbol" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$" onchange="try{setCustomValidity('')}catch(e){}" oninput="setCustomValidity('')" ref={(c) => regPasswordVerify = c} /><br/>
+                <h5 className="formDescription">* indicates a required field</h5>
+                <input type="submit" id="registerButton" className='registerButton' value='Create Account'/><br/>
+            </form>
+            <h5>{message}</h5>     
+        </div>
     );
+    
 }
 export default Register;
