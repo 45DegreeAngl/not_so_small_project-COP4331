@@ -1,17 +1,21 @@
-@font-face {
-    font-family: 'Inter';
-    src: local('Inter'), url("./fonts/Inter-VariableFont_slnt,wght.ttf")format('truetype');
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+
 body {
   margin: 0;
-  font-family:'Inter';
+  font-family: "Inter", sans-serif !important; 
+  font-optical-sizing: auto !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-variation-settings:
+    "slnt" 0 !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x:hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: 'Inter',source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } 
 

@@ -26,7 +26,7 @@ function Register(){
 
     const doRegister= async event =>{
         event.preventDefault();
-        if(regPassword.value != regPasswordVerify.value){
+        if(regPassword.value !== regPasswordVerify.value){
             setMessage("Passwords do not match");
             return;
         }
@@ -56,7 +56,7 @@ function Register(){
 
     return(
         <div className="registerComponent">
-            <h2 id="pageTitle" className='registerTitle'>Create an account</h2>
+            <h1 id="pageTitle" className='registerTitle'><b>Create an Account</b></h1>
             <form onSubmit={doRegister}>
                 <div className='formTitle'><label for="accountName" id="nameTitle" ><b>Name*</b></label><br/></div>
                 <input required="" type="text" id="accountName" placeholder='Name' className='registerForm' ref={(c) => regName = c} /><br/>
