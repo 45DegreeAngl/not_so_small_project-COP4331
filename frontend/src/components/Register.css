@@ -1,49 +1,49 @@
-.registerComponent{
-    padding:40px 0;
-    margin:0 auto;
-    align-items: center;
-    justify-content: center;
+body{
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.topDiv {
+    background-color: #DC6B2C;
+    color: white;
     text-align: center;
+    padding: 50px 0;
 }
-.registerTitle{
-    padding-bottom: 20px;
-    font-size:x-large;
+.bottomDiv{
+    padding-top:30px;
+    justify-content: center;
+    align-items: center;
+    width:700px !important;
 }
-.registerFormContainer{
-    padding-right:50%
+.formItem{
+    padding:0 20px;
 }
-.registerFormGroup{
-    text-align:left;
+.formItem:valid{
+    border-color: green;
 }
-.registerForm{
-    width:600px;
-    height:60px;
-    border-radius:6px;
-    border-color:#E0E0E0;
-    border-style:inset;
-    border-width:thin;
-    margin-top:10px;
-    padding-left:5px;
-}
-.formTitle{
-    text-align: left;
-    font-size:medium;
-    padding-left: 725px;
-    margin-top: 30px
-}
-.registerButton{
-    border:none;
-    text-justify:center;
-    padding:0 40px;
-    height:55px;
-    background-color:#DC6B2C;
-    color:#ffffff;
-    cursor:pointer;
-    border-radius:7.5px;
+.formItem:invalid{
+    border-color:red;
 }
 .formDescription{
     font-style: italic;
-    padding-top:20px;
-    padding-bottom:10px;
     font-size:16px;
+    text-align: center;
+}
+.buttonDiv{
+    padding-top:10px;
+}
+.submitButton{
+    background-color: #DC6B2C;
+    color: white;
+    text-align: center;
+    padding:15px 30px;
+    border-radius: 5px;
+    border:none;
+}
+.formMessage{
+    padding-top:15px;
+    font-style: italic;
+    font-size:18px;
+    text-align: center;
+    color:red;
 }
