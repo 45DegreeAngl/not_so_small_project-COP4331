@@ -22,12 +22,11 @@ function Register(){
     var regPhone;
     var regEmail;
 
-    const validPhone = RegExp("/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/");
-    const validEmail = RegExp("");
-    const validPassLower= RegExp("/(?=.*[a-z])/");
-    const validPassUpper = RegExp("/(?=.*[A-Z])/");
-    const validPassSymbol = RegExp("/[A-Z]/i");
-    const validPassDigit = RegExp("/[0-9]/");
+    const validPhone = /^[(]?\d{3}[)]?[ -]?\d{3}[ -]?\d{4}$/;
+    const validPassLower= RegExp("[a-z]+");
+    const validPassUpper = RegExp("[A-Z]+");
+    const validPassSymbol = RegExp("[^a-zA-Z0-9\s]+");
+    const validPassDigit = RegExp("[0-9]+");
 
     const msgTag = " *** ";
 
@@ -35,28 +34,33 @@ function Register(){
 
     const doRegister= async event =>{
         event.preventDefault();
-       
-        if(regPhone.length>0 && validPhone.test(regPhone) === false){
+        console.log(regPhone.value);
+        if(!validPhone.test(regPhone.value)){
             setMessage("*** Please enter a valid 10 digit phone number ***");
             return;
         }
-       
+        
         if (regPassword.value === null || regPassword.value.length < 8) {
             setMessage("*** Your password must be at least 8 characters ***");
             return;
         }
-        if (validPassLower.test(regPassword.value) === false){
+        if (!validPassLower.test(regPassword.value)){
             setMessage("*** Your password must contain at least one lowercase letter ***")
             return;
         }
-        if (validPassUpper.test(regPassword.value) === false) {
+        if (!validPassUpper.test(regPassword.value)) {
             setMessage("*** Your password must contain at least one uppercase letter ***"); 
             return;
         }
-        if (validPassDigit.test(regPassword.value) === false) {
+        if (!validPassDigit.test(regPassword.value)) {
             setMessage("*** Your password must contain at least one digit ***");
             return;
         } 
+        if (!validPassSymbol.test(regPassword.value)) {
+            setMessage("*** Your password must contain at least special symbol ***");
+            return;
+        } 
+        
         if(regPassword.value !== regPasswordVerify.value){
             setMessage("*** Passwords do not match ***");
             return;
