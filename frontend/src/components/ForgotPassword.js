@@ -4,9 +4,9 @@ import './ForgotPassword.css';
 const app_name = 'ganttify-5b581a9c8167';
 
 function buildPath(route) {
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://' + app_name + '.herokuapp.com/' + route;
-  } else {
+   if (process.env.NODE_ENV === 'production') {
+     return 'https://' + app_name + '.herokuapp.com/' + route;
+   } else {
     return 'http://localhost:5000/' + route;
   }
 }
@@ -15,7 +15,7 @@ function buildPath(route) {
 function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [timer, setTimer] = useState(5);
+  const [timer, setTimer] = useState(120);
   const [disable, setDisable] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
 
@@ -39,13 +39,13 @@ function ForgotPassword() {
       if (response.ok) {
         setMessage(res.message);
         setDisable(true);
-        setTimer(5);
+        setTimer(120);
 
       } else {
-        setMessage(res.error);
+        alert(res.error);
       }
     } catch (e) {
-      alert(e.toString());
+      alert('An error has occured');
       return;
     } finally {
       setDisableButton(false);
