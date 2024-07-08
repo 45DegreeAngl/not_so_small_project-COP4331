@@ -1,23 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import './login.css';
+import './Login.css';
 const app_name = 'ganttify-5b581a9c8167';
 
 const baseStyle = {
   textAlign: "center"
 };
 
-const loginButton = {
-  border: "none",
-  textJustify: "center",
-  width: "300px",
-  height: "55px",
-  backgroundColor: "#DC6B2C",
-  color: "#ffffff",
-  cursor: "pointer",
-  borderRadius: "7.5px",
-  marginTop: "15px"
-};
 
 function buildPath(route) {
   if (process.env.NODE_ENV === 'production') {
@@ -79,20 +68,21 @@ function Login() {
         </div>
         <div>
         <div class="mb-3 bottomDiv">
-                <form onSubmit={doLogin}>
-                    <div class="form-group">
-                        <label for="inputEmail"><h5><b>Email Address</b></h5></label>
-                        <input type="email" class="form-control form-control-lg" id="inputEmail" placeholder='example@email.com' ref={(c) => loginEmail = c} required/>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPassword"><h5><b>Password</b></h5></label>
-                        <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c}/>
-                    </div>
-                    <div class="row justify-content-center buttonDiv"><button type="submit" class="btn submitButton">Login</button></div>
-                </form>
-                <div className='formMessage'><span>{message}</span></div>
+          <form onSubmit={doLogin}>
+            <div class="form-group">
+                <label for="inputEmail"><h5><b>Email Address</b></h5></label>
+                <input type="email" class="form-control form-control-lg" id="inputEmail" placeholder='example@email.com' ref={(c) => loginEmail = c} required/>
             </div>
+            <div class="form-group">
+                <label for="inputPassword"><h5><b>Password</b></h5></label>
+                <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c}/>
+            </div>
+            <div class="row justify-content-center buttonDiv"><button type="submit" class="btn submitButton">Login</button></div>
+          </form>
+          <div className='formMessage'><span>{message}</span></div>
+          <a href="/forgot-password" className="forgot-password-link">Forgot your password?</a>
         </div>
+      </div>
     </div>
   );
 };
