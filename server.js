@@ -447,9 +447,9 @@ app.post('/api/forgot-password', async (req, res) =>
 
 
       //-------------------------------------------------------------------------------------------------------------------
-      //let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
+      let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
       
-      let link = `http://localhost:5000/reset-password/${user._id}/${token}`;
+      //link = `http://localhost:5000/reset-password/${user._id}/${token}`;
       //-------------------------------------------------------------------------------------------------------------------
 
 
