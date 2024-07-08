@@ -478,8 +478,7 @@ app.post('/api/forgot-password', async (req, res) =>
         }
       });
     } else {
-      error = 'User with that email address does not exist.';
-      return res.status(404).json({ error });
+      return res.status(404).json({ error: 'User with that email address does not exist.' });
     }
 
 
