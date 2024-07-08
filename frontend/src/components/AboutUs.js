@@ -72,9 +72,9 @@ function AboutUs() {
             </div>
 
             <div className="team-member">
-                <img src="/images/kittens.webp" alt="Oscar Rodriguez" className="team-image"/>
+                <img src="/images/kittens.webp" alt="Omar Castro" className="team-image"/>
                 <div className="member-info">
-                    <h2>Oscar Rodriguez</h2>
+                    <h2>Omar Castro</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </div>
             </div>
