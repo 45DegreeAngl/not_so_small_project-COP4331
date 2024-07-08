@@ -14,7 +14,6 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 function App() {
   return (
     <BrowserRouter>
-      <DebugRouter>
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -24,7 +23,6 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:id/:token" element={<ResetPasswordPage />} />
         </Routes>
-      </DebugRouter>
     </BrowserRouter>
   );
 }
