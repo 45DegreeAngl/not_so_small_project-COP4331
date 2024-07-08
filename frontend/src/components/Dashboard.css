@@ -1,0 +1,10 @@
+body{
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.topDiv {
+    background-color: #DC6B2C;
+    color: white;
+    text-align: center;
+}

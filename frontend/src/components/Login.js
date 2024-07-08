@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import './Login.css';
 const app_name = 'ganttify-5b581a9c8167';
 
-const baseStyle = {
-  textAlign: "center"
-};
 
 
 function buildPath(route) {
@@ -51,7 +48,7 @@ function Login() {
         localStorage.setItem('user_data', JSON.stringify(user));
 
         setMessage('');
-        window.location.href = '/cards';
+        window.location.href = '/dashboard';
       }
     } catch (e) {
       alert(e.toString());

@@ -1,47 +1,36 @@
 import {Link } from "react-router-dom";
+import "./NavBar.css"
 
 const app_name = 'ganttify-5b581a9c8167'
-const baseStyle ={
-    backgroundColor:"#FDDC87", 
-    paddingLeft:"50px",
-    paddingTop:"10px",
-    paddingBottom:"10px"
-}
-const buttonStyle ={
-    border:"none",
-    textJustify:"center",
-    position:"relative",
-    right:"20px",
-    bottom:"47.5px",
-    float:"right",
-    width:"120px",
-    height:"35px",
-    backgroundColor:"#DC6B2C",
-    color:"#ffffff",
-    marginRight:"30px",
-    cursor:"pointer",
-    borderRadius:"7.5px"
-}
 
 function NavBar(props)
 {
     if(props.layout == 0){
         return(
-            <div id="navBarDiv" style={baseStyle}>
+            <div id="navBarDiv" class = "base">
                 <h3 id="appTitle">{props.pageTitle}</h3>
             </div>
         );
     }
     else if(props.layout == 1){
         return(
-            <div id="navBarDiv" style={baseStyle}>
-                <h3 id="appTitle">{props.pageTitle}</h3>
-                <Link to="/login"><button id = "login"  style = {buttonStyle} >Login</button></Link>
-                <Link to="/register"><button id = "creatAccount"  style = {buttonStyle} >Create Account</button></Link>
-                <Link to="/about-us"> <button id = "about" style={buttonStyle}>About Us</button></Link>
+            <div id="navBarDiv" class="base">
+                <h3 id="appTitle"><Link to="/" class="pageTitle">{props.pageTitle}</Link></h3>
+                <Link to="/login"><button id = "login"  class = "btn linkBtn" >Login</button></Link>
+                <Link to="/register"><button id = "creatAccount"  class = "btn linkBtn" >Create Account</button></Link>
+                <Link to="/about-us"> <button id = "about" class = "btn linkBtn">About Us</button></Link>
                 
             </div>
         );
+    }
+    else if(props.layout == 2){
+        return(
+            <div id="navBarDiv" class="base">
+                <h3 id="dashboardTitle"><Link to="/dashboard" class="pageTitle">{props.pageTitle}</Link></h3>
+                <Link to="/" class="pageTitle"><button id = "about" class = "btn linkBtn">Sign Out</button></Link>
+                <h5 id="accountSettings" ><Link to="/accountSettings" class="accountSettingsLink">Account Settings</Link></h5>
+            </div>
+        )
     }
     
 }
