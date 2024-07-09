@@ -1,6 +1,55 @@
 /*NavBar.css*/
-.base{
-    background-color: #FDDC87;
-    color: black;
+body{
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
 }
-
+.base{
+    width:100%;
+    background-color: #FDDC87;
+    height:75px;
+    padding-top:1px;
+    padding-left: 30px;
+    float:top;
+    padding-right: 50px;
+    justify-content: center;
+}
+.pageTitle{
+    color: black;
+    font:bold;
+    text-decoration: none;
+    float:left;
+    display: inline;
+}
+.pageTitle:hover{
+    text-decoration: underline;
+}
+.accountSettingsLink{
+    color: black;
+    font:bold;
+    text-decoration: none;
+    float:right;
+    display: inline;
+}
+.accountSettingsLink:hover{
+    text-decoration: underline;
+}
+.linkBtnContainer{
+    float:right;
+    margin-left: 20px;
+    display: inline;
+}
+.linkBtn {
+    border:none;
+    text-justify:center;
+    width:130px !important;
+    height:35px !important;
+    background-color:#DC6B2C;
+    color:#ffffff;
+    cursor:pointer;
+    border-radius:7.5px !important;
+    font-size: 14px !important;
+}
+.link{
+    text-decoration: none;
+}

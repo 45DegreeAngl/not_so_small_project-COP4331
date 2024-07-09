@@ -10,6 +10,7 @@ import RegisterPage from './pages/RegisterPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:id/:token" element={<ResetPasswordPage />} />
+          <Route path="/dashboard" element={<DashboardPage/>}/>
         </Routes>
     </BrowserRouter>
   );

@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import './Login.css';
 const app_name = 'ganttify-5b581a9c8167';
 
-const baseStyle = {
-  textAlign: "center"
-};
 
 
 function buildPath(route) {
@@ -51,7 +48,7 @@ function Login() {
         localStorage.setItem('user_data', JSON.stringify(user));
 
         setMessage('');
-        window.location.href = '/cards';
+        window.location.href = '/dashboard';
       }
     } catch (e) {
       alert(e.toString());
@@ -75,7 +72,7 @@ function Login() {
             </div>
             <div class="form-group">
                 <label for="inputPassword"><h5><b>Password</b></h5></label>
-                <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c}/>
+                <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c} required/>
             </div>
             <div class="row justify-content-center buttonDiv"><button type="submit" class="btn submitButton">Login</button></div>
           </form>
