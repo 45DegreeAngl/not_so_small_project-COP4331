@@ -8,13 +8,18 @@ body{
     width:100%;
     background-color: #FDDC87;
     height:75px;
-    padding-top: 17.5px;
+    padding-top:1px;
     padding-left: 30px;
+    float:top;
+    padding-right: 50px;
+    justify-content: center;
 }
 .pageTitle{
     color: black;
     font:bold;
     text-decoration: none;
+    float:left;
+    display: inline;
 }
 .pageTitle:hover{
     text-decoration: underline;
@@ -24,23 +29,27 @@ body{
     font:bold;
     text-decoration: none;
     float:right;
+    display: inline;
 }
 .accountSettingsLink:hover{
     text-decoration: underline;
 }
+.linkBtnContainer{
+    float:right;
+    margin-left: 20px;
+    display: inline;
+}
 .linkBtn {
     border:none;
     text-justify:center;
-    position:relative;
-    right:20px !important;
-    bottom:47.5px !important;
-    float:right;
     width:130px !important;
     height:35px !important;
     background-color:#DC6B2C;
     color:#ffffff;
-    margin-right:30px !important;
     cursor:pointer;
     border-radius:7.5px !important;
     font-size: 14px !important;
+}
+.link{
+    text-decoration: none;
 }

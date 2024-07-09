@@ -27,7 +27,7 @@ function NavBar(props)
         return(
             <div id="navBarDiv" class="base">
                 <h3 id="dashboardTitle"><Link to="/dashboard" class="pageTitle">{props.pageTitle}</Link></h3>
-                <Link to="/" class="pageTitle"><button id = "about" class = "btn linkBtn">Sign Out</button></Link>
+                <div class = "linkBtnContainer"><Link to="/" class="link"><button id = "about" class = "btn linkBtn">Sign Out</button></Link></div>
                 <h5 id="accountSettings" ><Link to="/accountSettings" class="accountSettingsLink">Account Settings</Link></h5>
             </div>
         )

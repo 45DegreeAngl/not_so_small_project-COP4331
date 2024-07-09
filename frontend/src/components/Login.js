@@ -72,7 +72,7 @@ function Login() {
             </div>
             <div class="form-group">
                 <label for="inputPassword"><h5><b>Password</b></h5></label>
-                <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c}/>
+                <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c} required/>
             </div>
             <div class="row justify-content-center buttonDiv"><button type="submit" class="btn submitButton">Login</button></div>
           </form>
