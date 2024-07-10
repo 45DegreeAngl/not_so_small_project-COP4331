@@ -13,8 +13,11 @@ function buildPath(route) {
 
 function DashboardProjectCard(){
     return (
-        <div class ="card leftCard">
-            
+        <div class ="card">
+            <img src='...' class = "card-img-top" alt='...'/>
+            <div class = "card-body">
+                
+            </div>
         </div>
     );
 }

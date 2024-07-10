@@ -20,11 +20,30 @@ function DashboardCharts(){
                 <form>
                     <input type="search" class="form-control searchForm" placeholder='Search charts by name or owner...' id="search projects"/>
                 </form>
+                <div class ="row px-0 mt-3 cardRow">
+                    <div class ="col px-0">
+                        <ProjectCard/>
+                    </div>
+                    <div class ="col px-0">
+                        <ProjectCard/>
+                    </div>
+                    <div class ="col px-0">
+                        <ProjectCard/>
+                    </div>
+                </div>
+                <div class ="row px-0 mt-3 cardRow">
+                    <div class ="col px-0">
+                        <ProjectCard/>
+                    </div>
+                    <div class ="col px-0">
+                        <ProjectCard/>
+                    </div>
+                    <div class ="col px-0">
+                        <ProjectCard/>
+                    </div>
+                    
+                </div>
             </div>
-            <div class = "container px-0 mx-0 cardContainer">
-                <ProjectCard/>
-            </div>
-            
         </div>
     );
 }
