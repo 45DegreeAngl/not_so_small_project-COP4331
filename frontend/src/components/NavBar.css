@@ -1,55 +1,44 @@
-/*NavBar.css*/
-body{
-    font-family: "Inter", sans-serif;
-    margin: 0;
-    padding: 0;
-}
-.base{
-    width:100%;
-    background-color: #FDDC87;
-    height:75px;
-    padding-top:1px;
-    padding-left: 30px;
-    float:top;
-    padding-right: 50px;
-    justify-content: center;
+.topNavBar{
+    background-color: #FDDC87 !important;
+    min-height: 100px;
+    padding-bottom: 15px;
 }
 .pageTitle{
+    margin-left:30px !important;
+    font-size: 30px !important;
     color: black;
-    font:bold;
     text-decoration: none;
-    float:left;
-    display: inline;
 }
-.pageTitle:hover{
-    text-decoration: underline;
+.linkText{
+    font-size: 20px !important;
+    padding-top: 17px;
 }
-.accountSettingsLink{
-    color: black;
-    font:bold;
-    text-decoration: none;
-    float:right;
-    display: inline;
-}
-.accountSettingsLink:hover{
-    text-decoration: underline;
-}
-.linkBtnContainer{
-    float:right;
-    margin-left: 20px;
-    display: inline;
+.linkText:hover{
+    text-decoration: underline !important;
 }
 .linkBtn {
+    padding: auto;
     border:none;
     text-justify:center;
+    text-align: center !important;
     width:130px !important;
-    height:35px !important;
     background-color:#DC6B2C;
     color:#ffffff;
     cursor:pointer;
     border-radius:7.5px !important;
     font-size: 14px !important;
 }
-.link{
-    text-decoration: none;
+.linkBtn:hover{
+    color:white;
+}
+.nav-item{
+    margin-left: 30px;
+}
+.navbar-nav{
+    display: flex;
+    width: 50%;
+}
+.linkList{
+    justify-content: flex-end;
+    padding-right:20px;
 }

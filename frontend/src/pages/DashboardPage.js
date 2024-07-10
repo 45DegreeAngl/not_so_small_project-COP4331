@@ -9,7 +9,7 @@ const DashboardPage = () =>
 
     return(
       <div>
-        <NavBar pageTitle ="Dashboard" layout={2}/>
+        <NavBar pageTitle ="Dashboard" layout={4}/>
         <DashboardNavBar/>
         <Dashboard/>
       </div>
