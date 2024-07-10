@@ -1,0 +1,18 @@
+body{
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.title{
+    font:larger;
+    margin-left:40px;
+}
+.mainContainer{
+    float:left;
+    float:top;
+}
+.searchForm{
+    margin-left:40px;
+    max-width: 400px;
+    min-width: 200px;
+}

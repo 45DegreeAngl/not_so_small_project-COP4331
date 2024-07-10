@@ -6,33 +6,104 @@ const app_name = 'ganttify-5b581a9c8167'
 function NavBar(props)
 {
     if(props.layout == 0){
-        return(
-            <div id="navBarDiv" class = "base">
-                <h3 id="appTitle">{props.pageTitle}</h3>
+    return(
+        <nav class = "navbar navbar-expand-sm topNavBar"> 
+            <div class = "container-fluid">
+                <ul class ="navbar-nav">
+                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
+                </ul>
+                <ul class ="navbar-nav linkList">
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/about-us">About Us</a>
+                    </li>
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/register">Create Account</a>
+                    </li>
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/login">Login</a>
+                    </li>
+                </ul>
             </div>
+        </nav>
+    );
+   }
+    if(props.layout == 1){
+        return(
+            <nav class = "navbar navbar-expand-sm topNavBar"> 
+                <div class = "container-fluid">
+                    <ul class ="navbar-nav">
+                        <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
+                    </ul>
+                    <ul class ="navbar-nav linkList">
+                        <li class = "nav-item">
+                            <a class = "nav-link btn linkBtn" href="/about-us">About Us</a>
+                        </li>
+                        <li class = "nav-item">
+                            <a class = "nav-link btn linkBtn" href="/login">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         );
     }
-    else if(props.layout == 1){
-        return(
-            <div id="navBarDiv" class="base">
-                <h3 id="appTitle"><Link to="/" class="pageTitle">{props.pageTitle}</Link></h3>
-                <Link to="/login"><button id = "login"  class = "btn linkBtn" >Login</button></Link>
-                <Link to="/register"><button id = "creatAccount"  class = "btn linkBtn" >Create Account</button></Link>
-                <Link to="/about-us"> <button id = "about" class = "btn linkBtn">About Us</button></Link>
-                
+   
+   if(props.layout == 2){
+    return(
+        <nav class = "navbar navbar-expand-sm topNavBar"> 
+            <div class = "container-fluid">
+                <ul class ="navbar-nav">
+                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
+                </ul>
+                <ul class ="navbar-nav linkList">
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/about-us">About Us</a>
+                    </li>
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/register">Create Account</a>
+                    </li>
+                </ul>
             </div>
-        );
-    }
-    else if(props.layout == 2){
-        return(
-            <div id="navBarDiv" class="base">
-                <h3 id="dashboardTitle"><Link to="/dashboard" class="pageTitle">{props.pageTitle}</Link></h3>
-                <div class = "linkBtnContainer"><Link to="/" class="link"><button id = "about" class = "btn linkBtn">Sign Out</button></Link></div>
-                <h5 id="accountSettings" ><Link to="/accountSettings" class="accountSettingsLink">Account Settings</Link></h5>
+        </nav>
+    );
+   }
+   if(props.layout == 3){
+    return(
+        <nav class = "navbar navbar-expand-sm topNavBar"> 
+            <div class = "container-fluid">
+                <ul class ="navbar-nav">
+                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
+                </ul>
+                <ul class ="navbar-nav linkList">
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/register">Create Account</a>
+                    </li>
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/login">Login</a>
+                    </li>
+                </ul>
             </div>
-        )
-    }
-    
+        </nav>
+    );
+   }
+   if(props.layout == 4){
+    return(
+        <nav class = "navbar navbar-expand-sm topNavBar"> 
+            <div class = "container-fluid">
+                <ul class ="navbar-nav">
+                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
+                </ul>
+                <ul class ="navbar-nav linkList">
+                    <li class = "nav-item">
+                        <a class = "nav-link pageTitle linkText" href="/account-settings">Account Settings</a>
+                    </li>
+                    <li class = "nav-item">
+                        <a class = "nav-link btn linkBtn" href="/">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    );
+   }
 }
 
 export default NavBar;
