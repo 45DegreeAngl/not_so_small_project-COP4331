@@ -9,7 +9,7 @@ const WelcomePage = () =>{
 
     return(
         <div>
-            <NavBar pageTitle = "Ganttify" layout = {1}/>
+            <NavBar pageTitle = "Ganttify" layout = {0}/>
             <Welcome/>
             <Info/>
         </div>

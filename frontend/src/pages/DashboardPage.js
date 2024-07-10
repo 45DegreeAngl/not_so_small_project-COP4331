@@ -10,8 +10,10 @@ const DashboardPage = () =>
     return(
       <div>
         <NavBar pageTitle ="Dashboard" layout={4}/>
-        <DashboardNavBar/>
-        <Dashboard/>
+         <DashboardNavBar/>
+         <div class = "container-fluid px-0 mx-0 py-0 my-0">
+            <Dashboard/>
+        </div>
       </div>
     );
 };
