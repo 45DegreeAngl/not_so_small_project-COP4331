@@ -40,15 +40,10 @@ body{
     border-radius: 5px;
     border:none;
 }
-.forgot-password-link {
-    display: block;
-    margin-top: 1rem;
-    color: #E78252;
-    text-decoration: none;
-    width: 100%;
-    text-align: right;
-  }
-  
-  .forgot-password-link:hover {
-    text-decoration: underline;
-  }
+.formMessage{
+    padding-top:15px;
+    font-style: italic;
+    font-size:18px;
+    text-align: center;
+    color:red;
+}
