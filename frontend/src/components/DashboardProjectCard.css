@@ -5,7 +5,8 @@ body{
 }
 .card{
     width: 400px;
+    height: 400px;
 }
-.leftCard{
-    margin-left: 40px;
+.card-img-top{
+    height: 40%;
 }
