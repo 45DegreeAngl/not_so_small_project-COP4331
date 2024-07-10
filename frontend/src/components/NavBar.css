@@ -1,44 +1,44 @@
-.topNavBar{
-    background-color: #FDDC87 !important;
-    min-height: 100px;
-    padding-bottom: 15px;
-}
-.pageTitle{
-    margin-left:30px !important;
-    font-size: 30px !important;
+/*NavBar.css*/
+.base{
+    background-color: #FDDC87;
     color: black;
-    text-decoration: none;
 }
-.linkText{
-    font-size: 20px !important;
-    padding-top: 17px;
+.navbar{
+    width: 100%;
+    height: auto;
+    display : flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FDDC87;
+    padding : 15px 0px;
+    position: fixed;
+    z-index: 99999  ;
 }
-.linkText:hover{
-    text-decoration: underline !important;
+
+.logo{
+    width: 75px;
+    padding: 0px 50px;
 }
-.linkBtn {
-    padding: auto;
-    border:none;
-    text-justify:center;
-    text-align: center !important;
-    width:130px !important;
-    background-color:#DC6B2C;
-    color:#ffffff;
-    cursor:pointer;
-    border-radius:7.5px !important;
-    font-size: 14px !important;
+
+#button{
+    cursor: pointer;
+    border : none;
+    background-color: #FDDC87;
+    font-size: 18px;
 }
-.linkBtn:hover{
-    color:white;
+
+ul{
+    flex: 1;
+    list-style: none;
+    text-align: right;
+    
 }
-.nav-item{
-    margin-left: 30px;
+
+ul li{
+    display : inline-block;
+    margin : 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    
 }
-.navbar-nav{
-    display: flex;
-    width: 50%;
-}
-.linkList{
-    justify-content: flex-end;
-    padding-right:20px;
-}
+
