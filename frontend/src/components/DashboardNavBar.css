@@ -19,6 +19,7 @@ body{
     width: 95% !important;
     height: 8px;
     margin-top:20px;
+    cursor:pointer;
 }
 .topNavBtn{
     margin-top: 30px !important;

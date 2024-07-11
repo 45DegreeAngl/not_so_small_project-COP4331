@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 import './DashboardCharts.css';
 import ProjectCard from './DashboardProjectCard'
 const app_name = 'ganttify-5b581a9c8167';
@@ -13,6 +12,16 @@ function buildPath(route) {
 }
 
 function DashboardCharts(){
+    var search = '';
+
+    var _ud = localStorage.getItem('user_data');
+    var ud = JSON.parse(_ud);
+    var _id = ud._id;
+    const searchProjects = async event =>
+        {
+            
+    
+        }
     return (
         <div class ="container-fluid">
             <div class = "container px-0 mt-5 mx-0 mainContainer">
