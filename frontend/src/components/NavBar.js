@@ -1,109 +1,62 @@
 import {Link } from "react-router-dom";
-import "./NavBar.css"
+import Logo from '../Images/Logo.jpg';
+import './NavBar.css'
+
 
 const app_name = 'ganttify-5b581a9c8167'
+const baseStyle ={
+    backgroundColor:"#FDDC87", 
+    paddingLeft:"50px",
+    paddingTop:"10px",
+    paddingBottom:"10px"
+}
+const buttonStyle ={
+    border:"none",
+    textJustify:"center",
+    position:"relative",
+    right:"20px",
+    bottom:"47.5px",
+    float:"right",
+    width:"120px",
+    height:"35px",
+    backgroundColor:"#DC6B2C",
+    color:"#ffffff",
+    marginRight:"30px",
+    cursor:"pointer",
+    borderRadius:"7.5px"
+}
 
 function NavBar(props)
 {
     if(props.layout == 0){
-    return(
-        <nav class = "navbar navbar-expand-sm topNavBar"> 
-            <div class = "container-fluid">
-                <ul class ="navbar-nav">
-                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
-                </ul>
-                <ul class ="navbar-nav linkList">
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/about-us">About Us</a>
-                    </li>
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/register">Create Account</a>
-                    </li>
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/login">Login</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    );
-   }
-    if(props.layout == 1){
         return(
-            <nav class = "navbar navbar-expand-sm topNavBar"> 
-                <div class = "container-fluid">
-                    <ul class ="navbar-nav">
-                        <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
-                    </ul>
-                    <ul class ="navbar-nav linkList">
-                        <li class = "nav-item">
-                            <a class = "nav-link btn linkBtn" href="/about-us">About Us</a>
-                        </li>
-                        <li class = "nav-item">
-                            <a class = "nav-link btn linkBtn" href="/login">Login</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <div id="navBarDiv" style={baseStyle}>
+                <h3 id="appTitle">{props.pageTitle}</h3>
+            </div>
         );
     }
-   
-   if(props.layout == 2){
-    return(
-        <nav class = "navbar navbar-expand-sm topNavBar"> 
-            <div class = "container-fluid">
-                <ul class ="navbar-nav">
-                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
-                </ul>
-                <ul class ="navbar-nav linkList">
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/about-us">About Us</a>
-                    </li>
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/register">Create Account</a>
-                    </li>
-                </ul>
+    else if(props.layout == 1){
+        return(
+            <div id="navBarDiv">
+                <div className="navbar">
+                    <a href = "/">
+                        <img src={Logo} alt="" className="logo" />
+                    </a>
+
+                    <h1> Ganttify </h1>
+                    <ul>
+                        <li><Link to="/"><button id = "button"> Home</button></Link></li>
+                        <li><Link to="/about-us"><button id = "button">About Us</button></Link></li>
+                        <li><Link to="/register"><button id = "button">Create Account</button></Link></li>
+                        <li><Link to="/login"><button id = "button" >Login</button></Link></li>
+
+                    </ul>
+                    
+                </div>                
             </div>
-        </nav>
-    );
-   }
-   if(props.layout == 3){
-    return(
-        <nav class = "navbar navbar-expand-sm topNavBar"> 
-            <div class = "container-fluid">
-                <ul class ="navbar-nav">
-                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
-                </ul>
-                <ul class ="navbar-nav linkList">
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/register">Create Account</a>
-                    </li>
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/login">Login</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    );
-   }
-   if(props.layout == 4){
-    return(
-        <nav class = "navbar navbar-expand-sm topNavBar"> 
-            <div class = "container-fluid">
-                <ul class ="navbar-nav">
-                    <a class = "nav-link pageTitle" href="/">{props.pageTitle}</a>
-                </ul>
-                <ul class ="navbar-nav linkList">
-                    <li class = "nav-item">
-                        <a class = "nav-link pageTitle linkText" href="/account-settings">Account Settings</a>
-                    </li>
-                    <li class = "nav-item">
-                        <a class = "nav-link btn linkBtn" href="/">Sign Out</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    );
-   }
+        );
+    }
+    
 }
 
 export default NavBar;
