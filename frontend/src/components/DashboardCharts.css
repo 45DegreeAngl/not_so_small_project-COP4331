@@ -4,8 +4,10 @@ body{
     padding: 0;
 }
 .title{
-    font:larger;
+    font:bold;
     margin-left:40px;
+    margin-top:-60px;
+    color: black;
 }
 .mainContainer{
     float:left;

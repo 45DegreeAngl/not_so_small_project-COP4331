@@ -25,6 +25,10 @@ const buttonStyle ={
     cursor:"pointer",
     borderRadius:"7.5px"
 }
+const dashboardNav ={
+    position:"relative",
+    float:"top"
+}
 
 function NavBar(props)
 {
@@ -52,6 +56,23 @@ function NavBar(props)
 
                     </ul>
                     
+                </div>                
+            </div>
+        );
+    }
+    else if(props.layout == 2){
+        return(
+            <div id="navBarDiv" style={dashboardNav}>
+                <div className="navbarDash">
+                    <a href = "/">
+                        <img src={Logo} alt="" className="logo" />
+                    </a>
+
+                    <h1> Dashboard </h1>
+                    <ul>
+                        <li><Link to="/register"><button id = "button">Account Settings</button></Link></li>
+                        <li><Link to="/"><button id = "button" >Sign Out</button></Link></li>
+                    </ul>
                 </div>                
             </div>
         );

@@ -14,6 +14,18 @@
     position: fixed;
     z-index: 99999  ;
 }
+.navbarDash{
+    width: 100%;
+    height: auto;
+    display : flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FDDC87;
+    padding : 15px 0px;
+    position: relative;
+    z-index: 99999  ;
+    float: top;
+}
 
 .logo{
     width: 75px;

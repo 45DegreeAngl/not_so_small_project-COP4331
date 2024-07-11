@@ -14,7 +14,9 @@ function buildPath(route) {
 
 function Dashboard(){
     return (
-        <DashboardCharts/>
+        <div>
+            Hey
+        </div>
     );
 }
 
