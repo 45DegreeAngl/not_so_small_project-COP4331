@@ -1,9 +1,13 @@
 import {Link } from "react-router-dom";
+import React, { useState } from 'react';
+
 import "./DashboardNavBar.css"
+import Dashboard from '../components/Dashboard';
+import DashboardCharts from '../components/DashboardCharts'
 
 const app_name = 'ganttify-5b581a9c8167'
 
-function DasboardNavBar()
+function DasboardNavBar(props)
 {
     return(
         <div class = "container-fluid navBarBody">
