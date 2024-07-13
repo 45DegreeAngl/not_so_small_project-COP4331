@@ -21,3 +21,11 @@ body{
 .cardRow{
     margin-left:40px;
 }
+.chartNavButton{
+    border-radius: 5px;
+    width: 100px;
+    height: 50px;
+}
+.hiddenButton{
+   visibility: hidden;
+}

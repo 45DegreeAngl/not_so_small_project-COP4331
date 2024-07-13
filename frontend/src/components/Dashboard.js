@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 import './Dashboard.css';
-import DashboardCharts from './DashboardCharts'
 const app_name = 'ganttify-5b581a9c8167';
 
 function buildPath(route) {
