@@ -16,22 +16,6 @@ function DashboardCharts({projects}){
     const buttonOn = "btn chartNavButton", buttonOff = "btn chartNavButton hiddenButton";
     var chartVisibility = [true,true,true,true,true,true], buttonVisibility = [buttonOff,buttonOff]; //0->prev 1->next
     //when component is rendered, display the first page
-    const initialCharts = projects.length;
-    if(projects.length<6){//only the first page is present, need to not show charts that do not exsist
-        switch(projects.length){
-            case 0: chartVisibility[0] = false;
-            case 1: chartVisibility[1] = false;
-            case 2: chartVisibility[2] = false; 
-            case 3: chartVisibility[3] = false;
-            case 4: chartVisibility[4] = false;
-            case 5: chartVisibility[5] = false;
-           
-            default: break;
-        }
-    }
-    if(projects.length > 6){//more then 1 page is needed, turn on button
-        buttonVisibility[1] = buttonOn;
-    }
     const [chart1,setChart1] = useState(<ProjectCard projectTitle={projects[0]} isVisible={chartVisibility[0]}/>);
     const [chart2,setChart2] = useState(<ProjectCard projectTitle={projects[1]} isVisible={chartVisibility[1]}/>);
     const [chart3,setChart3] = useState(<ProjectCard projectTitle={projects[2]} isVisible={chartVisibility[2]}/>);
@@ -41,6 +25,31 @@ function DashboardCharts({projects}){
     const [prevButton,setPrevButton] = useState(buttonVisibility[0]);
     const [nextButton,setNextButton] = useState(buttonVisibility[1]);
 
+    const setChartPage = event =>{
+        if(projects.length<6){//only the first page is present, need to not show charts that do not exsist
+            switch(projects.length){
+                case 0: chartVisibility[0] = false;
+                case 1: chartVisibility[1] = false;
+                case 2: chartVisibility[2] = false; 
+                case 3: chartVisibility[3] = false;
+                case 4: chartVisibility[4] = false;
+                case 5: chartVisibility[5] = false;
+                default: break;
+            }
+        }
+        if(projects.length > 6){
+            setNextButton(buttonOn);
+        }
+        else{
+            setNextButton(buttonOff);
+        }
+        setChart1(<ProjectCard projectTitle = {projects[0]} isVisible={chartVisibility[0]}/>);
+        setChart2(<ProjectCard projectTitle = {projects[1]} isVisible={chartVisibility[1]}/>);
+        setChart3(<ProjectCard projectTitle = {projects[2]} isVisible={chartVisibility[2]}/>);
+        setChart4(<ProjectCard projectTitle = {projects[3]} isVisible={chartVisibility[3]}/>);
+        setChart5(<ProjectCard projectTitle = {projects[4]} isVisible={chartVisibility[4]}/>);
+        setChart6(<ProjectCard projectTitle = {projects[5]} isVisible={chartVisibility[5]}/>);
+    }
     //next page, need to render only the charts and buttons that need to be rendered
     const nextChartPage = event =>{
         event.preventDefault();
@@ -111,6 +120,9 @@ function DashboardCharts({projects}){
         setNextButton("btn chartNavButton");
         setChartListPage(chartListPage-1);
     }
+    
+    //whenever projects is updated by the parent component, rerender charts
+    useEffect(() =>{setChartPage()},[projects]);
     
     return (
         <div>
