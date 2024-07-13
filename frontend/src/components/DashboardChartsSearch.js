@@ -1,39 +1,62 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import DashboardCharts from '../components/DashboardCharts'
 import './DashboardCharts.css';
-var projects1 = [
-    "project 1",
-    "project 2",
-    "project 3",
-    "project 4",
-    "project 5",
-    "project 6",
-    "project 7",
-    "project 8",
-    "project 9",
-    "project 10",
-    "project 11",
-    "project 12",
-    "project 13",
-    "project 14",
-    "project 15",
-    "project 16",
-    "project 17"
-]
-var projects2 = [
-    "Ganttify",
-    "Personal Chart",
-    "COP4302 pl/0 Compiler"
-]
+const app_name = 'ganttify-5b581a9c8167'
+function buildPath(route)
+{
+    if (process.env.NODE_ENV === 'production') 
+    {
+        return 'https://' + app_name +  '.herokuapp.com/' + route;
+    }
+    else
+    {        
+        return 'http://localhost:5000/' + route;
+    }
+}
+
+//empty array for displaying nothing
+var empty = []
 
 function DashboardChartsSearch(){
     var search = "";
-    const [chartsToDisplay, setChartsToDisplay] = useState(<DashboardCharts projects={projects1}/>);
-     
+    var _ud = localStorage.getItem('user_data');
+    var ud = JSON.parse(_ud);
+    var userId = ud._id;
+
+    const [chartsToDisplay, setChartsToDisplay] = useState(<DashboardCharts projects={empty}/>);
+
     const doProjectSearch = async event =>{
-        setChartsToDisplay(<DashboardCharts projects={projects2}/>);
-        console.log(search.value);
+        var obj = {title:search.value};
+        var js = JSON.stringify(obj);
+        try
+        {   
+            const response = await fetch(buildPath('api/search/projects'),
+            {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var txt = await response.text();
+            var res = JSON.parse(txt);
+            var _results = res.results;
+            var projectNames=[];
+            //get list of project names and pass as prop to child
+            if(res.length>0){
+                for(var i = 0; i<res.length;i++){
+                    projectNames[i] = res[i].nameProject;
+                }
+                setChartsToDisplay(<DashboardCharts projects={projectNames}/>);
+            }
+            else{
+                setChartsToDisplay(<DashboardCharts projects={empty}/>);
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+        }
     }
+
+    //do an empty search before page renders
+    useLayoutEffect(()=>{doProjectSearch()},[]);
+    
 
     return(
         <div class ="container-fluid">
