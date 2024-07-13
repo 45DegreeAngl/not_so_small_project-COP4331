@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import DashboardCharts from '../components/DashboardCharts'
 import './DashboardCharts.css';
-
-const projects1 = [
+var projects1 = [
     "project 1",
     "project 2",
     "project 3",
@@ -21,19 +20,18 @@ const projects1 = [
     "project 16",
     "project 17"
 ]
-const projects2 = [
+var projects2 = [
     "Ganttify",
     "Personal Chart",
     "COP4302 pl/0 Compiler"
 ]
 
-const DashboardChartsSearch = () =>
-{
+function DashboardChartsSearch(){
     var search = "";
-    const [chartsToDisplay, setChartsToDisplay] = useState(projects1);
-
+    const [chartsToDisplay, setChartsToDisplay] = useState(<DashboardCharts projects={projects1}/>);
+     
     const doProjectSearch = async event =>{
-        setChartsToDisplay(projects2);
+        setChartsToDisplay(<DashboardCharts projects={projects2}/>);
         console.log(search.value);
     }
 
@@ -42,9 +40,9 @@ const DashboardChartsSearch = () =>
             <div class = "container px-0 mt-4 mx-0 mainContainer">
                 <h1 class="title">Charts</h1>
                 <form>
-                    <input type="search" class="form-control searchForm" placeholder='Search charts by name or owner...' id="search projects" onInput={doProjectSearch} ref={(c) => search = c}/>
+                    <input type="search" class="form-control searchForm" placeholder='Search charts by name...' id="search projects" onChange={doProjectSearch} ref={(c) => search = c}/>
                 </form>
-                <DashboardCharts projects={chartsToDisplay}/>
+                {chartsToDisplay}
             </div>
         </div>
     );
