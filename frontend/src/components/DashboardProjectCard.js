@@ -11,13 +11,20 @@ function buildPath(route) {
     }
 }
 
-function DashboardProjectCard(){
+function DashboardProjectCard({projectTitle, isVisible}){
+    var cardClass;
+    if(isVisible){
+        cardClass = "card";
+    }
+    else{
+        cardClass = "invisibleCard";
+    }
     return (
-        <div class ="card">
-            <a class="card-block stretched-link text-decoration-none" href="/"></a>
+        <div class ={cardClass} >
+            <a class="card-block stretched-link text-decoration-none" href="#"></a>
                 <img src='...' class = "card-img-top" alt='...'/>
                 <div class = "card-body">
-                    <h5 class = "card-title">Example Project Title</h5>
+                    <h5 class = "card-title">{projectTitle}</h5>
                     <p class ="card-text">Project description</p>
                 </div>
             <a/>
