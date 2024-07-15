@@ -13,3 +13,25 @@ body{
     float:left;
     float:top;
 }
+.searchForm{
+    margin-left:40px;
+    max-width: 400px;
+    min-width: 200px;
+}
+.table{
+    margin-top: 40px;
+    margin-left: 40px;
+    width:1600px;
+}
+.tr{
+    line-height: 100px !important;
+    min-height: 100px !important; 
+    height: 100px !important;
+}
+.cell{
+    vertical-align:middle;
+}
+.hidden{
+    border: none;
+    visibility: hidden;
+}

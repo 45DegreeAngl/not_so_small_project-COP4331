@@ -46,6 +46,8 @@ function Login() {
             toDoList: res.toDoList,
             error: res.error};
         localStorage.setItem('user_data', JSON.stringify(user));
+        const secret = process.env.JWT_SECRET + user.password;
+        const token = jwt.sign({ email: user.email, id: user._id }, secret, {expiresIn: "100m",});
 
         setMessage('');
         window.location.href = '/dashboard';
