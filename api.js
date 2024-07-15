@@ -383,7 +383,7 @@ router.delete("/projects/:id", async (req, res) => {
   }
 });
 
-router.post('/api/forgot-password', async (req, res) => 
+router.post('/forgot-password', async (req, res) => 
 {
   const {email} = req.body;
   let error = '';
@@ -478,7 +478,7 @@ router.get('/reset-password/:id/:token', async (req, res) =>
 
 });
   
-router.post('/api/reset-password', async (req, res) => 
+router.post('/reset-password', async (req, res) => 
 {
   const { id, password } = req.body;
 
