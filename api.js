@@ -2,6 +2,7 @@ const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodeMailer = require("nodemailer");
 require("dotenv").config();
 
 // Replaced app.post with router.post for modularity and best practices.
@@ -383,67 +384,136 @@ router.delete("/projects/:id", async (req, res) => {
   }
 });
 
-router.post("/forgot-password", async (req, res) => {
-  const { email } = req.body;
-  let error = "";
+router.post('/forgot-password', async (req, res) => 
+{
+  const {email} = req.body;
+  let error = '';
+  
 
-  try {
-    const db = client.db("ganttify");
-    const results = db.collection("userAccounts");
+  try{
 
-    const user = await results.findOne({ email });
+    await client.connect();
+    const db = client.db('ganttify');
+    const results = db.collection('userAccounts');
+    const user = await results.findOne({email});
+
 
     if (user) {
+      
       const secret = process.env.JWT_SECRET + user.password;
-      const token = jwt.sign({ email: user.email, id: user._id }, secret, {
-        expiresIn: "100m",
+      const token = jwt.sign({email: user.email, id: user._id}, secret, {expiresIn: "2m",} );
+
+      let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
+
+      const transporter = nodeMailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.USER_EMAIL,
+          pass: process.env.EMAIL_PASSWORD
+        }
       });
 
-      const link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
-      error = `${link}`;
+      let mailDetails = {
+        from: process.env.USER_EMAIL,
+        to: email,
+        subject: 'Reset Your Ganttify Password',
+        text: `Hello ${user.name},\n We recieved a request to reset your Ganttify password. Click the link to reset your password: ${link}`,
+        html: `<p>Hello ${user.name},</p> <p>We recieved a request to reset your Ganttify password. Click the button to reset your password:\n</p> <a href="${link}" className="btn">Reset Password</a>`
+      };
 
-      res.status(404).json({ error });
-      console.log(error);
+
+      transporter.sendMail(mailDetails, function (err, data) {
+        if (err) {
+          return res.status(500).json({ error: 'Error sending email' });
+        } else {
+          return res.status(200).json({ message: 'Password reset email sent' });
+        }
+      });
     } else {
-      error = "User with that email address does not exist.";
-      console.log("User not found");
+      return res.status(404).json({ error: 'User with that email address does not exist.' });
     }
+
+
   } catch (error) {
-    res.status(404).json({ error });
-    console.log("Try/catch not working");
+    console.error('An error has occurred:', error);
+    return res.status(500).json({ error });
+  } finally {
+    await client.close();
   }
 });
-
-router.get("/reset-password/:id/:token", async (req, res) => {
+  
+router.get('/reset-password/:id/:token', async (req, res) => 
+{
   const { id, token } = req.params;
-  console.log(req.params);
-  console.log(`\n${id}`);
 
   try {
-    const objectId = new ObjectId(id);
 
-    const db = client.db("ganttify");
-    const results = db.collection("userAccounts");
-    const user = await results.findOne({ _id: new ObjectId(id) });
+    const objectId = new ObjectId(id);
+  
+    await client.connect();
+    const db = client.db('ganttify');
+    const results = db.collection('userAccounts');
+    const user = await results.findOne({_id: objectId});
+
 
     if (user) {
       const secret = process.env.JWT_SECRET + user.password;
-
+  
       try {
-        const verify = jwt.verify(token, secret);
-        res.sendFile(
-          path.resolve(__dirname, "frontend", "build", "index.html"),
-        );
-        console.log("Did it work?");
+
+        jwt.verify(token, secret);
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  
       } catch (error) {
         res.send("Not verified");
       }
-    } else {
+    } 
+  
+    else{
       return res.status(404).send("User does not exist");
     }
-  } catch (error) {
-    console.error("Error during password reset verification:", error);
+  } catch(error) {
+    console.error('Error during password reset verification:', error);
     res.status(400).send("Invalid ID format");
+  }
+
+});
+  
+router.post('/reset-password', async (req, res) => 
+{
+  const { id, password } = req.body;
+
+  let error = '';
+
+  try {
+    await client.connect();
+    const db = client.db('ganttify');
+    const objectId = ObjectId.createFromHexString(id); 
+    const userCollection = db.collection('userAccounts');
+    const user = await userCollection.findOne({_id: objectId});
+
+
+    if (user){
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      try {
+        await userCollection.updateOne({_id: objectId}, {$set: {password: hashedPassword}});
+        res.status(200).json({ message: "Password has been reset successfully" });
+      } catch(error) {
+        return res.json({status: "error", data: error})
+      }
+
+    } else {
+      error = 'User not found';
+      return res.status(400).json({ error });
+    }
+
+  } catch (error) {
+    console.error('Error occured during password reset:', error);
+    error = 'Internal server error';
+    res.status(500).json({ error });
+  } finally {
+    await client.close();
   }
 });
 
