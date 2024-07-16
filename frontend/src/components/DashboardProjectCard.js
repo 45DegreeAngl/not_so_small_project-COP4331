@@ -13,6 +13,7 @@ function buildPath(route) {
 
 function DashboardProjectCard({projectTitle, isVisible}){
     var cardClass;
+    console.log(projectTitle);
     if(isVisible){
         cardClass = "card";
     }

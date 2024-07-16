@@ -29,3 +29,10 @@ body{
 .hiddenButton{
    visibility: hidden;
 }
+.refreshBtn{
+    margin:40px;
+    width:100px;
+}
+.inlineForm{
+    display:inline;
+}

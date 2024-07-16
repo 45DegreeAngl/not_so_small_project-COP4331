@@ -27,7 +27,8 @@ const buttonStyle ={
 }
 const dashboardNav ={
     position:"relative",
-    float:"top"
+    float:"top",
+    zIndex: "1"
 }
 
 function NavBar(props)

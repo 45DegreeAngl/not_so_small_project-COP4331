@@ -3,13 +3,6 @@ import './DashboardCharts.css';
 import ProjectCard from './DashboardProjectCard'
 const app_name = 'ganttify-5b581a9c8167';
 
-function buildPath(route) {
-    if (process.env.NODE_ENV === 'production') {
-      return 'https://' + app_name + '.herokuapp.com/' + route;
-    } else {
-      return 'http://localhost:5000/' + route;
-    }
-}
 
 function DashboardCharts({projects}){
     const [chartListPage,setChartListPage] = useState(0);
