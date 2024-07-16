@@ -369,6 +369,108 @@ router.delete("/tasks/:id", async (req, res) => {
   }
 });
 
+
+// -----------------> Assign user to a task <----------------- //
+router.post("/assignusertotask", async (req, res) => {
+  const { taskId, userId } = req.body;
+
+  if (!taskId || !userId) {
+    return res.status(400).json({ error: "Task ID and user ID are required" });
+  }
+
+  try {
+    const db = client.db("ganttify");
+    const taskCollection = db.collection("tasks");
+
+    //Check if the user is already assigned to the task
+    const task = await taskCollection.findOne({
+      _id: new ObjectId(taskId),
+      assignedTasksUsers: new ObjectId(userId)
+    });
+
+    if (task) {
+      return res.status(400).json({error: "User is already assigned to this task"});
+    }
+
+    // Update task to add user to assignedTasksUsers 
+    const result = await taskCollection.updateOne(
+      { _id: new ObjectId(taskId) },
+      { $addToSet: { assignedTasksUsers: new ObjectId(userId) } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.status(200).json({ message: "User assigned to task successfully" });
+  } catch (error) {
+    console.error("Error assigning user to task:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// -----------------> Assign task to a project <----------------- //
+router.post("/assigntaskstoproject", async (req, res) => {
+  const { projectId, taskId } = req.body;
+  let error = "";
+
+  if (!projectId || !taskId || !Array.isArray(taskId) || taskId.length === 0) {
+    error = "Project ID and an array of Task IDs are required";
+    return res.status(400).json({ error });
+  }
+
+  try {
+    const db = client.db("ganttify");
+    const projectCollection = db.collection("projects");
+    const taskCollection = db.collection("tasks");
+
+    // Ensure the project exists
+    const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    // Ensure all tasks exist
+    const tasks = await taskCollection.find({
+      _id: { $in: taskId.map(id => new ObjectId(id)) }
+    }).toArray();
+
+    if (tasks.length !== taskId.length) {
+      return res.status(404).json({ error: "One or more tasks not found" });
+    }
+
+    // Check if any of the tasks are already assigned to the project
+    const assignedTasks = await taskCollection.find({
+      _id: { $in: taskId.map(id => new ObjectId(id)) },
+      tiedProjectId: new ObjectId(projectId)
+    }).toArray();
+
+    if (assignedTasks.length > 0) {
+      const alreadyAssignedTasks = assignedTasks.map(task => task._id.toString());
+      return res.status(400).json({ error: `Task is already assigned to this project` });
+    }
+
+    // Add taskId to the project's tasks array
+    await projectCollection.updateOne(
+      { _id: new ObjectId(projectId) },
+      { $addToSet: { tasks: { $each: taskId.map(id => new ObjectId(id)) } } }
+    );
+
+    // Update each task's tiedProjectId field
+    await taskCollection.updateMany(
+      { _id: { $in: taskId.map(id => new ObjectId(id)) } },
+      { $set: { tiedProjectId: new ObjectId(projectId) } }
+    );
+
+    res.status(200).json({ message: "Tasks assigned to project successfully" });
+  } catch (error) {
+    console.error("Error assigning tasks to project:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 // Project CRUD Operations
 //-----------------> Create a project <-----------------//
 router.post("/createproject", async (req, res) => {
@@ -428,24 +530,66 @@ router.get("/readprojects", async (req, res) => {
     res.status(500).json({ error });
   }
 });
-//-----------------> Read a specific project <-----------------//
-router.post("/readproject", async (req, res) => {
-    let error = "";
-    const{
-        _id
-    }=req.body;
-    try {
-      const db = client.db("ganttify");
-      const projectCollection = db.collection("projects");
-  
-      const project = await projectCollection.findOne({_id:_id});
-      res.status(200).json(project);
-    } catch (error) {
-      console.error("Error finding project:", error);
-      error = "Internal server error";
-      res.status(500).json({ error });
-    }
-  });
+
+
+//-----------------> Read public projects only <-----------------//
+router.get("/publicprojects", async (req, res) => {
+  try {
+    const db = client.db("ganttify");
+    const projectCollection = db.collection("projects");
+
+    const publicProjects = await projectCollection.find({ isVisible: 1 }).toArray();
+
+    res.status(200).json(publicProjects);
+  } catch (error) {
+    console.error("Error fetching public projects:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// -----------------> Read specific projects <-----------------//
+router.post("/readspecificprojects", async (req, res) => {
+  const { projectId } = req.body; // Assuming projectIds is an array of _id values
+
+  try {
+    const db = client.db("ganttify");
+    const projectCollection = db.collection("projects");
+
+    const projects = await projectCollection.find({
+      _id: { $in: projectId.map(id => new ObjectId(id)) }
+    }).toArray();
+
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error("Error finding projects:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+//-----------------> Read all projects for a specific user (public & founder) <-----------------//
+router.get("/userprojects/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const db = client.db("ganttify");
+    const projectCollection = db.collection("projects");
+
+    const accessibleProjects = await projectCollection.find({
+      $or: [
+        { isVisible: 1 },
+        { founderId: new ObjectId(userId) }
+      ]
+    }).toArray();
+
+    res.status(200).json(accessibleProjects);
+  } catch (error) {
+    console.error("Error fetching user projects:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 //-----------------> Update Project <-----------------//
 router.put("/projects/:id", async (req, res) => {
@@ -540,9 +684,8 @@ router.post('/forgot-password', async (req, res) =>
       const secret = process.env.JWT_SECRET + user.password;
       const token = jwt.sign({email: user.email, id: user._id}, secret, {expiresIn: "2m",} );
 
-      //let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
-      let link = `http://localhost:3000/reset-password/${user._id}/${token}`;
-
+      let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
+     
       
 
       const transporter = nodeMailer.createTransport({
