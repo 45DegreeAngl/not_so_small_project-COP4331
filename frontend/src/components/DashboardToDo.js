@@ -1,5 +1,6 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import './DashboardToDo.css';
+import { useRoutes } from 'react-router-dom';
 const app_name = 'ganttify-5b581a9c8167'
 function buildPath(route)
 {
@@ -42,6 +43,13 @@ function DashboardToDo(){
     var userId = ud._id;
     var displayedTasks = [];
 
+    const [taskDescription,setTaskDescription] = useState("");
+    const [taskTitle,setTaskTitle] = useState("");
+    const [taskUsers,setTaskUsers] = useState([]);
+    const [taskProgress,setTaskProgress] = useState("");
+    const [taskDueDate,setTaskDueDate] = useState("");
+    const [projectName,setProjectName] = useState("");
+
     const getTasks = async event =>{
         var obj= {userId:userId};
         var js = JSON.stringify(obj);
@@ -55,14 +63,15 @@ function DashboardToDo(){
             var res1 = JSON.parse(txt1);
             var txt2 = await respone2.text();
             var res2 = JSON.parse(txt2);
-            console.log(res1);
             //console.log(res2);
             res1.forEach(element => {
                 if(displayedTasks.includes(element._id)){
                     return;
                 }
                 displayedTasks.push(element._id);
+                let currTaskId = element._id;
                 let currTaskTitle = element.taskTitle;
+                let currTaskDescription = element.description;
                 //console.log(currTaskTitle);
                 let currDueDate = toDate(element.dueDateTime);
                 //console.log(currDueDate);
@@ -93,12 +102,13 @@ function DashboardToDo(){
                 projectNameCol.innerText = currProjectName;
 
                 const actionsCol = document.createElement("td");
-                //actionsCol.innerHTML = "<button class = \"btn actionsBtn\" onClick={displayActions()}"
+                actionsCol.innerHTML = `<button class = "btn actionsBtn" onClick={${displayTask(currTaskTitle,currTaskProgress,currProjectName,currDueDate,currProjectId,currTaskId,currTaskDescription)}} data-bs-toggle="modal" data-bs-target="#taskModal"/>`
 
                 newRow.appendChild(dueDateCol);
                 newRow.appendChild(taskNameCol);
                 newRow.appendChild(projectNameCol)
                 newRow.appendChild(progressCol);
+                newRow.appendChild(actionsCol);
                 tableBody.append(newRow);
             });
 
@@ -124,6 +134,12 @@ function DashboardToDo(){
         }
 
     }
+    function displayTask(currTaskTitle,currTaskProgress,currProjectName,currDueDate,currProjectId,currTaskId,currTaskDescription){
+        setTaskTitle(currTaskTitle);
+        setTaskDescription(currTaskDescription);
+        setProjectName(currProjectName);
+        return;
+    }
     useLayoutEffect(()=>{getTasks()},[]);
     return(
         <div class ="container-fluid">
@@ -145,6 +161,23 @@ function DashboardToDo(){
                         
                     </tbody>
                 </table>
+                <div class="modal" tabindex="-1" id="taskModal">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">{taskTitle}</h3>
+                                <h5 class =" modal-title modalSubTitle">{projectName}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{taskDescription}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary">yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

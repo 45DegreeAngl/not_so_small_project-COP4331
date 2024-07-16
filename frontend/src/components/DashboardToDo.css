@@ -35,3 +35,11 @@ body{
     border: none;
     visibility: hidden;
 }
+.actionsButton{
+    border:none;
+    display: inline-flex;
+    top:10px;
+}
+.modalSubTitle{
+    float:bottom;
+}
