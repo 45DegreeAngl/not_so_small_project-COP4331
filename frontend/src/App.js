@@ -10,6 +10,7 @@ import RegisterPage from './pages/RegisterPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 import DashboardPage from './pages/DashboardPage';
 import DashboardChartsPage from './pages/DashboardChartsPage';
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:id/:token" element={<ResetPasswordPage />} />
+          <Route path="/verify-email/:email/:token" element={<VerifyEmailPage />} />
           <Route path="/dashboard/charts" element={<DashboardChartsPage/>}/>
           <Route path="/dashboard" element={<DashboardPage/>}/>
         </Routes>
