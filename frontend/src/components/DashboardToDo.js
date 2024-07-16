@@ -40,13 +40,14 @@ function DashboardToDo(){
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud._id;
+    var displayedTasks = [];
 
     const getTasks = async event =>{
-        var obj= {founderId:userId,name:search.value};
+        var obj= {userId:userId};
         var js = JSON.stringify(obj);
         try
         {   
-            const response1 = await fetch(buildPath('api/search/tasks'),
+            const response1 = await fetch(buildPath('api/search/tasks/todo'),
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
             const respone2 = await fetch(buildPath("api/readprojects"),
             {method:'GET',headers:{'Content-Type': 'application/json'}});
@@ -54,8 +55,13 @@ function DashboardToDo(){
             var res1 = JSON.parse(txt1);
             var txt2 = await respone2.text();
             var res2 = JSON.parse(txt2);
+            console.log(res1);
             //console.log(res2);
             res1.forEach(element => {
+                if(displayedTasks.includes(element._id)){
+                    return;
+                }
+                displayedTasks.push(element._id);
                 let currTaskTitle = element.taskTitle;
                 //console.log(currTaskTitle);
                 let currDueDate = toDate(element.dueDateTime);
@@ -81,10 +87,13 @@ function DashboardToDo(){
                 dueDateCol.textContent = toDisplayDate(currDueDate);
 
                 const taskNameCol = document.createElement("td");
-                taskNameCol.textContent = currTaskTitle;
+                taskNameCol.innerText = currTaskTitle;
 
                 const projectNameCol = document.createElement("td");
-                projectNameCol.textContent = currProjectName;
+                projectNameCol.innerText = currProjectName;
+
+                const actionsCol = document.createElement("td");
+                //actionsCol.innerHTML = "<button class = \"btn actionsBtn\" onClick={displayActions()}"
 
                 newRow.appendChild(dueDateCol);
                 newRow.appendChild(taskNameCol);
@@ -100,10 +109,18 @@ function DashboardToDo(){
         }
     }
     function doTaskSearch(){
+        let value = search.value.toLowerCase();
         let rows = document.getElementById("taskTableBody").getElementsByTagName("tr");
 
         for(var i = 0; i< rows.length;i++){
-
+            let taskCol = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase();
+            let projectCol = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
+            if(taskCol.includes(value) || projectCol.includes(value)){
+                rows[i].style.display="";
+            }
+            else{
+                rows[i].style.display="none";
+            }
         }
 
     }
@@ -113,7 +130,7 @@ function DashboardToDo(){
             <div class = "container px-0 mt-5 mx-0 mainContainer">
                 <h1 class="title">To Do List</h1>
                 <form>
-                    <input type="search" class="form-control searchForm" placeholder='Search tasks by name or project...' id="search projects" onChange={getTasks} ref={(c) => search = c}/>
+                    <input type="search" class="form-control searchForm" placeholder='Search tasks by name or project...' id="search projects" onChange={doTaskSearch} ref={(c) => search = c}/>
                 </form>
                 <table class = "table table-bordereless" id="taskTableHeader">
                     <thead>

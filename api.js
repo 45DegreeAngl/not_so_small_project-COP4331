@@ -593,12 +593,14 @@ router.post("/search/tasks", async (req, res) => {
   const {founderId, name, dueDate, sortBy = "completionPercentage" } = req.body;
   const query = {};
 
-  if (name) {
+  if (!dueDate) {
     query.description = { founderId:founderId,$regex: name, $options: "i" };
   }
-  else if (dueDate) {
-    query.dueDateTime = { $gte: new Date(dueDate) };
+  
+  else {
+    query.description = { founderId: founderId, $gte: new Date(dueDate) };
   }
+  console.log(query);
 
   try {
     const db = client.db("ganttify");
@@ -636,5 +638,25 @@ router.post("/search/tasks/users", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+//-> Search Tasks for Specific User  <-//
+router.post("/search/tasks/todo", async (req, res) => {
+    const { userId } = req.body;
+  
+    try {
+      const db = client.db("ganttify");
+      const taskCollection = db.collection("tasks");
+  
+      const query = {
+        assignedTasksUsers: new ObjectId(userId),
+      };
+  
+      const tasks = await taskCollection.find(query).toArray();
+  
+      res.status(200).json(tasks);
+    } catch (error) {
+      console.error("Error searching tasks for user on project team:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
 
 module.exports = router;
