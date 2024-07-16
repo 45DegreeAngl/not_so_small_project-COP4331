@@ -4,7 +4,7 @@ import DashboardToDoTableCell from './DashboardToDoTableCell'
 function DashboardToDoTable(){
     
     return(
-      <table class = "table table-bordereless">
+      <table class = "table table-bordereless" id="taskTableHeader">
         <thead>
             <tr>
                 <th  width="15%" scope='col'>Due Date</th>
@@ -13,7 +13,7 @@ function DashboardToDoTable(){
                 <th width="25%" scope='col'>Owner</th>
             </tr>
         </thead>
-        <tbody class = "table-group-divider">
+        <tbody class = "table-group-divider" id="taskTableBody">
             
         </tbody>
       </table>

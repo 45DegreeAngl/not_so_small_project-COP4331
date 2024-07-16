@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 import './Login.css';
 const app_name = 'ganttify-5b581a9c8167';
 
@@ -34,10 +33,11 @@ function Login() {
 
       var res = JSON.parse(await response.text());
 
-      if (res.error != "") {
+      if (res.error !== "") {
         setMessage(res.error);
       } else {
         var user = {
+            _id:res._id,
             email: res.email,
             name: res.name,
             username: res.username,
@@ -46,8 +46,8 @@ function Login() {
             toDoList: res.toDoList,
             error: res.error};
         localStorage.setItem('user_data', JSON.stringify(user));
-        const secret = process.env.JWT_SECRET + user.password;
-        const token = jwt.sign({ email: user.email, id: user._id }, secret, {expiresIn: "100m",});
+        console.log(user._id);
+        
 
         setMessage('');
         window.location.href = '/dashboard';

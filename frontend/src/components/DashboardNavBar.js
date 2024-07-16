@@ -23,6 +23,7 @@ function DasboardNavBar()
 
         var obj = {founderId:userId,nameProject:newProjectName.value};
         var js = JSON.stringify(obj);
+        console.log(js);
         try
         {
             const response = await fetch(buildPath('api/createproject'),
@@ -31,7 +32,7 @@ function DasboardNavBar()
             var txt = await response.text();
             var res = JSON.parse(txt);
 
-            if( res.error.length > 0 )
+            if( res.error != null )
             {
                 setMessage( "API Error:" + res.error );
             }

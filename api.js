@@ -96,6 +96,7 @@ router.post("/login", async (req, res) => {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) {
         res.status(200).json({
+          _id: user._id,
           email: user.email,
           name: user.name,
           username: user.username,
@@ -263,8 +264,8 @@ router.post("/createproject", async (req, res) => {
   } = req.body;
   let error = "";
 
-  if (!nameProject || !team || !founderId || !group) {
-    error = "Project name, team, founder ID, and group are required";
+  if (!nameProject || !founderId) {
+    error = "Project name is required";
     return res.status(400).json({ error });
   }
 
@@ -275,12 +276,12 @@ router.post("/createproject", async (req, res) => {
     const newProject = {
       nameProject,
       dateCreated: new Date(),
-      team: new ObjectId(team),
-      tasks: tasks.map((id) => new ObjectId(id)),
+      team: new ObjectId(),
+      tasks: null,
       isVisible,
       founderId: new ObjectId(founderId),
       flagDeletion,
-      group: new ObjectId(group),
+      group: [new ObjectId()],
     };
 
     const project = await projectCollection.insertOne(newProject);
@@ -308,6 +309,24 @@ router.get("/readprojects", async (req, res) => {
     res.status(500).json({ error });
   }
 });
+//-----------------> Read a specific project <-----------------//
+router.post("/readproject", async (req, res) => {
+    let error = "";
+    const{
+        _id
+    }=req.body;
+    try {
+      const db = client.db("ganttify");
+      const projectCollection = db.collection("projects");
+  
+      const project = await projectCollection.findOne({_id:_id});
+      res.status(200).json(project);
+    } catch (error) {
+      console.error("Error finding project:", error);
+      error = "Internal server error";
+      res.status(500).json({ error });
+    }
+  });
 
 //-----------------> Update Project <-----------------//
 router.put("/projects/:id", async (req, res) => {
@@ -523,13 +542,14 @@ router.post('/reset-password', async (req, res) =>
 
 //-> Search Project by Title & Sort by Due Date <-//
 router.post("/search/projects", async (req, res) => {
-  const { title, sortBy = "dueDate" } = req.body;
+    //need to also add functionality for teamId, we'll get there
+  const { founderId,title, sortBy = "dueDate" } = req.body;
 
   try {
     const db = client.db("ganttify");
     const projectCollection = db.collection("projects");
 
-    const query = { nameProject: { $regex: title, $options: "i" } };
+    const query = { founderId:new ObjectId(founderId), nameProject: { $regex: title, $options: "i" } };
     const sortOptions = { [sortBy]: 1 }; // 1 for ascending, -1 for descending
 
     const projects = await projectCollection
@@ -569,13 +589,14 @@ router.post("/search/categories", async (req, res) => {
 
 // Search Task by Name, Due Date, (Sort by Completion Percentage)
 router.post("/search/tasks", async (req, res) => {
-  const { name, dueDate, sortBy = "completionPercentage" } = req.body;
+    //need to also add functionality for teamId, we'll get there
+  const {founderId, name, dueDate, sortBy = "completionPercentage" } = req.body;
   const query = {};
 
   if (name) {
-    query.description = { $regex: name, $options: "i" };
+    query.description = { founderId:founderId,$regex: name, $options: "i" };
   }
-  if (dueDate) {
+  else if (dueDate) {
     query.dueDateTime = { $gte: new Date(dueDate) };
   }
 
