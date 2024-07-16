@@ -84,18 +84,14 @@ function ContentBox(props){
 
                 <div class = "endTag">
                     <h1 class = "title">
-                        Learn about the Team.
                         <ul class = "align">
-                            <li><Link to="/about-us"><button class = "button">About Us</button></Link></li>
-                        </ul>                        
+                            <li>Learn More</li>
+                            <li><a href = "/about-us"><button class="button">About Us</button></a></li>
+                        </ul>                
                     </h1>
                 </div>
-
-
             </div>
-
-
-            
+  
         );
     }
 }
