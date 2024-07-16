@@ -66,7 +66,7 @@ router.post("/register", async (req, res) => {
     const secret = process.env.JWT_SECRET + hashedPassword;
     const token = jwt.sign({email: newUser.email}, secret, {expiresIn: "5m",} );
 
-    let link = `https://ganttify-5b581a9c8167.herokuapp.com/verify-user/${email}/${token}`;
+    let link = `https://ganttify-5b581a9c8167.herokuapp.com/verify-email/${email}/${token}`;
 
 
     const transporter = nodeMailer.createTransport({
