@@ -23,6 +23,8 @@ let client;
 // In-memory array to store users
 let userList = [];
 
+let tempUsers = [];
+
 //-----------------> Register Endpoint <-----------------//
 router.post("/register", async (req, res) => {
   const { email, name, phone, password, username } = req.body;
@@ -44,6 +46,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error });
     }
 
+
     // Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -58,17 +61,133 @@ router.post("/register", async (req, res) => {
       toDoList: [],
     };
 
-    userList.push(newUser);
+    tempUsers.push(newUser);
 
-    await userCollection.insertOne(newUser);
+    const secret = process.env.JWT_SECRET + hashedPassword;
+    const token = jwt.sign({email: newUser.email}, secret, {expiresIn: "5m",} );
 
-    res.status(201).json({ error: "" });
+    let link = `https://ganttify-5b581a9c8167.herokuapp.com/verify-email/${email}/${token}`;
+
+
+    const transporter = nodeMailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.USER_EMAIL,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+
+    let mailDetails = {
+      from: process.env.USER_EMAIL,
+      to: email,
+      subject: 'Verify Your Ganttify Account',
+      text: `Hello ${newUser.name},\n Please verify your Ganttify account by clicking the following link: ${link}`,
+      html: `<p>Hello ${newUser.name},</p> <p>Please verify your Ganttify account by clicking the following link:\n</p> <a href="${link}" className="btn">Verify Account</a>`
+    };
+
+
+    transporter.sendMail(mailDetails, function (err, data) {
+      if (err) {
+        return res.status(500).json({ error: 'Error sending verification email' });
+      } else {
+        return res.status(200).json({ message: 'Verification email sent' });
+      }
+    });
   } catch (error) {
-    console.error("Registration error:", error);
-    error = "Internal server error";
-    res.status(500).json({ error });
+    console.error('An error has occurred:', error);
+    return res.status(500).json({ error });
+  }
+
+
+  res.status(201).json({ error: "" });
+  
+});
+
+
+router.post('/verify-email', async (req, res) => {
+  const { email, token } = req.body;
+
+
+  try {
+
+    let user = tempUsers.find(userEmail => userEmail.email === email);
+    if (!user) {
+      return res.status(404).send("User was not found");
+    }
+
+ 
+    const secret = process.env.JWT_SECRET + user.password;
+    try {
+      jwt.verify(token, secret);
+    } catch (error) {
+      return res.status(403).send("Invalid or expired token");
+    }
+
+  
+  
+    const db = client.db("ganttify");
+    const userCollection = db.collection("userAccounts");
+    const userCheck = await userCollection.findOne({ email });
+    if (userCheck) {
+      res.status(200).json({ message: "User already exists" });
+      return;
+    }
+    await userCollection.insertOne(user);
+
+    userList.push(user);
+
+
+
+    let index = tempUsers.indexOf(user);
+    if (index > -1) {
+      tempUsers.splice(index, 1);
+    }
+
+
+    return res.status(200).json({ message: "Email verified and account created successfully" });
+    
+
+  } catch (error) {
+    res.status(403).json({ error: "Server error occurred" });
   }
 });
+
+
+router.get('/verify-email/:email/:token', async (req, res) => { 
+
+  const { email, token } = req.params;
+
+
+  try {
+
+    let user = tempUsers.find(
+      userEmail => userEmail.email === email
+    )
+
+
+    if (user) {
+      const secret = process.env.JWT_SECRET + user.password;
+  
+      try {
+
+        jwt.verify(token, secret);
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+
+  
+      } catch (error) {
+        res.send("Invalid or expired token");
+      }
+    } 
+  
+    else{
+      return res.status(404).send("User does not exist");
+    }
+  } catch(error) {
+    console.error('Error during verification:', error);
+    res.status(400).send("Invalid ID format");
+  }
+});
+
 
 //-----------------> User List Endpoint <-----------------//
 router.get("/userlist", (req, res) => {
@@ -411,7 +530,6 @@ router.post('/forgot-password', async (req, res) =>
 
   try{
 
-    await client.connect();
     const db = client.db('ganttify');
     const results = db.collection('userAccounts');
     const user = await results.findOne({email});
@@ -422,7 +540,10 @@ router.post('/forgot-password', async (req, res) =>
       const secret = process.env.JWT_SECRET + user.password;
       const token = jwt.sign({email: user.email, id: user._id}, secret, {expiresIn: "2m",} );
 
-      let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
+      //let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
+      let link = `http://localhost:3000/reset-password/${user._id}/${token}`;
+
+      
 
       const transporter = nodeMailer.createTransport({
         service: 'gmail',
@@ -456,20 +577,18 @@ router.post('/forgot-password', async (req, res) =>
   } catch (error) {
     console.error('An error has occurred:', error);
     return res.status(500).json({ error });
-  } finally {
-    await client.close();
-  }
+  } 
 });
   
 router.get('/reset-password/:id/:token', async (req, res) => 
 {
+
   const { id, token } = req.params;
 
   try {
 
     const objectId = new ObjectId(id);
   
-    await client.connect();
     const db = client.db('ganttify');
     const results = db.collection('userAccounts');
     const user = await results.findOne({_id: objectId});
@@ -505,7 +624,6 @@ router.post('/reset-password', async (req, res) =>
   let error = '';
 
   try {
-    await client.connect();
     const db = client.db('ganttify');
     const objectId = ObjectId.createFromHexString(id); 
     const userCollection = db.collection('userAccounts');
@@ -531,9 +649,7 @@ router.post('/reset-password', async (req, res) =>
     console.error('Error occured during password reset:', error);
     error = 'Internal server error';
     res.status(500).json({ error });
-  } finally {
-    await client.close();
-  }
+  } 
 });
 
 //////////////////////
