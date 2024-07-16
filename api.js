@@ -684,9 +684,8 @@ router.post('/forgot-password', async (req, res) =>
       const secret = process.env.JWT_SECRET + user.password;
       const token = jwt.sign({email: user.email, id: user._id}, secret, {expiresIn: "2m",} );
 
-      //let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
-      let link = `http://localhost:3000/reset-password/${user._id}/${token}`;
-
+      let link = `https://ganttify-5b581a9c8167.herokuapp.com/reset-password/${user._id}/${token}`;
+     
       
 
       const transporter = nodeMailer.createTransport({
