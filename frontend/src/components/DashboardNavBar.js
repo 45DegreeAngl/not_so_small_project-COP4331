@@ -52,7 +52,6 @@ function DasboardNavBar()
                 <a id ="ToDo List" class = "btn navBtn navBtn" href="/dashboard"><span class = "navBtnText">To Do List</span></a>
                 <button id ="Create Project" class ="btn navBtn" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span class = "navBtnText">Create Project</span></button> 
                 <a id ="Recently Deleted" class ="btn navBtn" href="/dashboard/recently-deleted"><span class = "navBtnText">Recently Deleted</span></a>
-                <a>{message}</a>
 
                 <div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

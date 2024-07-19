@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import './DashboardToDo.css';
 import { useRoutes } from 'react-router-dom';
 const app_name = 'ganttify-5b581a9c8167'
@@ -36,56 +36,64 @@ function toDisplayDate(date){
     if(day -  thisDay== 1){return "tomorrow"}
     return date;
 }
+
 function DashboardToDo(){
     var search = ""
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud._id;
     var displayedTasks = [];
+    var tasks = [];
+    
+    const [taskList,setTaskList] = useState([]);
+    const [taskId,setTaskId] = useState("");
 
-    const [taskDescription,setTaskDescription] = useState("");
-    const [taskTitle,setTaskTitle] = useState("");
-    const [taskUsers,setTaskUsers] = useState([]);
-    const [taskProgress,setTaskProgress] = useState("");
-    const [taskDueDate,setTaskDueDate] = useState("");
-    const [projectName,setProjectName] = useState("");
+    const taskModal = document.getElementById("taskModal")
 
     const getTasks = async event =>{
         var obj= {userId:userId};
         var js = JSON.stringify(obj);
         try
         {   
+            //get list of tasks user is assigned to 
             const response1 = await fetch(buildPath('api/search/tasks/todo'),
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            //get list of projects to get project info for tasks
             const respone2 = await fetch(buildPath("api/readprojects"),
             {method:'GET',headers:{'Content-Type': 'application/json'}});
             var txt1 = await response1.text();
             var res1 = JSON.parse(txt1);
             var txt2 = await respone2.text();
             var res2 = JSON.parse(txt2);
-            //console.log(res2);
+            //create table for tasks
             res1.forEach(element => {
                 if(displayedTasks.includes(element._id)){
                     return;
                 }
                 displayedTasks.push(element._id);
+                //get all info relevant info  for respecitve task
                 let currTaskId = element._id;
                 let currTaskTitle = element.taskTitle;
                 let currTaskDescription = element.description;
-                //console.log(currTaskTitle);
+                let currTaskWorkers = element.assignedTasksUsers;
                 let currDueDate = toDate(element.dueDateTime);
-                //console.log(currDueDate);
                 let currProjectId = element.tiedProjectId;
-                //console.log(currProjectId);
                 let currTaskProgress = element.progress
-                //console.log(currTaskProgress);
                 let currProject = res2.filter(project => project._id === currProjectId);
-                //console.log(currProject);
                 let currProjectName = currProject[0].nameProject;
-                //console.log(currProjectName);
                 let currProjectOwnerId = currProject[0].founderId;
-                //console.log(currProjectOwnerId);
-                
+                tasks.push({
+                    _id:currTaskId,
+                    taskTitle:currTaskTitle,
+                    description:currTaskDescription,
+                    users:currTaskWorkers,
+                    dueDate:currDueDate,
+                    projectId:currProjectId,
+                    projectName:currProjectName,
+                    progress:currTaskProgress,
+                    projectOwnerId:currProjectOwnerId
+                });
+                //create row and respective columns
                 const tableBody = document.getElementById("taskTableBody");
                 const newRow = document.createElement("tr");
 
@@ -101,15 +109,18 @@ function DashboardToDo(){
                 const projectNameCol = document.createElement("td");
                 projectNameCol.innerText = currProjectName;
 
-                const actionsCol = document.createElement("td");
-                actionsCol.innerHTML = `<button class = "btn actionsBtn" onClick={${displayTask(currTaskTitle,currTaskProgress,currProjectName,currDueDate,currProjectId,currTaskId,currTaskDescription)}} data-bs-toggle="modal" data-bs-target="#taskModal"/>`
+                //create button that can 
+                const buttonCol = document.createElement("td");
+                buttonCol.innerHTML = `<button onclick=${setTaskId(element._id)}></button>`;
 
                 newRow.appendChild(dueDateCol);
                 newRow.appendChild(taskNameCol);
                 newRow.appendChild(projectNameCol)
                 newRow.appendChild(progressCol);
-                newRow.appendChild(actionsCol);
+                newRow.appendChild(buttonCol);
                 tableBody.append(newRow);
+
+                setTaskList(tasks)
             });
 
         }
@@ -134,13 +145,12 @@ function DashboardToDo(){
         }
 
     }
-    function displayTask(currTaskTitle,currTaskProgress,currProjectName,currDueDate,currProjectId,currTaskId,currTaskDescription){
-        setTaskTitle(currTaskTitle);
-        setTaskDescription(currTaskDescription);
-        setProjectName(currProjectName);
-        return;
+    function displayTaskModal(){
+        console.log(taskId);
     }
     useLayoutEffect(()=>{getTasks()},[]);
+    useEffect(()=>{displayTaskModal()},[taskId]);
+    
     return(
         <div class ="container-fluid">
             <div class = "container px-0 mt-5 mx-0 mainContainer">
@@ -158,19 +168,20 @@ function DashboardToDo(){
                         </tr>
                     </thead>
                     <tbody class = "table-group-divider" id="taskTableBody">
-                        
+                        <script>
+                            
+                        </script>
                     </tbody>
                 </table>
                 <div class="modal" tabindex="-1" id="taskModal">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h3 class="modal-title">{taskTitle}</h3>
-                                <h5 class =" modal-title modalSubTitle">{projectName}</h5>
+                                <h3 class="modal-title"><h5 class="modal-title"></h5></h3>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p>{taskDescription}</p>
+                                <p></p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary">yes</button>

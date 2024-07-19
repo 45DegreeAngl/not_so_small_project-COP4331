@@ -193,6 +193,43 @@ router.get('/verify-email/:email/:token', async (req, res) => {
 router.get("/userlist", (req, res) => {
   res.status(200).json({ users: userList });
 });
+//-----------Read Users Endpoint----------------//
+router.post("/read/users", async (req, res) => {
+    const { users } = req.body;
+    let error = "";
+    var usersInfo = [];
+    
+    if (!users) {
+        error = "User ids are required";
+        return res.status(400).json({ error });
+    }
+  
+    try {
+        for(let i = 0;i<users.length;i++){
+            const db = client.db("ganttify");
+            const results = db.collection("userAccounts");
+        
+            // Find user by email
+            const user = await results.findOne({ _id:new ObjectId(users[i])});
+            usersInfo.push(user);
+        }
+
+        if(!userList){
+            error = "no users found";
+            res.status(400).json({error});
+        }
+        else{
+            res.status(200).json({usersInfo,error});
+        }
+        
+    }
+    catch (error) {
+        console.error("Login error:", error);
+        error = "Internal server error";
+        res.status(500).json({ error });
+    }
+  });
+
 
 //-----------------> Login Endpoint <-----------------//
 router.post("/login", async (req, res) => {

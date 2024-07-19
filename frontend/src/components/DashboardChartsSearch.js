@@ -22,11 +22,17 @@ function DashboardChartsSearch(){
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud._id;
+   
 
-    const [chartsToDisplay, setChartsToDisplay] = useState(<DashboardCharts projects={empty}/>);
-
+    
     const doProjectSearch = async event =>{
-        var obj = {founderId:userId,title:search.value};
+        var obj;
+        if(search.value){
+            obj = {founderId:userId,title:search.value};
+        }
+        else{
+            obj = {founderId:userId,title:""};
+        }
         var js = JSON.stringify(obj);
         try
         {   
@@ -36,12 +42,8 @@ function DashboardChartsSearch(){
             var txt = await response.text();
             var res = JSON.parse(txt);
             //get list of project names and pass as prop to child
-            var projectNames = [];
             if(res.length>0){
-                for(var i = 0; i<res.length;i++){
-                    projectNames[i] = res[i].nameProject;
-                }
-                setChartsToDisplay(<DashboardCharts projects={projectNames}/>);
+                setChartsToDisplay(<DashboardCharts projects={res}/>);
             }
             else{
                 setChartsToDisplay(<DashboardCharts projects={empty}/>);
@@ -52,6 +54,8 @@ function DashboardChartsSearch(){
             alert(e.toString());
         }
     }
+    const [chartsToDisplay, setChartsToDisplay] = useState(<DashboardCharts projects={empty}/>);
+
 
     //do an empty search before page renders
     useLayoutEffect(()=>{doProjectSearch()},[]);
