@@ -35,3 +35,14 @@ body{
     border: none;
     visibility: hidden;
 }
+.taskBtn{
+    border:none;
+    background: none;
+    color:none;
+    font-size:x-large;
+    padding: 0;
+    margin: 0;
+}
+.modalSubTitle{
+    float:bottom;
+}

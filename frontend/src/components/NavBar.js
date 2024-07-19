@@ -71,7 +71,6 @@ function NavBar(props)
 
                     <h1> Dashboard </h1>
                     <ul>
-                        <li><Link to="/register"><button id = "button">Account Settings</button></Link></li>
                         <li><Link to="/"><button id = "button" >Sign Out</button></Link></li>
                     </ul>
                 </div>                
