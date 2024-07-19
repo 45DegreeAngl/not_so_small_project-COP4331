@@ -182,6 +182,28 @@ function DashboardToDo() {
             alert(error);
         }
     }
+    const doMarkTaskStarted = async event => {
+        console.log(taskToDisplay['taskTitle'] + " is complete");
+        var error = "";
+        var obj = {progress:"In-Progress"};
+        var js = JSON.stringify(obj);
+
+        try{
+            const response = await fetch(buildPath('api/tasks/'+taskToDisplay['_id']),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+            var txt = await response.text();
+            var res = JSON.parse(txt);
+            if(res.acknowledged){
+                window.location.assign(window.location.pathname);
+            }
+            else{
+                error = "Failed to update project visibility"
+                alert(error);
+            }
+        }
+        catch(e){
+            alert(error);
+        }
+    }
     useLayoutEffect(() => { getTasks() }, []);
     //useEffect(() => { setToDoList() }, [taskList])
     return (
