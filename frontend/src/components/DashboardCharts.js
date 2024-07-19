@@ -404,7 +404,7 @@ function DashboardCharts({ projects }) {
                                     <button class="projectBtn">{chart1.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart1()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart1()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart1.project.nameProject}</h5>
-                                <p class="card-text">Owner: {userId.toString().localeCompare((chart1.project.founderId.toString()) === 0) ? meText : friendText} {chart1.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart1.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart1.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -418,7 +418,7 @@ function DashboardCharts({ projects }) {
                                     <button class="projectBtn">{chart2.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart2.project.nameProject}</h5>
-                                <p class="card-text">Owner: {userId.toString().localeCompare((chart2.project.founderId.toString()) === 0) ? meText : friendText} {chart2.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart2.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart2.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -432,7 +432,7 @@ function DashboardCharts({ projects }) {
                                     <button class="projectBtn">{chart3.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart3.project.nameProject}</h5>
-                                <p class="card-text">Owner: {userId.toString().localeCompare((chart3.project.founderId.toString()) === 0) ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner:{chart3.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -448,7 +448,7 @@ function DashboardCharts({ projects }) {
                                     <button class="projectBtn">{chart4.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart4.project.nameProject}</h5>
-                                <p class="card-text">Owner: {userId.toString().localeCompare((chart4.project.founderId.toString()) === 0) ? meText : friendText} {chart4.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart4.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart4.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -462,7 +462,7 @@ function DashboardCharts({ projects }) {
                                     <button class="projectBtn">{chart5.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart5()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart5()} />}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart5.project.nameProject}</h5>
-                                <p class="card-text">Owner: {userId.toString().localeCompare((chart5.project.founderId.toString()) === 0) ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner:{chart5.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -476,7 +476,7 @@ function DashboardCharts({ projects }) {
                                     <button class="projectBtn">{chart6.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart6()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart6()} />}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart6.project.nameProject}</h5>
-                                <p class="card-text">Owner: {userId.toString().localeCompare((chart6.project.founderId.toString()) === 0) ? meText : friendText} {chart6.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart6.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart6.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>

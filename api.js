@@ -838,27 +838,55 @@ router.post('/reset-password', async (req, res) =>
 
 //-> Search Project by Title & Sort by Due Date <-//
 router.post("/search/projects", async (req, res) => {
-    //need to also add functionality for teamId, we'll get there
-  const { founderId,title, sortBy = "dueDate" } = req.body;
 
-  try {
-    const db = client.db("ganttify");
-    const projectCollection = db.collection("projects");
-
-    const query = { founderId:new ObjectId(founderId), nameProject: { $regex: title, $options: "i" } };
-    const sortOptions = { [sortBy]: 1 }; // 1 for ascending, -1 for descending
-
-    const projects = await projectCollection
-      .find(query)
-      .sort(sortOptions)
-      .toArray();
-
-    res.status(200).json(projects);
-  } catch (error) {
-    console.error("Error searching projects:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+    const { founderId, title, sortBy = "dueDate" } = req.body;
+  
+    try {
+      const db = client.db("ganttify");
+      const projectCollection = db.collection("projects");
+      const teamCollection = db.collection("team");
+  
+      const teams = await teamCollection.find({
+        $or: [
+          { founderId: new ObjectId(founderId) },
+          { editor: new ObjectId(founderId) },
+          { member: new ObjectId(founderId) }
+        ]
+      }).toArray();
+  
+      console.log("These are the teams: ", teams);
+  
+      const teamIds = teams.map(team => new ObjectId(team._id));
+  
+      console.log("These are the team IDs: ", teamIds);
+  
+      const query = {
+        $or: [
+          { founderId: new ObjectId(founderId) },
+          { team: { $in: teamIds } }
+        ],
+        nameProject: { $regex: title, $options: "i" }
+      };
+  
+      console.log("These are the query: ", query);
+  
+      const sortOptions = { [sortBy]: 1 }; // 1 for ascending, -1 for descending
+  
+      const projects = await projectCollection
+        .find(query)
+        .sort(sortOptions)
+        .toArray();
+  
+      res.status(200).json(projects);
+  
+      console.log("These are the projects: ", projects);
+  
+    } catch (error) {
+      console.error("Error searching projects:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }); 
+  
 
 //-> Search Categories by Title and Sort by Completion Percentage <-//
 router.post("/search/categories", async (req, res) => {
@@ -945,8 +973,8 @@ router.post("/search/tasks/todo", async (req, res) => {
       const query = {
         assignedTasksUsers: new ObjectId(userId),
       };
-  
-      const tasks = await taskCollection.find(query).toArray();
+      
+      const tasks = await taskCollection.find(query).sort({dueDateTime: 1}).toArray();
   
       res.status(200).json(tasks);
     } catch (error) {
