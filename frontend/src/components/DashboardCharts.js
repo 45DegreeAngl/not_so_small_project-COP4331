@@ -143,7 +143,6 @@ function DashboardCharts({ projects }) {
         setChartListPage(chartListPage - 1);
     }
     const doProjectDelete = async event =>{
-        console.log("Deleting: "+projectToDelete.nameProject);
         try
         {   
             const response = await fetch(buildPath('api/projects/'+projectToDelete._id.toString()),
@@ -159,6 +158,235 @@ function DashboardCharts({ projects }) {
             alert(e.toString());
         }
     }
+    //when project is deleted, page is refreshed
+    const handleProjectDeleted = () =>{
+        if(projectIsDeleted){
+            setProjectIsDeleted(false);
+            window.location.assign(window.location.pathname);
+        }
+        
+    }
+    const toggleProjectVisibilityChart1 = async event =>{
+        console.log("");
+        var newVisibility;
+        var error = ""
+        if(chart1 && chart1.project&& chart1.project.isVisible === 1){
+            newVisibility = 0;
+        }
+        else if (chart1 && chart1.project&& chart1.project.isVisible === 0){
+            newVisibility = 1;
+        }
+        else{
+            newVisibility = -1;
+            error = "No project to toggle visibilty for";
+            alert(error);
+        }
+        if(newVisibility != -1){
+            var obj = {isVisible:newVisibility};
+            var js = JSON.stringify(obj);
+            try{
+                const response = await fetch(buildPath('api/projects/'+chart1.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                var txt = await response.text();
+                var res = JSON.parse(txt);
+                if(res.acknowledged){
+                    window.location.assign(window.location.pathname);
+                }
+                else{
+                    error = "Failed to update project visibility"
+                    alert(error);
+                }
+            }
+            catch(e){
+                error = "API ERROR: "+e.toString();
+                alert(error);
+            }
+        }
+    }
+    const toggleProjectVisibilityChart2 = async event =>{
+        console.log("");
+        var newVisibility;
+        var error = ""
+        if(chart2 && chart2.project&& chart2.project.isVisible === 1){
+            newVisibility = 0;
+        }
+        else if (chart2 && chart2.project&& chart2.project.isVisible === 0){
+            newVisibility = 1;
+        }
+        else{
+            newVisibility = -1;
+            error = "No project to toggle visibilty for";
+            alert(error);
+        }
+        if(newVisibility != -1){
+            var obj = {isVisible:newVisibility};
+            var js = JSON.stringify(obj);
+            try{
+                const response = await fetch(buildPath('api/projects/'+chart2.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                var txt = await response.text();
+                var res = JSON.parse(txt);
+                if(res.acknowledged){
+                    window.location.assign(window.location.pathname);
+                }
+                else{
+                    error = "Failed to update project visibility"
+                    alert(error);
+                }
+            }
+            catch(e){
+                error = "API ERROR: "+e.toString();
+                alert(error);
+            }
+        }
+    }
+
+    const toggleProjectVisibilityChart3 = async event =>{
+        console.log("");
+        var newVisibility;
+        var error = ""
+        if(chart3 && chart3.project&& chart3.project.isVisible === 1){
+            newVisibility = 0;
+        }
+        else if (chart3 && chart3.project&& chart3.project.isVisible === 0){
+            newVisibility = 1;
+        }
+        else{
+            newVisibility = -1;
+            error = "No project to toggle visibilty for";
+            alert(error);
+        }
+        if(newVisibility != -1){
+            var obj = {isVisible:newVisibility};
+            var js = JSON.stringify(obj);
+            try{
+                const response = await fetch(buildPath('api/projects/'+chart3.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                var txt = await response.text();
+                var res = JSON.parse(txt);
+                if(res.acknowledged){
+                    window.location.assign(window.location.pathname);
+                }
+                else{
+                    error = "Failed to update project visibility"
+                    alert(error);
+                }
+            }
+            catch(e){
+                error = "API ERROR: "+e.toString();
+                alert(error);
+            }
+        }
+    }
+    const toggleProjectVisibilityChart4 = async event =>{
+        console.log("");
+        var newVisibility;
+        var error = ""
+        if(chart4 && chart4.project&& chart4.project.isVisible === 1){
+            newVisibility = 0;
+        }
+        else if (chart4 && chart4.project&& chart4.project.isVisible === 0){
+            newVisibility = 1;
+        }
+        else{
+            newVisibility = -1;
+            error = "No project to toggle visibilty for";
+            alert(error);
+        }
+        if(newVisibility != -1){
+            var obj = {isVisible:newVisibility};
+            var js = JSON.stringify(obj);
+            try{
+                const response = await fetch(buildPath('api/projects/'+chart4.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                var txt = await response.text();
+                var res = JSON.parse(txt);
+                if(res.acknowledged){
+                    window.location.assign(window.location.pathname);
+                }
+                else{
+                    error = "Failed to update project visibility"
+                    alert(error);
+                }
+            }
+            catch(e){
+                error = "API ERROR: "+e.toString();
+                alert(error);
+            }
+        }
+    }
+    const toggleProjectVisibilityChart5 = async event =>{
+        console.log("");
+        var newVisibility;
+        var error = ""
+        if(chart5 && chart5.project&& chart5.project.isVisible === 1){
+            newVisibility = 0;
+        }
+        else if (chart5 && chart5.project&& chart5.project.isVisible === 0){
+            newVisibility = 1;
+        }
+        else{
+            newVisibility = -1;
+            error = "No project to toggle visibilty for";
+            alert(error);
+        }
+        if(newVisibility != -1){
+            var obj = {isVisible:newVisibility};
+            var js = JSON.stringify(obj);
+            try{
+                const response = await fetch(buildPath('api/projects/'+chart5.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                var txt = await response.text();
+                var res = JSON.parse(txt);
+                if(res.acknowledged){
+                    window.location.assign(window.location.pathname);
+                }
+                else{
+                    error = "Failed to update project visibility"
+                    alert(error);
+                }
+            }
+            catch(e){
+                error = "API ERROR: "+e.toString();
+                alert(error);
+            }
+        }
+    }
+    const toggleProjectVisibilityChart6 = async event =>{
+        console.log("");
+        var newVisibility;
+        var error = ""
+        if(chart6 && chart6.project&& chart6.project.isVisible === 1){
+            newVisibility = 0;
+        }
+        else if (chart6 && chart6.project&& chart6.project.isVisible === 0){
+            newVisibility = 1;
+        }
+        else{
+            newVisibility = -1;
+            error = "No project to toggle visibilty for";
+            alert(error);
+        }
+        if(newVisibility != -1){
+            var obj = {isVisible:newVisibility};
+            var js = JSON.stringify(obj);
+            try{
+                const response = await fetch(buildPath('api/projects/'+chart6.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                var txt = await response.text();
+                var res = JSON.parse(txt);
+                if(res.acknowledged){
+                    window.location.assign(window.location.pathname);
+                }
+                else{
+                    error = "Failed to update project visibility"
+                    alert(error);
+                }
+            }
+            catch(e){
+                error = "API ERROR: "+e.toString();
+                alert(error);
+            }
+        }
+    }
+
+
+
+
 
 
     //whenever projects is updated by the parent component, rerender charts
@@ -173,7 +401,7 @@ function DashboardCharts({ projects }) {
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart1.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
                                     <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart1.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart1.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon" /> : <InvisibleProjectIcon class="btnIcon" />}</button></div>
+                                    <button class="projectBtn">{chart1.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart1()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart1()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart1.project.nameProject}</h5>
                                 <p class="card-text">Owner: {userId.toString().localeCompare((chart1.project.founderId.toString()) === 0) ? meText : friendText} {chart1.project.isVisible === 1 ? publicText : privateText}</p>
@@ -187,7 +415,7 @@ function DashboardCharts({ projects }) {
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart2.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
                                     <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart2.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart2.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon" /> : <InvisibleProjectIcon class="btnIcon" />}</button></div>
+                                    <button class="projectBtn">{chart2.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart2.project.nameProject}</h5>
                                 <p class="card-text">Owner: {userId.toString().localeCompare((chart2.project.founderId.toString()) === 0) ? meText : friendText} {chart2.project.isVisible === 1 ? publicText : privateText}</p>
@@ -201,7 +429,7 @@ function DashboardCharts({ projects }) {
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart3.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
                                     <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart3.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart3.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon" /> : <InvisibleProjectIcon class="btnIcon" />}</button></div>
+                                    <button class="projectBtn">{chart3.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart3.project.nameProject}</h5>
                                 <p class="card-text">Owner: {userId.toString().localeCompare((chart3.project.founderId.toString()) === 0) ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
@@ -217,7 +445,7 @@ function DashboardCharts({ projects }) {
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart4.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
                                     <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart4.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart4.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon" /> : <InvisibleProjectIcon class="btnIcon" />}</button></div>
+                                    <button class="projectBtn">{chart4.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart4.project.nameProject}</h5>
                                 <p class="card-text">Owner: {userId.toString().localeCompare((chart4.project.founderId.toString()) === 0) ? meText : friendText} {chart4.project.isVisible === 1 ? publicText : privateText}</p>
@@ -231,7 +459,7 @@ function DashboardCharts({ projects }) {
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart5.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
                                     <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart5.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart5.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon" /> : <InvisibleProjectIcon class="btnIcon" />}</button></div>
+                                    <button class="projectBtn">{chart5.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart5()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart5()} />}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart5.project.nameProject}</h5>
                                 <p class="card-text">Owner: {userId.toString().localeCompare((chart5.project.founderId.toString()) === 0) ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
@@ -245,7 +473,7 @@ function DashboardCharts({ projects }) {
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart6.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
                                     <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart6.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart6.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon" /> : <InvisibleProjectIcon class="btnIcon" />}</button></div>
+                                    <button class="projectBtn">{chart6.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart6()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart6()} />}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart6.project.nameProject}</h5>
                                 <p class="card-text">Owner: {userId.toString().localeCompare((chart6.project.founderId.toString()) === 0) ? meText : friendText} {chart6.project.isVisible === 1 ? publicText : privateText}</p>
@@ -268,13 +496,13 @@ function DashboardCharts({ projects }) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="DeleteProjectModalLabel">{projectIsDeleted ? "Project was deleted succesfully" :"Are you sure you want to delete " + projectToDelete.nameProject+"?"}</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={()=>setProjectIsDeleted(false)}></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={()=>handleProjectDeleted()}></button>
                         </div>
                         <div class="modal-body">
                             {projectIsDeleted  ? "You can also delete your project from the recently deleted page manually":"Your project will me moved to your recently deleted page for X days, then it is deleted permanantly"}
                         </div>
                         <div class="modal-footer">
-                        {projectIsDeleted?  <button type="button" class="btn deleteModalBtn" data-bs-dismiss="modal" onClick={()=>setProjectIsDeleted(false)}>Got It!</button> : <button type="button" class="btn deleteModalBtn" onClick={doProjectDelete}>Yes, delete my project </button>}
+                        {projectIsDeleted?  <button type="button" class="btn deleteModalBtn" data-bs-dismiss="modal" onClick={()=>handleProjectDeleted()}>Got It!</button> : <button type="button" class="btn deleteModalBtn" onClick={doProjectDelete}>Yes, delete my project </button>}
                         </div>
                     </div>
                 </div>

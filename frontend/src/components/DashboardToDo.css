@@ -35,10 +35,13 @@ body{
     border: none;
     visibility: hidden;
 }
-.taskButton{
+.taskBtn{
     border:none;
-    display: inline-flex;
-    top:10px;
+    background: none;
+    color:none;
+    font-size:x-large;
+    padding: 0;
+    margin: 0;
 }
 .modalSubTitle{
     float:bottom;
