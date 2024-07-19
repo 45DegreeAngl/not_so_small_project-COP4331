@@ -973,8 +973,8 @@ router.post("/search/tasks/todo", async (req, res) => {
       const query = {
         assignedTasksUsers: new ObjectId(userId),
       };
-  
-      const tasks = await taskCollection.find(query).toArray();
+      
+      const tasks = await taskCollection.find(query).sort({dueDateTime: 1}).toArray();
   
       res.status(200).json(tasks);
     } catch (error) {

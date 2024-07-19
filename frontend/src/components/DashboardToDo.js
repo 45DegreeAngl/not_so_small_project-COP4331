@@ -67,6 +67,7 @@ function DashboardToDo() {
             var txt2 = await respone2.text();
             var res2 = JSON.parse(txt2);
             //create table for tasks
+            console.log(res1);
 
             for (i = 0; i < res1.length; i++) {
                 if (displayedTasks.includes(res1[i]._id) || taskList.includes(res1[i]._id)) {
@@ -131,7 +132,6 @@ function DashboardToDo() {
                 newRow.appendChild(actionCol);
                 tableBody.appendChild(newRow);
                 if(currTaskProgress.localeCompare("Done") === 0 && currDueDatePretty.localeCompare("PAST DUE") === 0){
-                    console.log("hiding" + i);
                     newRow.style.display = "None";
                 }
 
@@ -161,7 +161,6 @@ function DashboardToDo() {
 
     }
     const doMarkTaskComplete = async event => {
-        console.log(taskToDisplay['taskTitle'] + " is complete");
         var error = "";
         var obj = {progress:"Done"};
         var js = JSON.stringify(obj);
@@ -182,8 +181,7 @@ function DashboardToDo() {
             alert(error);
         }
     }
-    const doMarkTaskStarted = async event => {
-        console.log(taskToDisplay['taskTitle'] + " is complete");
+    const doMarkTaskInProgress = async event => {
         var error = "";
         var obj = {progress:"In-Progress"};
         var js = JSON.stringify(obj);
@@ -236,11 +234,13 @@ function DashboardToDo() {
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                             {taskToDisplay ? <div><p>{taskToDisplay['description']}</p>{taskToDisplay['progress'].localeCompare("DONE") === 0 ? null:<p>{taskToDisplay['dueDatePretty'].localeCompare("PAST DUE") === 0 ? "THIS TASK WAS DUE: "+ taskToDisplay['dueDateActual']: "Due: "+ taskToDisplay['dueDatePretty']}</p>}</div> : null}
+                             {taskToDisplay ? <div><p>{taskToDisplay['description']}</p>{taskToDisplay['progress'].localeCompare("Done") === 0 ? null:<p>{taskToDisplay['dueDatePretty'].localeCompare("PAST DUE") === 0 ? "THIS TASK WAS DUE: "+ taskToDisplay['dueDateActual']: "Due: "+ taskToDisplay['dueDatePretty']}</p>}</div> : null}
                             </div>
+                            {taskToDisplay? 
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" onClick={()=>doMarkTaskComplete()}>Mark Task Complete</button>
-                            </div>
+                                {(taskToDisplay['progress'].localeCompare("Done") === 0) ?  <button type="button" class="btn btn-primary" onClick={()=>doMarkTaskInProgress()}>Mark Task In Progress</button>:
+                                <button type="button" class="btn btn-primary" onClick={()=>doMarkTaskComplete()}>Mark Task Complete</button>}
+                            </div>:null}
                         </div>
                     </div>
                 </div>
