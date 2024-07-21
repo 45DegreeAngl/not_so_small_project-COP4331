@@ -52,7 +52,7 @@ function AboutUs() {
                     <h2>Aaron Nogues</h2>
                     <p>Mobile app developer</p>
                 </div>
-                <img src="./Images/assets/team_member_icons/AN.jpg" alt="Aaron Nogues" className="team-image"/>
+                <img src="../Images/assets/team_member_icons/AN.jpg" alt="Aaron Nogues" className="team-image"/>
             </div>
 
             <div className="team-member">
