@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './AboutUs.css';
-
+import member_an from '../Images/assets/team_member_icons/AN.jpg';
 const app_name = 'ganttify-5b581a9c8167';
 
 
@@ -52,7 +52,7 @@ function AboutUs() {
                     <h2>Aaron Nogues</h2>
                     <p>Mobile app developer</p>
                 </div>
-                <img src="../Images/assets/team_member_icons/AN.jpg" alt="Aaron Nogues" className="team-image"/>
+                <img src={member_an} alt="Aaron Nogues" className="team-image"/>
             </div>
 
             <div className="team-member">
