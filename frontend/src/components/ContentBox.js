@@ -27,11 +27,7 @@ function ContentBox(props){
                     </h1>
 
                     <p class = "textbox">
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-                    Aenean commodo ligula eget dolor. Aenean massa. 
-                    Cum sociis natoque penatibus et magnis dis parturient montes, 
-                    nascetur ridiculus mus. Donec quam felis, ultricies nec, 
-                    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+                    Take advantage of Ganttify's simple onboarding process to plan your day! Everyone gets Ganttify and all of its features for free. Simply sign up with a valid email address.
                     </p>
 
                     <a href = "/">
@@ -47,11 +43,9 @@ function ContentBox(props){
                     </a>
 
                     <p class = "textbox">
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-                    Aenean commodo ligula eget dolor. Aenean massa. 
-                    Cum sociis natoque penatibus et magnis dis parturient montes, 
-                    nascetur ridiculus mus. Donec quam felis, ultricies nec, 
-                    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+                    At Ganttify, there's only one plan: free, simple and accessible to everyone! Divide and conquer by assigning team members to tasks within a chart. 
+                    Use a color picker and pattern overlays for maximum visual constrast for task colors. 
+                    If you do not want other users to see or team members to join your chart, simply make it private.
                     </p>
 
                     <h1 class = "animated-header-2">
@@ -68,11 +62,7 @@ function ContentBox(props){
                     </h1>
 
                     <p class = "textbox">
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-                    Aenean commodo ligula eget dolor. Aenean massa. 
-                    Cum sociis natoque penatibus et magnis dis parturient montes, 
-                    nascetur ridiculus mus. Donec quam felis, ultricies nec, 
-                    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+                    Simply toggle a task to indicate if it's done. You can mark tasks as complete on desktop or in our companion app.
                     </p>
 
                     <a href = "/">
