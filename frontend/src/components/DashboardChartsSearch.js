@@ -23,8 +23,6 @@ function DashboardChartsSearch(){
     var ud = JSON.parse(_ud);
     var userId = ud._id;
    
-
-    
     const doProjectSearch = async event =>{
         var obj;
         if(search.value){
