@@ -1,19 +1,19 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
 import DashboardNavBar from '../components/DashboardNavBar';
-import DashboardChartsSearch from '../components/DashboardChartsSearch'
+import RecentlyDeletedSearch from '../components/RecentlyDeletedSearch'
 
-const DashboardChartsPage = () =>
+const  RecentlyDeletedPage = () =>
 {
     return(
       <div>
         <NavBar layout={2}/>
         <DashboardNavBar/>
         <div class = "container-fluid px-0 mx-0 py-0 mt-5 mb-0">
-            <DashboardChartsSearch/>
+            <RecentlyDeletedSearch/>
         </div>
       </div>
     );
 };
 
-export default DashboardChartsPage;
+export default RecentlyDeletedPage;

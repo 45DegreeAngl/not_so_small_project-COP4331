@@ -19,7 +19,7 @@ function buildPath(route)
 
 
 
-function DashboardCharts({ projects }) {
+function RecentlyDeletedCharts({ projects }) {
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud._id;
@@ -145,7 +145,7 @@ function DashboardCharts({ projects }) {
     const doProjectDelete = async event =>{
         try
         {   
-            const response = await fetch(buildPath('api/projects/'+projectToDelete._id.toString()),
+            const response = await fetch(buildPath('api/recently-deleted/'+projectToDelete._id.toString()),
             {method:'DELETE',headers:{'Content-Type': 'application/json'}});
 
             var txt = await response.text();
@@ -185,7 +185,7 @@ function DashboardCharts({ projects }) {
             var obj = {isVisible:newVisibility};
             var js = JSON.stringify(obj);
             try{
-                const response = await fetch(buildPath('api/projects/'+chart1.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                const response = await fetch(buildPath('api/recently-deleted/'+chart1.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
                 var txt = await response.text();
                 var res = JSON.parse(txt);
                 if(res.acknowledged){
@@ -221,7 +221,7 @@ function DashboardCharts({ projects }) {
             var obj = {isVisible:newVisibility};
             var js = JSON.stringify(obj);
             try{
-                const response = await fetch(buildPath('api/projects/'+chart2.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                const response = await fetch(buildPath('api/recently-deleted/'+chart2.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
                 var txt = await response.text();
                 var res = JSON.parse(txt);
                 if(res.acknowledged){
@@ -258,7 +258,7 @@ function DashboardCharts({ projects }) {
             var obj = {isVisible:newVisibility};
             var js = JSON.stringify(obj);
             try{
-                const response = await fetch(buildPath('api/projects/'+chart3.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                const response = await fetch(buildPath('api/recently-deleted/'+chart3.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
                 var txt = await response.text();
                 var res = JSON.parse(txt);
                 if(res.acknowledged){
@@ -294,7 +294,7 @@ function DashboardCharts({ projects }) {
             var obj = {isVisible:newVisibility};
             var js = JSON.stringify(obj);
             try{
-                const response = await fetch(buildPath('api/projects/'+chart4.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                const response = await fetch(buildPath('api/recently-deleted/'+chart4.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
                 var txt = await response.text();
                 var res = JSON.parse(txt);
                 if(res.acknowledged){
@@ -330,7 +330,7 @@ function DashboardCharts({ projects }) {
             var obj = {isVisible:newVisibility};
             var js = JSON.stringify(obj);
             try{
-                const response = await fetch(buildPath('api/projects/'+chart5.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                const response = await fetch(buildPath('api/recently-deleted/'+chart5.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
                 var txt = await response.text();
                 var res = JSON.parse(txt);
                 if(res.acknowledged){
@@ -366,7 +366,7 @@ function DashboardCharts({ projects }) {
             var obj = {isVisible:newVisibility};
             var js = JSON.stringify(obj);
             try{
-                const response = await fetch(buildPath('api/projects/'+chart6.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
+                const response = await fetch(buildPath('api/recently-deleted/'+chart6.project._id.toString()),{method:'PUT',body:js,headers:{'Content-Type': 'application/json'}});
                 var txt = await response.text();
                 var res = JSON.parse(txt);
                 if(res.acknowledged){
@@ -495,14 +495,15 @@ function DashboardCharts({ projects }) {
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="DeleteProjectModalLabel">{projectIsDeleted ? "Project was deleted succesfully" :"Are you sure you want to delete " + projectToDelete.nameProject+"?"}</h1>
+                            <h1 class="modal-title fs-5" id="DeleteProjectModalLabel">{projectIsDeleted ? "Project was deleted succesfully" :"Are you sure you want to delete " + projectToDelete.nameProject+" permanently?"}</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={()=>handleProjectDeleted()}></button>
                         </div>
+                        {projectIsDeleted?null:
                         <div class="modal-body">
-                            {projectIsDeleted  ? "You can also delete your project from the recently deleted page manually":"Your project will me moved to your recently deleted page for X days, then it is deleted permanantly"}
-                        </div>
+                            This action cannot be undone!
+                        </div>}
                         <div class="modal-footer">
-                        {projectIsDeleted?  <button type="button" class="btn deleteModalBtn" data-bs-dismiss="modal" onClick={()=>handleProjectDeleted()}>Got It!</button> : <button type="button" class="btn deleteModalBtn" onClick={doProjectDelete}>Yes, delete my project </button>}
+                        {projectIsDeleted?  <button type="button" class="btn deleteModalBtn" data-bs-dismiss="modal" onClick={()=>handleProjectDeleted()}>Got It!</button> : <button type="button" class="btn deleteModalBtn" onClick={doProjectDelete}>Yes, delete my project</button>}
                         </div>
                     </div>
                 </div>
@@ -512,7 +513,7 @@ function DashboardCharts({ projects }) {
 }
 
 
-export default DashboardCharts;
+export default RecentlyDeletedCharts;
 
 
 

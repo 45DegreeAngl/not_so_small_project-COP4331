@@ -668,6 +668,46 @@ router.put("/projects/:id", async (req, res) => {
     res.status(500).json({ error });
   }
 });
+//-----------------> Update Project in Recently Deleted <-----------------//
+router.put("/recently-deleted/:id", async (req, res) => {
+    const { id } = req.params;
+    const updateFields = req.body;
+    let error = "";
+  
+    if (!Object.keys(updateFields).length) {
+      error = "No fields provided to update";
+      return res.status(400).json({ error });
+    }
+  
+    try {
+      const db = client.db("ganttify");
+      const projectCollection = db.collection("recently_deleted_projects");
+  
+      // Convert any provided ObjectId fields
+      if (updateFields.team) {
+        updateFields.team = new ObjectId(updateFields.team);
+      }
+      if (updateFields.tasks) {
+        updateFields.tasks = updateFields.tasks.map((id) => new ObjectId(id));
+      }
+      if (updateFields.founderId) {
+        updateFields.founderId = new ObjectId(updateFields.founderId);
+      }
+      if (updateFields.group) {
+        updateFields.group = new ObjectId(updateFields.group);
+      }
+  
+      const result = await projectCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updateFields },
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Error updating project in recently-deleted:", error);
+      error = "Internal server error";
+      res.status(500).json({ error });
+    }
+  });
 
 //-----------------> Delete a project <-----------------//
 router.delete("/projects/:id", async (req, res) => {
@@ -702,6 +742,35 @@ router.delete("/projects/:id", async (req, res) => {
     res.status(500).json({ error });
   }
 });
+//-----------------> Delete a Project from Recently-Deleted <-----------------//
+router.delete("/recently-deleted/:id", async (req, res) => {
+    const { id } = req.params;
+    let error = "";
+  
+    try {
+      const db = client.db("ganttify");
+      const projectCollection = db.collection("recently_deleted_projects");
+  
+      // Find the project to delete
+      const project = await projectCollection.findOne({ _id: new ObjectId(id) });
+      console.log("deleting " + project._id +" permanently");
+  
+      if (!project) {
+        error = "Project not found";
+        return res.status(404).json({ error });
+      }
+  
+      // Delete the project from recently deleted collection
+      const result = await projectCollection.deleteOne({ _id: new ObjectId(id) });
+      console.log("deleted")
+  
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Error deleting project from recently deleted:", error);
+      error = "Internal server error";
+      res.status(500).json({ error });
+    }
+  });
 
 router.post('/forgot-password', async (req, res) => 
 {
@@ -876,10 +945,28 @@ router.get("/allusers", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
-// -----------------> Search users by email, name, username, or projects <-----------------//
+//------------------> Search users by ids<---------------WIP----------------------//
+router.post("/search/taskworkers", async (req, res) => {
+    const { ids } = req.body;
+  
+    try {
+      const db = client.db("ganttify");
+      const userCollection = db.collection("userAccounts");
+  
+      const query = {_id : {$in : ids}};
+  
+      // Find users matching ids excluding passwords
+      const users = await userCollection.find(query, {
+        projection: { password: 0 } // Exclude password from the results
+      }).toArray();
+      console.log(users);
+      res.status(200).json(users);
+    } catch (error) {
+      console.error("Error searching users:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+// -----------------> Search users by email, name, username or projects <-----------------//
 router.post("/searchusers", async (req, res) => {
   const { email, name, username, projects } = req.body;
 
@@ -908,7 +995,6 @@ router.post("/searchusers", async (req, res) => {
     }, {
       projection: { password: 0 } // Exclude password from the results
     }).toArray();
-
     res.status(200).json(users);
   } catch (error) {
     console.error("Error searching users:", error);
@@ -926,7 +1012,7 @@ router.post("/search/projects", async (req, res) => {
     try {
       const db = client.db("ganttify");
       const projectCollection = db.collection("projects");
-      const teamCollection = db.collection("team");
+      const teamCollection = db.collection("teams");
   
       const teams = await teamCollection.find({
         $or: [
@@ -936,11 +1022,11 @@ router.post("/search/projects", async (req, res) => {
         ]
       }).toArray();
   
-      console.log("These are the teams: ", teams);
+      //console.log("These are the teams: ", teams);
   
       const teamIds = teams.map(team => new ObjectId(team._id));
   
-      console.log("These are the team IDs: ", teamIds);
+      //console.log("These are the team IDs: ", teamIds);
   
       const query = {
         $or: [
@@ -950,7 +1036,7 @@ router.post("/search/projects", async (req, res) => {
         nameProject: { $regex: title, $options: "i" }
       };
   
-      console.log("These are the query: ", query);
+      //console.log("These are the query: ", query);
   
       const sortOptions = { [sortBy]: 1 }; // 1 for ascending, -1 for descending
   
@@ -961,7 +1047,34 @@ router.post("/search/projects", async (req, res) => {
   
       res.status(200).json(projects);
   
-      console.log("These are the projects: ", projects);
+      //console.log("These are the projects: ", projects);
+  
+    } catch (error) {
+      console.error("Error searching projects:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }); 
+  //-> Search Recently-Deleted Projects by Title & Sort by Due Date <-//
+router.post("/search/recently-deleted", async (req, res) => {
+
+    const { founderId, title, sortBy = "dueDate" } = req.body;
+  
+    try {
+      const db = client.db("ganttify");
+      const projectCollection = db.collection("recently_deleted_projects");
+  
+  
+      const query = {founderId: new ObjectId(founderId), nameProject: { $regex: title, $options: "i" } };
+  
+      const sortOptions = { [sortBy]: 1 }; // 1 for ascending, -1 for descending
+  
+      const projects = await projectCollection
+        .find(query)
+        .sort(sortOptions)
+        .toArray();
+  
+      res.status(200).json(projects);
+  
   
     } catch (error) {
       console.error("Error searching projects:", error);
