@@ -836,6 +836,88 @@ router.post('/reset-password', async (req, res) =>
 // SEARCH ENDPOINTS //
 //////////////////////
 
+// -----------------> Search a specific user <-----------------//
+router.get("/user/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const db = client.db("ganttify");
+    const userCollection = db.collection("userAccounts");
+
+    const user = await userCollection.findOne(
+      { _id: new ObjectId(userId) },
+      { projection: { password: 0 } } // Exclude the password field
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error finding user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// -----------------> Get All Users <-----------------//
+router.get("/allusers", async (req, res) => {
+  try {
+    const db = client.db("ganttify");
+    const userCollection = db.collection("userAccounts");
+
+    // Retrieve all users excluding their passwords
+    const users = await userCollection.find({}, { projection: { password: 0 } }).toArray();
+    
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+// -----------------> Search users by email, name, username, or projects <-----------------//
+router.post("/searchusers", async (req, res) => {
+  const { email, name, username, projects } = req.body;
+
+  try {
+    const db = client.db("ganttify");
+    const userCollection = db.collection("userAccounts");
+
+    // Build search criteria array
+    const searchCriteria = [];
+    if (email) searchCriteria.push({ email: email });
+    if (name) searchCriteria.push({ name: name });
+    if (username) searchCriteria.push({ username: username });
+    if (projects && projects.length) {
+      // Search for users where the projects field contains any of the given project IDs
+      searchCriteria.push({ projects: { $in: projects.map(id => new ObjectId(id)) } });
+    }
+
+    // Check if there are any search criteria
+    if (searchCriteria.length === 0) {
+      return res.status(400).json({ error: "At least one search parameter must be provided" });
+    }
+
+    // Find users matching any of the search criteria, excluding passwords
+    const users = await userCollection.find({
+      $or: searchCriteria
+    }, {
+      projection: { password: 0 } // Exclude password from the results
+    }).toArray();
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error searching users:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 //-> Search Project by Title & Sort by Due Date <-//
 router.post("/search/projects", async (req, res) => {
 
