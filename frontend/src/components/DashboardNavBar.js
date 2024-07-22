@@ -24,9 +24,13 @@ function DasboardNavBar()
 
         var obj = {founderId:userId,nameProject:newProjectName.value};
         var js = JSON.stringify(obj);
-        console.log(js);
+        //console.log(js);
         try
         {
+            if (newProjectName.value.length > 35){
+                setMessage("Project names cannot be longer then 35 characters");
+                return;
+            }
             const response = await fetch(buildPath('api/createproject'),
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
@@ -57,10 +61,10 @@ function DasboardNavBar()
     }
     return(
         <div class = "container-fluid navBarBody">
-                <a id ="Charts" class = "btn navBtn topNavBtn" href="/dashboard/charts"><span class = "navBtnText">Charts</span></a>
-                <a id ="ToDo List" class = "btn navBtn navBtn" href="/dashboard"><span class = "navBtnText">To Do List</span></a>
-                <button id ="Create Project" class ="btn navBtn" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span class = "navBtnText">Create Project</span></button> 
+                <a id ="ToDo List" class = "btn navBtn topNavBtn" href="/dashboard"><span class = "navBtnText">To Do List</span></a>
+                <a id ="Charts" class = "btn navBtn" href="/dashboard/charts"><span class = "navBtnText">Charts</span></a>
                 <a id ="Recently Deleted" class ="btn navBtn" href="/dashboard/recently-deleted"><span class = "navBtnText">Recently Deleted</span></a>
+                <button id ="Create Project" class ="btn navBtn" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span class = "navBtnText">Create Project</span></button> 
 
                 <div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog">
