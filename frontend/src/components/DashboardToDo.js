@@ -30,11 +30,13 @@ function toDisplayDate(date) {
     if (month < thisMonth) { return "PAST DUE"; }
     if (day - thisDay > 1) { return date; }
     if (day - thisDay < 0) { return "PAST DUE"; }
-    if (day - thisDay == 1) { return "Tomorrow" }
+    if (day - thisDay == 1) { return "Tomorrow";}
+    if(day-thisDay == 0){return "Today";}
     return date;
 }
 var i;
 var task;
+var currTaskWorkers;
 function DashboardToDo() {
     var search = ""
     var _ud = localStorage.getItem('user_data');
@@ -44,6 +46,7 @@ function DashboardToDo() {
     var tasks = [];
     const [taskList, setTaskList] = useState([]);
     const [taskToDisplay, setTaskToDisplay] = useState(null);
+    const[userList,setUserList] = useState([]);
 
 
     const taskModal = document.getElementById("taskModal")
@@ -66,8 +69,10 @@ function DashboardToDo() {
             var res1 = JSON.parse(txt1);
             var txt2 = await respone2.text();
             var res2 = JSON.parse(txt2);
+
+            var usersToSearch = [];
             //create table for tasks
-            console.log(res1);
+            //console.log(res1);
 
             for (i = 0; i < res1.length; i++) {
                 if (displayedTasks.includes(res1[i]._id) || taskList.includes(res1[i]._id)) {
@@ -78,7 +83,10 @@ function DashboardToDo() {
                 let currTaskId = res1[i]._id;
                 let currTaskTitle = res1[i].taskTitle;
                 let currTaskDescription = res1[i].description;
-                let currTaskWorkers = res1[i].assignedTasksUsers;
+                currTaskWorkers = res1[i].assignedTasksUsers;
+                currTaskWorkers.forEach(teamUser => {
+                    if(!usersToSearch.includes(teamUser)){usersToSearch.push(teamUser);}
+                });
                 let currDueDate = toDate(res1[i].dueDateTime);
                 let currDueDatePretty = toDisplayDate(currDueDate);
                 let currProjectId = res1[i].tiedProjectId;
@@ -136,7 +144,18 @@ function DashboardToDo() {
                 }
 
             };
-            setTaskList(tasks)
+            //get info on all users in projects that the user has a task in
+            if(usersToSearch && usersToSearch.length){
+                var obj3 = {ids:usersToSearch};
+                var js3 = JSON.stringify(obj3);
+                console.log(obj3);
+                const response3 = await fetch(buildPath('api/search/taskworkers'),{ method: 'POST', body: js3, headers: { 'Content-Type': 'application/json' } });
+                var txt3 = response3.text;
+                var res3 = JSON.parse(txt3);
+                setUserList(res3);
+                console.log(res3);
+            }
+            setTaskList(tasks);
 
         }
         catch (e) {
@@ -203,7 +222,6 @@ function DashboardToDo() {
         }
     }
     useLayoutEffect(() => { getTasks() }, []);
-    //useEffect(() => { setToDoList() }, [taskList])
     return (
         <div class="container-fluid">
             <div class="container px-0 mt-5 mx-0 mainContainer">
