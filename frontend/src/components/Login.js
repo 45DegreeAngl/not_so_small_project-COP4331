@@ -1,23 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
-
+import './Login.css';
 const app_name = 'ganttify-5b581a9c8167';
 
-const baseStyle = {
-  textAlign: "center"
-};
 
-const loginButton = {
-  border: "none",
-  textJustify: "center",
-  width: "300px",
-  height: "55px",
-  backgroundColor: "#DC6B2C",
-  color: "#ffffff",
-  cursor: "pointer",
-  borderRadius: "7.5px",
-  marginTop: "15px"
-};
 
 function buildPath(route) {
   if (process.env.NODE_ENV === 'production') {
@@ -28,7 +13,7 @@ function buildPath(route) {
 }
 
 function Login() {
-  var loginName;
+  var loginEmail;
   var loginPassword;
 
   const [message, setMessage] = useState('');
@@ -36,7 +21,7 @@ function Login() {
   const doLogin = async event => {
     event.preventDefault();
 
-    var obj = { login: loginName.value, password: loginPassword.value };
+    var obj = { email: loginEmail.value, password: loginPassword.value };
     var js = JSON.stringify(obj);
 
     try {
@@ -48,14 +33,24 @@ function Login() {
 
       var res = JSON.parse(await response.text());
 
-      if (res.id <= 0) {
-        setMessage('User/Password combination incorrect');
+      if (res.error !== "") {
+        setMessage(res.error);
       } else {
-        var user = { firstname: res.firstname, lastname: res.lastname, id: res.id };
+        var user = {
+            _id:res._id,
+            email: res.email,
+            name: res.name,
+            username: res.username,
+            phone: res.phone,
+            projects: res.projects,
+            toDoList: res.toDoList,
+            error: res.error};
         localStorage.setItem('user_data', JSON.stringify(user));
+        console.log(user._id);
+        
 
         setMessage('');
-        window.location.href = '/cards';
+        window.location.href = '/dashboard';
       }
     } catch (e) {
       alert(e.toString());
@@ -64,19 +59,29 @@ function Login() {
   };
 
   return (
-    <div id="loginDiv" style={baseStyle}>
-      <h1 id="loginTitle">Login</h1>
-      <h3 id="loginDescription">For existing users only.</h3>
-      <h5 id="usernameTitle">Username</h5>
-      <input type="text" id="loginName" placeholder="Username"
-        ref={(c) => loginName = c} /><br />
-      <h5 id="passwordTitle">Password</h5>
-      <input type="password" id="loginPassword" placeholder="Password"
-        ref={(c) => loginPassword = c} /><br />
-      <input type="submit" id="loginButton" style={loginButton} className="buttons" value="Login"
-        onClick={doLogin} /><br />
-        <Link to="/forgot-password"> <button id = "forgot-password" style={loginButton}>Forgot Password?</button></Link>
-      <span id="loginResult">{message}</span>
+    <div>
+        <div class = 'topDiv'>
+            <h1>
+                Login
+            </h1>
+        </div>
+        <div>
+        <div class="mb-3 bottomDiv">
+          <form onSubmit={doLogin}>
+            <div class="form-group">
+                <label for="inputEmail"><h5><b>Email Address</b></h5></label>
+                <input type="email" class="form-control form-control-lg" id="inputEmail" placeholder='example@email.com' ref={(c) => loginEmail = c} required/>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword"><h5><b>Password</b></h5></label>
+                <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c} required/>
+            </div>
+            <div class="row justify-content-center buttonDiv"><button type="submit" class="btn submitButton">Login</button></div>
+          </form>
+          <div className='formMessage'><span>{message}</span></div>
+          <a href="/forgot-password" className="forgot-password-link">Forgot your password?</a>
+        </div>
+      </div>
     </div>
   );
 };

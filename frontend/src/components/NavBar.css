@@ -3,4 +3,54 @@
     background-color: #FDDC87;
     color: black;
 }
+.navbar{
+    width: 100%;
+    height: auto;
+    display : flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FDDC87;
+    padding : 15px 0px;
+    position: fixed;
+    z-index: 99999  ;
+}
+.navbarDash{
+    width: 100%;
+    height: auto;
+    display : flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FDDC87;
+    padding : 15px 0px;
+    position: relative;
+    z-index: 99999  ;
+    float: top;
+}
+
+.logo{
+    width: 175px;
+    padding: 0px 50px;
+}
+
+#button{
+    cursor: pointer;
+    border : none;
+    background-color: #FDDC87;
+    font-size: 18px;
+}
+
+ul{
+    flex: 1;
+    list-style: none;
+    text-align: right;
+    
+}
+
+ul li{
+    display : inline-block;
+    margin : 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    
+}
 

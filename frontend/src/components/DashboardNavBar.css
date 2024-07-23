@@ -1,0 +1,34 @@
+body{
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.navBarBody {
+    background-color: #DC6B2C;
+    height:100% !important;
+    width:11% !important;
+    float:left;
+    text-align: left;
+    padding-bottom: 100%;
+}
+.navBtn {
+    justify-content: left;
+    background-color: white !important;
+    color: white !important;
+    text-align: left !important;
+    width: 95% !important;
+    height: 8px;
+    margin-top:20px;
+    cursor:pointer;
+}
+.topNavBtn{
+    margin-top: 30px !important;
+}
+.navBtnText{
+    color:black;
+    font-size: 16px;
+    text-align: left !important;
+}
+.message{
+    color: red;
+}
