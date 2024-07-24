@@ -3,7 +3,7 @@ import './AboutUs.css';
 import member_an from '../Images/assets/team_member_icons/AN.jpg';
 import member_nb from '../Images/assets/team_member_icons/NB.png';
 import member_tk from '../Images/assets/team_member_icons/TK.jpg';
-import member_lr from '../Images/assets/team_member_icons/LR.png';
+import member_lr from '../Images/assets/team_member_icons/LR.jpg';
 const app_name = 'ganttify-5b581a9c8167';
 
 
@@ -30,7 +30,7 @@ function AboutUs() {
             
 
             <div className="team-member">
-                <img src="{member_nb} alt="Nickolas Brandenburg" className="team-image"/>   
+                <img src={member_nb} alt="Nickolas Brandenburg" className="team-image"/>   
                 <div className="member-info">
                     <h2>Nickolas Brandenburg</h2>
                     <p>Database and API developer</p>
