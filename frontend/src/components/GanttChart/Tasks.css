@@ -1,0 +1,58 @@
+#gantt-grid-container__tasks {
+  overflow: hidden;
+  overflow-x: hidden;
+}
+
+#gantt-task-row {
+  overflow-x: hidden;
+}
+
+.gantt-task-row {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+  height: 40px;
+  margin-top: 0.14px;
+}
+
+.placeholder-row {
+  height: 40px;
+}
+
+.first-placeholder-row {
+  border-bottom: none; 
+}
+
+.second-placeholder-row {
+  border-top: none; 
+}
+
+.task-title-input {
+  flex: 1;
+  padding: 5px;
+  border: none;
+  background: transparent;
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  font-size: 14px; 
+}
+
+.tasks-delete-button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  margin-left: 10px; 
+}
+
+
+#gantt-grid-container__tasks::-webkit-scrollbar {
+  width: 0px;  
+  background: transparent;  
+}
+
+#gantt-grid-container__tasks {
+  padding-bottom: 5px; 
+}
