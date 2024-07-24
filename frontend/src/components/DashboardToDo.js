@@ -40,7 +40,7 @@ function toPhonePretty(phoneNum){
     const third = phoneNum.slice(6, 10);
     return "("+first+")"+" "+second+"-"+third;
 }
-var i, task,tasks = [],info="",userInfoToDisplay;
+var i, task,tasks = [];
 function DashboardToDo() {
     var search = ""
     var _ud = localStorage.getItem('user_data');
@@ -53,6 +53,24 @@ function DashboardToDo() {
     function actionButtonClick(task){
         return function (){
             setTaskToDisplay(task);
+            var turnOnDiv = 0;
+            task.users.forEach(u =>{
+                console.log(u);
+                if(u.localeCompare(userId) === 0){return;}
+                const info = document.getElementById(u);
+                if(!info){return;}
+                info.style.display = "";
+                if(turnOnDiv === 0){
+                    turnOnDiv = 1;
+                }
+            })
+            const contactInfoDiv = document.getElementById("taskContactsDiv");
+            if(turnOnDiv === 1){
+                contactInfoDiv.style.display = "";
+            }
+            else{
+                contactInfoDiv.style.display = "none";
+            }
         }
     }
     const getTasks = async event => {
@@ -116,11 +134,18 @@ function DashboardToDo() {
                 const response3 = await fetch(buildPath('api/search/taskworkers'),{ method: 'POST', body: js3, headers: { 'Content-Type': 'application/json' } });
                 var txt3 = await response3.text();
                 userInfoRaw = JSON.parse(txt3);
+                console.log(userInfoRaw);
 
             }
             const taskContactsDiv = document.getElementById("taskContactsDiv");
+            taskContactsDiv.setAttribute("class","contactInfoDiv mt-1")
+            const taskContactsHeader = document.createElement("h5");
+            taskContactsHeader.textContent = "Teammate Information:"
+            taskContactsDiv.appendChild(taskContactsHeader);
             userInfoRaw.forEach(userRaw =>{
+                console.log(userRaw);
                 const userInfoDiv = document.createElement("div");
+                userInfoDiv.setAttribute("class","contactName");
                 if(userRaw._id.localeCompare(userId) === 0){
                     return;
                 }
@@ -128,27 +153,24 @@ function DashboardToDo() {
                 let email = "Email: " + userRaw.email;
                 const emailText = document.createElement("p");
                 emailText.innerText=email;
+                emailText.setAttribute("class","contactBody");
                 let phone = "Phone: " + toPhonePretty(userRaw.phone);
                 const phoneText = document.createElement("p");
                 phoneText.innerText = phone;
+                phoneText.setAttribute("class","contactBody");
                 let name = userRaw.name;
                 const nameText = document.createElement("p");
                 nameText.innerText = name;
+                nameText.setAttribute("class","contactName");
                 userInfoDiv.appendChild(nameText);
                 userInfoDiv.appendChild(emailText);
                 userInfoDiv.appendChild(phoneText);
                 userInfoDiv.id = userRaw._id
+                userInfoDiv.style.display = "none";
                 taskContactsDiv.appendChild(userInfoDiv);
             });
+            
             for (i = 0; i < tasks.length; i++) {
-
-                let currTaskWorkers = tasks[i]['users'];
-                console.log(currTaskWorkers);
-                currTaskWorkers.forEach(u => {
-                    let userRaw = userInfoRaw.find(user => user._id.toString().localeCompare(u) === 0);
-                    if(!userRaw){return};
-                });
-                tasks[i]['userInfoText'] = info;
                 const tableBody = document.getElementById('taskTableBody');
                 const newRow = document.createElement('tr');
 
@@ -251,6 +273,17 @@ function DashboardToDo() {
             alert(error);
         }
     }
+    function doTaskModalClose(){
+        const contactInfoDiv = document.getElementById("taskContactsDiv");
+        taskToDisplay.users.forEach(u =>{
+            console.log(u);
+            if(u.localeCompare(userId) === 0){return;}
+            const info = document.getElementById(u);
+            if(!info){return;}
+            info.style.display = "none";
+        })
+        contactInfoDiv.style.display = "none";
+    }
     useLayoutEffect(() => { getTasks() }, []);
     return (
         <div class="container-fluid">
@@ -274,12 +307,12 @@ function DashboardToDo() {
                         </script>
                     </tbody>
                 </table>
-                <div class="modal" tabindex="-1" id="taskModal">
+                <div class="modal fade" tabindex="-1" id="taskModal" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                             {taskToDisplay ? <h3 class="modal-title">{taskToDisplay['taskTitle']}<h5 class="modal-title">{taskToDisplay['projectName']}</h5></h3> : null}
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={doTaskModalClose}></button>
                             </div>
                             <div class="modal-body">
                              {taskToDisplay ? 
