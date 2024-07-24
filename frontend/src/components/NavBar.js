@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 import Logo from '../Images/assets/logo/Logo.png';
-import AddTaskDuration from './AddTaskDuration';
 import TimeRange from './GanttChart/TimeRange';
 import './NavBar.css';
 import React, { useState } from 'react';
@@ -182,7 +181,6 @@ function NavBar(props) {
                 </a>
                 <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a id="Add Task" className="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTaskModal" onClick={openModal}>Add Task</a>
-                  <a className="dropdown-item" onClick={() => openModal(<AddTaskDuration tasks={props.tasks} setTaskDurations={props.setTaskDurations} />)}>Add Task Duration</a>
                   <a className="dropdown-item" onClick={() => openModal(<TimeRange timeRange={props.timeRange} setTimeRange={props.setTimeRange} />)}>Tracker Period</a>
                 </div>
               </li>
@@ -251,5 +249,3 @@ function NavBar(props) {
 }
 
 export default NavBar;
-
-
