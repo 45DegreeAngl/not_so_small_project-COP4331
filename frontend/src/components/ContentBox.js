@@ -12,9 +12,6 @@ function ContentBox(props){
         return(
             <div>
                 <div>
-                    <h1 class = "title">
-                        Welcome to Ganttify!
-                    </h1>
                     <p class = "info">
                         Ganttify is a project management tool that helps you plan, organize, and track your projects in a visually appealing way.
                     </p>
@@ -73,13 +70,14 @@ function ContentBox(props){
                 </div>
 
                 <div class = "endTag">
-                    <h1 class = "title">
-                        <ul class = "align">
-                            <li>Learn More</li>
-                            <li><a href = "/about-us"><button class="button">About Us</button></a></li>
-                        </ul>                
-                    </h1>
+                        <div class = "align">
+                            <p>Learn More   <li><a href = "/about-us"><button class="button">About Us</button></a></li> </p>
+                        </div>                
                 </div>
+
+
+
+
             </div>
   
         );

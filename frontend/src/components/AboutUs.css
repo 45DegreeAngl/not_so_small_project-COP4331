@@ -8,13 +8,13 @@ body {
     background-color: #DC6B2C;
     color: white;
     text-align: center;
-    padding: 50px 0;
+    padding-top: 80px;
 }
 
 .bottomDiv {
     background-color: #ffffff;
-    padding: 50px 0;
-    width: 90%;
+    padding: 25px 0;
+    width: 100%;
     margin: 0 auto;
     max-width: 1200px;
 }
@@ -58,4 +58,17 @@ body {
 .team-member-reverse img {
     margin-right: 0;
     margin-left: 20px;
+}
+
+
+.box{
+    padding-top: 10px;
+    width: 150%;
+    height: 300vh;
+    background-color: #f8cd62;
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: -17.5%;
+    margin-top: 10px;
+    opacity: 0.9;
 }
