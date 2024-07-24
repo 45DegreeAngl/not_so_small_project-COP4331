@@ -577,18 +577,29 @@ router.post("/createproject", async (req, res) => {
   let error = "";
 
   if (!nameProject || !founderId) {
-    error = "Project name is required";
+    error = "Project name and founder ID are required";
     return res.status(400).json({ error });
   }
 
   try {
     const db = client.db("ganttify");
     const projectCollection = db.collection("projects");
+    const teamCollection = db.collection("teams");
 
+    // Create a new team
+    const newTeam = {
+      founderId: new ObjectId(founderId),
+      editors: [],
+      members: [],
+    };
+
+    const teamResult = await teamCollection.insertOne(newTeam);
+
+    // Create a new project
     const newProject = {
       nameProject,
       dateCreated: new Date(),
-      team: new ObjectId(),
+      team: teamResult.insertedId,
       tasks: null,
       isVisible,
       founderId: new ObjectId(founderId),
@@ -596,8 +607,9 @@ router.post("/createproject", async (req, res) => {
       group: [new ObjectId()],
     };
 
-    const project = await projectCollection.insertOne(newProject);
-    res.status(201).json(newProject);
+    const projectResult = await projectCollection.insertOne(newProject);
+    
+    res.status(201).json(projectResult);
   } catch (error) {
     console.error("Error creating project:", error);
     error = "Internal server error";
