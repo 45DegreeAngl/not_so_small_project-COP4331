@@ -1,0 +1,32 @@
+#time-range__container {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  #time-range__container > * {
+    display: flex;
+    align-items: center;
+  }
+  
+  #time-range {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin: 0.75rem 0;
+  }
+  
+  fieldset {
+    border: none;
+    padding: 0.5rem;
+  }
+  
+  fieldset label {
+    margin-right: 10px;
+  }
+  
+  select {
+    margin-top: 0.5rem;
+  }

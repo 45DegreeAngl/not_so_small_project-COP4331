@@ -14,6 +14,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage';
 import DashboardPage from './pages/DashboardPage';
 import DashboardChartsPage from './pages/DashboardChartsPage';
 import RecentlyDeletedPage from './pages/RecentlyDeletedPage';
+import ViewChartPage from './pages/ViewChartPage';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/verify-email/:email/:token" element={<VerifyEmailPage />} />
           <Route path="/dashboard/charts" element={<DashboardChartsPage/>}/>
           <Route path="/dashboard" element={<DashboardPage/>}/>
+          <Route path="/viewchart/:id" element={<ViewChartPage/>}/>
           <Route path="/dashboard/recently-deleted" element={<RecentlyDeletedPage/>}/>
         </Routes>
     </BrowserRouter>
