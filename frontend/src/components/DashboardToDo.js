@@ -30,23 +30,26 @@ function toDisplayDate(date) {
     if (month < thisMonth) { return "PAST DUE"; }
     if (day - thisDay > 1) { return date; }
     if (day - thisDay < 0) { return "PAST DUE"; }
-    if (day - thisDay == 1) { return "Tomorrow" }
+    if (day - thisDay == 1) { return "Tomorrow";}
+    if(day-thisDay == 0){return "Today";}
     return date;
 }
-var i;
-var task;
+function toPhonePretty(phoneNum){
+    const first = phoneNum.slice(0,3);
+    const second = phoneNum.slice(3,6);
+    const third = phoneNum.slice(6, 10);
+    return "("+first+")"+" "+second+"-"+third;
+}
+var i, task,tasks = [],info="",userInfoToDisplay;
 function DashboardToDo() {
     var search = ""
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud._id;
     var displayedTasks = [];
-    var tasks = [];
     const [taskList, setTaskList] = useState([]);
     const [taskToDisplay, setTaskToDisplay] = useState(null);
 
-
-    const taskModal = document.getElementById("taskModal")
     function actionButtonClick(task){
         return function (){
             setTaskToDisplay(task);
@@ -63,27 +66,32 @@ function DashboardToDo() {
             const respone2 = await fetch(buildPath("api/readprojects"),
                 { method: 'GET', headers: { 'Content-Type': 'application/json' } });
             var txt1 = await response1.text();
-            var res1 = JSON.parse(txt1);
+            var usersTasks = JSON.parse(txt1);
             var txt2 = await respone2.text();
-            var res2 = JSON.parse(txt2);
-            //create table for tasks
-            console.log(res1);
+            var allProjects = JSON.parse(txt2);
 
-            for (i = 0; i < res1.length; i++) {
-                if (displayedTasks.includes(res1[i]._id) || taskList.includes(res1[i]._id)) {
+            var usersToSearch = [];
+            //create table for tasks
+            //console.log(usersTasks);
+
+            for (i = 0; i < usersTasks.length; i++) {
+                if (displayedTasks.includes(usersTasks[i]._id) || taskList.includes(usersTasks[i]._id)) {
                     return;
                 }
-                displayedTasks.push(res1[i]._id);
+                displayedTasks.push(usersTasks[i]._id);
                 //get all info relevant info  for respecitve task
-                let currTaskId = res1[i]._id;
-                let currTaskTitle = res1[i].taskTitle;
-                let currTaskDescription = res1[i].description;
-                let currTaskWorkers = res1[i].assignedTasksUsers;
-                let currDueDate = toDate(res1[i].dueDateTime);
+                let currTaskId = usersTasks[i]._id;
+                let currTaskTitle = usersTasks[i].taskTitle;
+                let currTaskDescription = usersTasks[i].description;
+                let currTaskWorkers = usersTasks[i].assignedTasksUsers;
+                currTaskWorkers.forEach(teamUser => {
+                    if(!usersToSearch.includes(teamUser)){usersToSearch.push(teamUser);}
+                });
+                let currDueDate = toDate(usersTasks[i].dueDateTime);
                 let currDueDatePretty = toDisplayDate(currDueDate);
-                let currProjectId = res1[i].tiedProjectId;
-                let currTaskProgress = res1[i].progress
-                let currProject = res2.filter(project => project._id === currProjectId);
+                let currProjectId = usersTasks[i].tiedProjectId;
+                let currTaskProgress = usersTasks[i].progress
+                let currProject = allProjects.filter(project => project._id === currProjectId);
                 let currProjectName = currProject[0].nameProject;
                 let currProjectOwnerId = currProject[0].founderId;
                 task = {
@@ -96,23 +104,65 @@ function DashboardToDo() {
                     projectId: currProjectId,
                     projectName: currProjectName,
                     progress: currTaskProgress,
-                    projectOwnerId: currProjectOwnerId
+                    projectOwnerId: currProjectOwnerId,
                 };
                 tasks.push(task);
+            };
+            //get info on all users in projects that the user has a task in
+            var userInfoRaw
+            if(usersToSearch && usersToSearch.length){
+                var obj3 = {ids:usersToSearch};
+                var js3 = JSON.stringify(obj3);
+                const response3 = await fetch(buildPath('api/search/taskworkers'),{ method: 'POST', body: js3, headers: { 'Content-Type': 'application/json' } });
+                var txt3 = await response3.text();
+                userInfoRaw = JSON.parse(txt3);
+
+            }
+            const taskContactsDiv = document.getElementById("taskContactsDiv");
+            userInfoRaw.forEach(userRaw =>{
+                const userInfoDiv = document.createElement("div");
+                if(userRaw._id.localeCompare(userId) === 0){
+                    return;
+                }
+                console.log(userRaw);
+                let email = "Email: " + userRaw.email;
+                const emailText = document.createElement("p");
+                emailText.innerText=email;
+                let phone = "Phone: " + toPhonePretty(userRaw.phone);
+                const phoneText = document.createElement("p");
+                phoneText.innerText = phone;
+                let name = userRaw.name;
+                const nameText = document.createElement("p");
+                nameText.innerText = name;
+                userInfoDiv.appendChild(nameText);
+                userInfoDiv.appendChild(emailText);
+                userInfoDiv.appendChild(phoneText);
+                userInfoDiv.id = userRaw._id
+                taskContactsDiv.appendChild(userInfoDiv);
+            });
+            for (i = 0; i < tasks.length; i++) {
+
+                let currTaskWorkers = tasks[i]['users'];
+                console.log(currTaskWorkers);
+                currTaskWorkers.forEach(u => {
+                    let userRaw = userInfoRaw.find(user => user._id.toString().localeCompare(u) === 0);
+                    if(!userRaw){return};
+                });
+                tasks[i]['userInfoText'] = info;
                 const tableBody = document.getElementById('taskTableBody');
                 const newRow = document.createElement('tr');
 
                 const dueDateCol = document.createElement('td');
-                dueDateCol.innerText = currDueDatePretty;
+                dueDateCol.innerText =  tasks[i]['dueDatePretty'];
 
                 const taskNameCol = document.createElement('td');
-                taskNameCol.innerText = currTaskTitle;
+                taskNameCol.innerText = tasks[i]['taskTitle'];
 
                 const projectNameCol = document.createElement('td');
-                projectNameCol.innerText = currProjectName;
+                projectNameCol.innerText = tasks[i]['projectName'];
 
                 const taskProgressCol = document.createElement('td');
-                taskProgressCol.innerText = currTaskProgress;
+                taskProgressCol.innerText = tasks[i]['progress'];
 
                 const actionCol = document.createElement('td');
 
@@ -120,7 +170,7 @@ function DashboardToDo() {
                 actionButton.id = 'task-action-button' + i
                 actionButton.setAttribute('data-bs-toggle','modal');
                 actionButton.setAttribute('data-bs-target','#taskModal');
-                actionButton.addEventListener("click",actionButtonClick(task));
+                actionButton.addEventListener("click",actionButtonClick(tasks[i]));
                 actionButton.setAttribute("Class","taskBtn");
                 actionButton.textContent = "..."
 
@@ -131,12 +181,11 @@ function DashboardToDo() {
                 actionCol.appendChild(actionButton); 
                 newRow.appendChild(actionCol);
                 tableBody.appendChild(newRow);
-                if(currTaskProgress.localeCompare("Done") === 0 && currDueDatePretty.localeCompare("PAST DUE") === 0){
+                if(tasks[i]['progress'].localeCompare("Done") === 0 && tasks[i]['dueDatePretty'].localeCompare("PAST DUE") === 0){
                     newRow.style.display = "None";
                 }
-
-            };
-            setTaskList(tasks)
+            }
+            setTaskList(tasks);
 
         }
         catch (e) {
@@ -203,7 +252,6 @@ function DashboardToDo() {
         }
     }
     useLayoutEffect(() => { getTasks() }, []);
-    //useEffect(() => { setToDoList() }, [taskList])
     return (
         <div class="container-fluid">
             <div class="container px-0 mt-5 mx-0 mainContainer">
@@ -234,8 +282,8 @@ function DashboardToDo() {
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                             {taskToDisplay ? <div><p>{taskToDisplay['description']}</p>{taskToDisplay['progress'].localeCompare("Done") === 0 ? null:<p>{taskToDisplay['dueDatePretty'].localeCompare("PAST DUE") === 0 ? "THIS TASK WAS DUE: "+ taskToDisplay['dueDateActual']: "Due: "+ taskToDisplay['dueDatePretty']}</p>}</div> : null}
-                            </div>
+                             {taskToDisplay ? 
+                                <div><p>{taskToDisplay['description']}</p>{taskToDisplay['progress'].localeCompare("Done") === 0 ? null:<p>{taskToDisplay['dueDatePretty'].localeCompare("PAST DUE") === 0 ? "THIS TASK WAS DUE: "+ taskToDisplay['dueDateActual']: "Due: "+ taskToDisplay['dueDatePretty']}</p>}{taskToDisplay['userInfoText']}</div> : null}<div id = "taskContactsDiv"></div></div>
                             {taskToDisplay? 
                             <div class="modal-footer">
                                 {(taskToDisplay['progress'].localeCompare("Done") === 0) ?  <button type="button" class="btn btn-primary" onClick={()=>doMarkTaskInProgress()}>Mark Task In Progress</button>:
