@@ -1,0 +1,77 @@
+#gantt-grid-container__time {
+  display: grid;
+  overflow-x: auto;
+  outline: 0.5px solid var(--color-outline);
+  padding-bottom: 1px;
+}
+
+#gantt-grid-container__time::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.task-duration {
+  position: absolute;
+  height: calc(var(--cell-height) / 1.5);
+  top: calc(var(--cell-height) / 7);
+  z-index: 1;
+  border-radius: var(--border-radius);
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
+  cursor: move;
+  resize: vertical;
+}
+
+.task-duration:hover {
+  border: 2px solid black;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+.task-buttons {
+  display: flex;
+  position: absolute;
+  right: -50px; 
+  top: 2px;
+}
+
+.task-edit-button,
+.task-delete-button {
+  border: none;
+  background-color: #fff;
+  color: #000;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.task-edit-button:hover,
+.task-delete-button:hover {
+  background: #fddc87;
+}
+
+.task-edit-button,
+.task-delete-button {
+  width: 2em;
+  height: 2em;
+  outline: 0.5px solid black;
+}
+
+.task-edit-button svg {
+  margin-left: -2px;
+  margin-top: -2px; 
+
+}
+
+.task-delete-button svg {
+  margin-left: -6px;
+  margin-top: -1.3px;
+}
+
+.non-editable {
+  cursor: default;
+}
