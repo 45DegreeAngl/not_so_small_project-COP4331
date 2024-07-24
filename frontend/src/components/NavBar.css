@@ -5,7 +5,7 @@
 }
 .navbar{
     width: 100%;
-    height: auto;
+    height: 15%;
     display : flex;
     align-items: center;
     justify-content: space-between;
@@ -36,7 +36,11 @@
     cursor: pointer;
     border : none;
     background-color: #FDDC87;
-    font-size: 18px;
+    font-size: 20px;
+}
+
+#button:hover{
+    color: #DC6B2C;
 }
 
 ul{
