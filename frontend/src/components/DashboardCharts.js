@@ -4,6 +4,7 @@ import GanttChartIcon from "./GanttChartIcon.js";
 import DeleteIcon from "./DeleteButtonIcon.js";
 import InvisibleProjectIcon from "./InvisibleChartIcon.js";
 import VisibleProjectIcon from "./VisibleChartIcon.js";
+import { Link } from "react-router-dom";
 const app_name = 'ganttify-5b581a9c8167';
 function buildPath(route)
 {
