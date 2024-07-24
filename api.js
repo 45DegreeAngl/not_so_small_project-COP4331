@@ -945,21 +945,20 @@ router.get("/allusers", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-//------------------> Search users by ids<---------------WIP----------------------//
+//------------------> Search users by ids<-------------------------------------//
 router.post("/search/taskworkers", async (req, res) => {
     const { ids } = req.body;
-  
+    //console.log(ids);
+    const oIds = ids.map((id) => new ObjectId(id));
     try {
       const db = client.db("ganttify");
       const userCollection = db.collection("userAccounts");
   
-      const query = {_id : {$in : ids}};
+      const query = {_id : {$in : oIds}};
   
       // Find users matching ids excluding passwords
-      const users = await userCollection.find(query, {
-        projection: { password: 0 } // Exclude password from the results
-      }).toArray();
-      console.log(users);
+      const users = await userCollection.find(query).project({name:1,phone:1,email:1}).toArray();
+      //console.log(users);
       res.status(200).json(users);
     } catch (error) {
       console.error("Error searching users:", error);
@@ -1001,9 +1000,6 @@ router.post("/searchusers", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
 //-> Search Project by Title & Sort by Due Date <-//
 router.post("/search/projects", async (req, res) => {
 
