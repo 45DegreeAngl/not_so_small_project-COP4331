@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './AboutUs.css';
 import member_an from '../Images/assets/team_member_icons/AN.jpg';
+import member_nb from '../Images/assets/team_member_icons/NB.png';
+import member_tk from '../Images/assets/team_member_icons/TK.jpg';
+import member_lr from '../Images/assets/team_member_icons/LR.png';
 const app_name = 'ganttify-5b581a9c8167';
 
 
@@ -27,7 +30,7 @@ function AboutUs() {
             
 
             <div className="team-member">
-                <img src="/images/kittens.webp" alt="Nickolas Brandenburg" className="team-image"/>   
+                <img src="{member_nb} alt="Nickolas Brandenburg" className="team-image"/>   
                 <div className="member-info">
                     <h2>Nickolas Brandenburg</h2>
                     <p>Database and API developer</p>
@@ -43,7 +46,7 @@ function AboutUs() {
             </div>
 
             <div className="team-member">
-                <img src="/images/kittens.webp" alt="Tetiana Kotvitska" className="team-image"/>
+                <img src={member_tk} alt="Tetiana Kotvitska" className="team-image"/>
                 <div className="member-info">
                     <h2>Tetiana Kotvitska</h2>
                     <p>Database and API developer</p>
@@ -71,7 +74,7 @@ function AboutUs() {
                     <h2>Luis Rodriguez-Rivera</h2>
                     <p>Database and API developer</p>
                 </div>
-                <img src="/images/kittens.webp" alt="Luis Rodriguez-Rivera" className="team-image"/>
+                <img src={member_lr} alt="Luis Rodriguez-Rivera" className="team-image"/>
             </div>
 
             <div className="team-member">
