@@ -142,34 +142,35 @@ function DashboardToDo() {
             const taskContactsHeader = document.createElement("h5");
             taskContactsHeader.textContent = "Teammate Information:"
             taskContactsDiv.appendChild(taskContactsHeader);
-            userInfoRaw.forEach(userRaw =>{
-                console.log(userRaw);
-                const userInfoDiv = document.createElement("div");
-                userInfoDiv.setAttribute("class","contactName");
-                if(userRaw._id.localeCompare(userId) === 0){
-                    return;
-                }
-                console.log(userRaw);
-                let email = "Email: " + userRaw.email;
-                const emailText = document.createElement("p");
-                emailText.innerText=email;
-                emailText.setAttribute("class","contactBody");
-                let phone = "Phone: " + toPhonePretty(userRaw.phone);
-                const phoneText = document.createElement("p");
-                phoneText.innerText = phone;
-                phoneText.setAttribute("class","contactBody");
-                let name = userRaw.name;
-                const nameText = document.createElement("p");
-                nameText.innerText = name;
-                nameText.setAttribute("class","contactName");
-                userInfoDiv.appendChild(nameText);
-                userInfoDiv.appendChild(emailText);
-                userInfoDiv.appendChild(phoneText);
-                userInfoDiv.id = userRaw._id
-                userInfoDiv.style.display = "none";
-                taskContactsDiv.appendChild(userInfoDiv);
-            });
-            
+            if(userInfoRaw){
+                userInfoRaw.forEach(userRaw =>{
+                    console.log(userRaw);
+                    const userInfoDiv = document.createElement("div");
+                    userInfoDiv.setAttribute("class","contactName");
+                    if(userRaw._id.localeCompare(userId) === 0){
+                        return;
+                    }
+                    console.log(userRaw);
+                    let email = "Email: " + userRaw.email;
+                    const emailText = document.createElement("p");
+                    emailText.innerText=email;
+                    emailText.setAttribute("class","contactBody");
+                    let phone = "Phone: " + toPhonePretty(userRaw.phone);
+                    const phoneText = document.createElement("p");
+                    phoneText.innerText = phone;
+                    phoneText.setAttribute("class","contactBody");
+                    let name = userRaw.name;
+                    const nameText = document.createElement("p");
+                    nameText.innerText = name;
+                    nameText.setAttribute("class","contactName");
+                    userInfoDiv.appendChild(nameText);
+                    userInfoDiv.appendChild(emailText);
+                    userInfoDiv.appendChild(phoneText);
+                    userInfoDiv.id = userRaw._id
+                    userInfoDiv.style.display = "none";
+                    taskContactsDiv.appendChild(userInfoDiv);
+                });
+            }
             for (i = 0; i < tasks.length; i++) {
                 const tableBody = document.getElementById('taskTableBody');
                 const newRow = document.createElement('tr');
