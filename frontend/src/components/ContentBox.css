@@ -10,9 +10,10 @@
 
 .info{
     font-size: 20px;
-    color: black;
-    margin-top: 250px;
-    margin-left: 300px;
+    color: black;   
+    margin-top: 15%;
+    margin-left: 12.5%;
+    justify-content: center;
     position: absolute;
     display: block;
 
@@ -22,8 +23,9 @@
     position: absolute;
     width: 100%;
     height: 550px;
-    background-color: black;
-    opacity: 0.1;
+    background-color: #FDDC87;
+    opacity: 0.5;
+    z-index: -99;
 }
 
 .Start{ 
@@ -106,7 +108,7 @@
     position: absolute;
     top : 2200px;
     width: 100%;
-    height: 60vh; /* Adjust based on your preference */
+    height: 25vh; /* Adjust based on your preference */
     background-color: #FDDC87; /* Example background color */
     color: white; /* Example text color */
     display: flex;
@@ -114,25 +116,34 @@
     text-align: center;
     align-items: center;
     line-height: 50px; /* Center the text vertically */
+    list-style-type: none;
 }
 
 
 .button{
     border : none;
-    font: 24px;
+    border-radius: 30%;
     width: 150px;
-    height: 150px;
+    height: 70px;
     background-color: #FDDC87;
     align-items: center;
-
+    color: black;
+    
+    
 }
+
+.button:hover{
+    background-color: #DC6B2C;
+    color: white;
+}
+
 
 .align{
     display: flex;
-    justify-content: center;
-    align-items: center;
     margin-top: 50px;
     margin-left: 675px;
+    font: 48px;
+    color: black;
 }
 
 @keyframes slideInFromLeft {
@@ -148,6 +159,7 @@
   
   .animated-header-1 {
     animation: slideInFromLeft 2s ease-out;
+    margin-left: 2.5%;
   }
 
 @keyframes slideInFromRight {
@@ -163,6 +175,7 @@
 
 .animated-header-2 {
 animation: slideInFromRight 2s ease-out;
+margin-right: 2.5%;
 position: relative;
 display: flex;
 justify-content: flex-end;

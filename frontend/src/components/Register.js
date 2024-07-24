@@ -119,6 +119,10 @@ function Register() {
       <div className='topDiv'>
         <h1>Create an Account</h1>
       </div>
+
+      <br></br>
+      <br></br>
+      
       <div className="mb-3 bottomDiv">
         {formVisible ? (
           <form onSubmit={doRegister}>

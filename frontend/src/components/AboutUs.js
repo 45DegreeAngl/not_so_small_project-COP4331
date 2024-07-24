@@ -23,6 +23,9 @@ function AboutUs() {
         </div>
         <div className="bottomDiv">
 
+            <div class = "box">
+            
+
             <div className="team-member">
                 <img src="/images/kittens.webp" alt="Nickolas Brandenburg" className="team-image"/>   
                 <div className="member-info">
@@ -85,6 +88,7 @@ function AboutUs() {
                     <p>Frontend and API developer</p>
                 </div>
                 <img src="/images/kittens.webp" alt="Shane Welz" className="team-image"/>
+            </div>
             </div>
         </div>
     </div>
