@@ -46,3 +46,16 @@ body{
 .modalSubTitle{
     float:bottom;
 }
+.contactInfoDiv{
+    padding:10px;
+    background-color:#FDDC87 ;
+    border-radius: 10px;
+}
+.contactName{
+    margin-top: 0;
+    margin-left: 20px;
+}
+.contactBody{
+    margin-top: 0;
+    margin-left: 40px;
+}
