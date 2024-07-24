@@ -771,7 +771,50 @@ router.delete("/recently-deleted/:id", async (req, res) => {
       res.status(500).json({ error });
     }
   });
-
+// Restore a recently deleted project
+router.post('/restore-project/:projectId', async (req, res) => {
+    const { projectId } = req.params;
+  
+    if (!projectId) {
+      return res.status(400).json({ error: "Project ID is required" });
+    }
+  
+    try {
+      const db = client.db("ganttify");
+      const recentlyDeletedCollection = db.collection("recently_deleted_projects");
+      const projectsCollection = db.collection("projects");
+  
+      // Validate projectId
+      if (!ObjectId.isValid(projectId)) {
+        return res.status(400).json({ error: "Invalid Project ID format" });
+      }
+  
+      // Convert projectId to ObjectId
+      const projectObjectId = new ObjectId(projectId);
+  
+      // Find the project in the recently_deleted_projects collection
+      const deletedProject = await recentlyDeletedCollection.findOne({ _id: projectObjectId });
+      if (!deletedProject) {
+        return res.status(404).json({ error: "Project not found in recently deleted projects" });
+      }
+  
+      // Remove the project from recently_deleted_projects collection
+      await recentlyDeletedCollection.deleteOne({ _id: projectObjectId });
+  
+      // Update the flagDeletion field and restore the project to the projects collection
+      deletedProject.flagDeletion = 0;
+      const result = await projectsCollection.insertOne(deletedProject);
+  
+      if (!result.insertedId) {
+        return res.status(500).json({ error: "Failed to restore project" });
+      }
+  
+      return res.status(200).json({ message: "Project restored successfully", restoredProjectId: result.insertedId });
+    } catch (error) {
+      console.error("Error restoring project:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
 router.post('/forgot-password', async (req, res) => 
 {
   const {email} = req.body;
