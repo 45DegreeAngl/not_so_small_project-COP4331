@@ -102,9 +102,11 @@ function DashboardToDo() {
                 let currTaskTitle = usersTasks[i].taskTitle;
                 let currTaskDescription = usersTasks[i].description;
                 let currTaskWorkers = usersTasks[i].assignedTasksUsers;
-                currTaskWorkers.forEach(teamUser => {
-                    if(!usersToSearch.includes(teamUser)){usersToSearch.push(teamUser);}
-                });
+                if(currTaskWorkers){
+                    currTaskWorkers.forEach(teamUser => {
+                        if(!usersToSearch.includes(teamUser)){usersToSearch.push(teamUser);}
+                    });
+                }
                 let currDueDate = toDate(usersTasks[i].dueDateTime);
                 let currDueDatePretty = toDisplayDate(currDueDate);
                 let currProjectId = usersTasks[i].tiedProjectId;
