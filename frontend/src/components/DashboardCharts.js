@@ -397,6 +397,7 @@ function DashboardCharts({ projects }) {
                 <div class="col px-0">
                     {chart1.isVisible ?
                         <div class="card" >
+                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart1.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart1.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
@@ -411,6 +412,7 @@ function DashboardCharts({ projects }) {
                 <div class="col px-0">
                     {chart2.isVisible ?
                         <div class="card" >
+                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart2.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart2.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
@@ -425,6 +427,7 @@ function DashboardCharts({ projects }) {
                 <div class="col px-0">
                     {chart3.isVisible ?
                         <div class="card" >
+                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart3.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart3.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
@@ -441,6 +444,7 @@ function DashboardCharts({ projects }) {
                 <div class="col px-0">
                     {chart4.isVisible ?
                         <div class="card" >
+                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart4.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart4.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
@@ -455,6 +459,7 @@ function DashboardCharts({ projects }) {
                 <div class="col px-0">
                     {chart5.isVisible ?
                         <div class="card" >
+                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart5.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart5.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
@@ -469,6 +474,7 @@ function DashboardCharts({ projects }) {
                 <div class="col px-0">
                     {chart6.isVisible ?
                         <div class="card" >
+                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart6.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 {userId.toString().localeCompare(chart6.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
