@@ -31,7 +31,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
 
- 
+
   const [originalTask, setOriginalTask] = useState(null);
 
   useEffect(() => {
@@ -47,6 +47,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       setStartDate(task.startDateTime);
       setDueDate(task.dueDateTime);
 
+  
 
       setOriginalTask({
         progress: task.progress,
@@ -60,11 +61,13 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     }
   }, [task]);
 
+
+
   const handleClickOutside = (event) => {
     if (show && !document.getElementById('task-details-sidebar').contains(event.target)) {
       if (editMode) {
         resetTaskDetails(); 
-        setEditMode(false); 
+        setEditMode(false);
       }
       onHide();
     }
@@ -125,41 +128,39 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
   const fetchTeamUsers = async (teamId) => {
     try {
-        const response = await fetch(buildPath(`api/teams/${teamId}`));
-        const team = await response.json();
+      const response = await fetch(buildPath(`api/teams/${teamId}`));
+      const team = await response.json();
 
-        //Gets all of the ID's in a team
-        const founderId = team.founderId;
-        const editors = Array.isArray(team.editors) ? team.editors : [];
-        const members = Array.isArray(team.members) ? team.members : [];
+  
+      const founderId = team.founderId;
+      const editors = Array.isArray(team.editors) ? team.editors : [];
+      const members = Array.isArray(team.members) ? team.members : [];
 
+     
+      const allUserIds = [founderId, ...editors, ...members];
 
-        const allUserIds = [founderId, ...editors, ...members];
+     
+      const uniqueUserIds = [...new Set(allUserIds)];
 
-        const uniqueUserIds = [...new Set(allUserIds)];
+      
+      const responseUsers = await fetch(buildPath('api/read/users'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ users: uniqueUserIds }),
+      });
 
+      if (!responseUsers.ok) {
+        throw new Error('Failed to fetch user details');
+      }
 
-        const responseUsers = await fetch(buildPath('api/read/users'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ users: uniqueUserIds }),
-        });
+      const { usersInfo } = await responseUsers.json();
+      const validUsers = Array.isArray(usersInfo) ? filterValidUsers(usersInfo) : [];
 
-        if (!responseUsers.ok) {
-            throw new Error('Failed to fetch user details');
-        }
-
-        const { usersInfo } = await responseUsers.json();
-
-        let filteredUsers = usersInfo.filter(user => user !== null);
-
-        const validUsers = Array.isArray(usersInfo) ? filteredUsers : [];
-
-        setTeamUsers(validUsers);
+      setTeamUsers(validUsers);
     } catch (error) {
-        console.error('Error fetching team users:', error);
+      console.error('Error fetching team users:', error);
     }
   };
 
@@ -205,8 +206,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
       const { usersInfo } = await response.json();
       if (Array.isArray(usersInfo)) {
-
-        const validUsers = usersInfo.filter(user => user !== null);
+        const validUsers = filterValidUsers(usersInfo);
         const userNames = validUsers.map(user => user.name || 'Unknown');
         setAssignedUserNames(userNames);
       } else {
@@ -217,6 +217,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     }
   };
 
+  const filterValidUsers = (users) => {
+    return users.filter(user => user !== null);
+  };
 
   const formatDate = (dateString) => {
     const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
@@ -248,7 +251,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleColorChange = async (newColor) => {
-    setColor(newColor);
+    setColor(newColor); 
 
     var element = document.getElementById('color-circle');
     element.style.backgroundColor = newColor;
@@ -268,8 +271,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
       const updatedTask = await response.json();
       console.log('Task color updated successfully:', updatedTask);
-
+   
       
+
     } catch (error) {
       console.error('Error updating task color:', error);
     }
@@ -299,15 +303,78 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       const updatedTask = await response.json();
       console.log('Task updated successfully:', updatedTask);
 
+     
+      
+      await updateUsersToDoList(task._id, assignedUserNames.map(name => teamUsers.find(user => user.name === name)._id).filter(id => id));
+
       setEditMode(false); 
-      window.location.reload();
+      
+      window.location.reload(); 
+      
     } catch (error) {
       console.error('Error updating task details:', error);
     }
   };
 
-  const checkboxChange = (userName) => {
-    setAssignedUserNames((prevAssignedUserNames) => prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName) : [...prevAssignedUserNames, userName]);
+  const updateUsersToDoList = async (taskId, userIds) => {
+    try {
+      const response = await fetch(buildPath('api/updateUsersToDoList'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId, userIds }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update users\' toDoList');
+      }
+
+      console.log('Users\' toDoList updated successfully');
+    } catch (error) {
+      console.error('Error updating users\' toDoList:', error);
+    }
+  };
+
+  const handleCheckboxChange = async (userName) => {
+    setAssignedUserNames((prevAssignedUserNames) => { const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName): [...prevAssignedUserNames, userName];
+
+  
+      const isChecked = !prevAssignedUserNames.includes(userName);
+
+    
+      const userId = teamUsers.find(user => user.name === userName)._id;
+
+    
+      updateSingleUserToDoList(task._id, userId, isChecked);
+
+      return updatedAssignedUsers;
+    });
+  };
+
+  const updateSingleUserToDoList = async (taskId, userId, isChecked) => {
+    try {
+      const response = await fetch(buildPath('api/updateSingleUserToDoList'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId, userId, isChecked }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user\'s toDoList');
+      }
+
+      console.log('User\'s toDoList updated successfully');
+    } catch (error) {
+      console.error('Error updating user\'s toDoList:', error);
+    }
+  };
+
+  const handleCloseClick = () => {
+    handleClickOutside(true); 
+    onHide();
   };
 
   const handleDeleteClick = () => {
@@ -324,7 +391,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         <div className="icon-button-container">
           {isEditable && <button type="button" className="edit-button" onClick={() => setEditMode(!editMode)}>✎</button>}
           {isEditable && <button type="button" className="delete-button" onClick={handleDeleteClick}>🗑</button>}
-          <button type="button" className="close" onClick={onHide}>&times;</button>
+          <button type="button" className="close" onClick={handleCloseClick}>&times;</button>
         </div>
         <div className="task-title-container">
           <div className={`color-circle ${editMode ? 'clickable' : ''}`} id="color-circle" style={{ backgroundColor: color }} onClick={() => editMode && setShowColorPicker(!showColorPicker)} />
@@ -374,7 +441,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
                         type="checkbox"
                         id={`user-${user._id}`}
                         checked={assignedUserNames.includes(user.name)}
-                        onChange={() => checkboxChange(user.name)}
+                        onChange={() => handleCheckboxChange(user.name)}
                       />
                       <label htmlFor={`user-${user._id}`}>{user.name}</label>
                     </div>
@@ -406,3 +473,4 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 };
 
 export default TaskDetails;
+
