@@ -285,7 +285,7 @@ router.post("/createtask", async (req, res) => {
     description = "",
     dueDateTime,
     progress = "Not Started",
-    assignedTasksUsers,
+    assignedTasksUsers = [],
     taskTitle,
     tiedProjectId,
     taskCreatorId,
@@ -295,14 +295,8 @@ router.post("/createtask", async (req, res) => {
   } = req.body;
   let error = "";
 
-  if (
-    !dueDateTime ||
-    !taskTitle ||
-    !taskCreatorId ||
-    !startDateTime
-  ) {
-    error =
-      "Task dueDateTime, taskTitle, taskCreatorId, and startDateTime are required";
+  if (!dueDateTime || !taskTitle || !taskCreatorId || !startDateTime) {
+    error = "Task dueDateTime, taskTitle, taskCreatorId, and startDateTime are required";
     return res.status(400).json({ error });
   }
 
@@ -310,6 +304,7 @@ router.post("/createtask", async (req, res) => {
     const db = client.db("ganttify");
     const taskCollection = db.collection("tasks");
     const projectCollection = db.collection("projects");
+    const userCollection = db.collection("userAccounts");
 
     const newTask = {
       description,
@@ -325,14 +320,23 @@ router.post("/createtask", async (req, res) => {
       pattern
     };
 
+    console.log("New task to be inserted:", newTask);
+
     const task = await taskCollection.insertOne(newTask);
     const taskId = task.insertedId;
-
 
     await projectCollection.updateOne(
       { _id: new ObjectId(tiedProjectId) },
       { $push: { tasks: taskId } }
     );
+
+    if (assignedTasksUsers.length > 0) {
+      console.log("Updating users with new task in toDoList:", assignedTasksUsers);
+      await userCollection.updateMany(
+        { _id: { $in: assignedTasksUsers.map(id => new ObjectId(id)) } },
+        { $push: { toDoList: taskId } }
+      );
+    }
 
     res.status(201).json({ ...newTask, _id: taskId });
   } catch (error) {
@@ -445,20 +449,48 @@ router.put("/tasks/:id/dates", async (req, res) => {
 //-----------------> Delete Task <-----------------//
 router.delete("/tasks/:id", async (req, res) => {
   const { id } = req.params;
-  let error = "";
 
   try {
     const db = client.db("ganttify");
     const taskCollection = db.collection("tasks");
+    const projectCollection = db.collection("projects");
+    const userCollection = db.collection("userAccounts");
+
+
+    const task = await taskCollection.findOne({ _id: new ObjectId(id) });
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    const { tiedProjectId, assignedTasksUsers } = task;
+
 
     const result = await taskCollection.deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+
+
+    await projectCollection.updateOne(
+      { _id: new ObjectId(tiedProjectId) },
+      { $pull: { tasks: new ObjectId(id) } }
+    );
+
+    if (assignedTasksUsers && assignedTasksUsers.length > 0) {
+      await userCollection.updateMany(
+        { _id: { $in: assignedTasksUsers.map(userId => new ObjectId(userId)) } },
+        { $pull: { toDoList: new ObjectId(id) } }
+      );
+    }
+
     res.status(200).json(result);
   } catch (error) {
     console.error("Error deleting task:", error);
-    error = "Internal server error";
-    res.status(500).json({ error });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 // -----------------> Assign user to a task <----------------- //
@@ -577,19 +609,21 @@ router.post("/createproject", async (req, res) => {
   let error = "";
 
   if (!nameProject || !founderId) {
-    error = "Project name is required";
+    error = "Project name and founder ID are required";
     return res.status(400).json({ error });
   }
 
   try {
     const db = client.db("ganttify");
     const projectCollection = db.collection("projects");
+    const teamCollection = db.collection("teams");
+    const userCollection = db.collection("userAccounts");
 
     const newProject = {
       nameProject,
       dateCreated: new Date(),
       team: new ObjectId(),
-      tasks: null,
+      tasks: [], 
       isVisible,
       founderId: new ObjectId(founderId),
       flagDeletion,
@@ -597,11 +631,33 @@ router.post("/createproject", async (req, res) => {
     };
 
     const project = await projectCollection.insertOne(newProject);
-    res.status(201).json(newProject);
+    const projectId = project.insertedId;
+
+
+    const newTeam = {founderId: new ObjectId(founderId), editors: [], members: [], projects: [projectId],};
+
+    const team = await teamCollection.insertOne(newTeam);
+
+  
+    await projectCollection.updateOne(
+      { _id: projectId },
+      { $set: { team: team.insertedId } }
+    );
+
+
+    await userCollection.updateOne(
+      { _id: new ObjectId(founderId) },
+      { $push: { projects: projectId } }
+    );
+
+    res.status(201).json({ ...newProject, _id: projectId, team: team.insertedId });
+
   } catch (error) {
+
     console.error("Error creating project:", error);
     error = "Internal server error";
     res.status(500).json({ error });
+    
   }
 });
 
@@ -1346,6 +1402,61 @@ router.post("/search/tasks/project", async (req, res) => {
     } catch (error) {
       console.error("Error searching tasks for project:", error);
       res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  router.post("/search/tasks/project", async (req, res) => {
+    const { projectId } = req.body;
+  
+    try {
+      const db = client.db("ganttify");
+      const projectCollection = db.collection("projects");
+      const taskCollection = db.collection("tasks");
+  
+      const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+  
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+  
+      let tasks = [];
+  
+      if (Array.isArray(project.tasks) && project.tasks.length > 0) {
+        tasks = await taskCollection.find({
+          _id: { $in: project.tasks }
+        }).toArray();
+      }
+  
+      res.status(200).json(tasks);
+    } catch (error) {
+      console.error("Error searching tasks for project:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  router.post("/updateSingleUserToDoList", async (req, res) => {
+    const { taskId, userId, isChecked } = req.body;
+    let error = "";
+  
+    if (!taskId || !userId || typeof isChecked !== 'boolean') {
+      error = "Task ID, user ID, and isChecked are required";
+      return res.status(400).json({ error });
+    }
+  
+    try {
+      const db = client.db("ganttify");
+      const userCollection = db.collection("userAccounts");
+  
+  
+      await userCollection.updateOne({ _id: new ObjectId(userId) }, isChecked ? { $addToSet: { toDoList: new ObjectId(taskId) } } : { $pull: { toDoList: new ObjectId(taskId) } });
+  
+      res.status(200).json({ message: "User's toDoList updated successfully" });
+    } catch (error) {
+
+      
+      console.error("Error updating user's toDoList:", error);
+      error = "Internal server error";
+      res.status(500).json({ error });
     }
   });
 
