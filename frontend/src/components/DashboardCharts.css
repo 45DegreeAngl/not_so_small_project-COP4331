@@ -65,10 +65,7 @@ body{
     margin:0px;
 }
 .btnRow{
-    vertical-align: middle;
-    margin: 0;
-    padding: 0;
-    justify-content: start;
+    vertical-align: center !important;
 }
 .btnCol{
     vertical-align: middle;
@@ -91,7 +88,7 @@ body{
     align-content: start;
     float: inline-end;
 }
-.viewChartButton{
+.viewChartBtn{
     font-size: smaller;
     width: fit-content;
     padding-inline: 10px;
@@ -102,8 +99,6 @@ body{
 }
 .btnLabel{
     font: bold 12px;
-    line-height: 14px;
-    height:20px;
     margin: 0px;
     display: table-cell;
     vertical-align: middle;
