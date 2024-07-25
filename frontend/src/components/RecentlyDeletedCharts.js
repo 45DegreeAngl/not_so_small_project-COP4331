@@ -305,7 +305,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <button class="projectBtn">{chart3.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>setProjectToRestoreChart3()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>setProjectToRestoreChart3()}/>}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart3.project.nameProject}</h5>
-                                <p class="card-text">Owner:{chart3.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart3.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -335,7 +335,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <button class="projectBtn">{chart5.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>setProjectToRestoreChart5()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>setProjectToRestoreChart5()} />}</button></div>
                                     : null}
                                 <h5 class="card-title">{chart5.project.nameProject}</h5>
-                                <p class="card-text">Owner:{chart5.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart5.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
