@@ -133,25 +133,32 @@ router.post('/verify-email', async (req, res) => {
 });
 
 
-router.get('/verify-email/:email/:token', async (req, res) => { 
+router.get('/verify-email/:email/:token', async (req, res) => {
   const { email, token } = req.params;
 
   try {
-    let user = tempUsers.find(userEmail => userEmail.email === email);
+    const db = client.db("ganttify");
+    const userCollection = db.collection("userAccounts");
+
+    const user = await userCollection.findOne({ email: email });
 
     if (user) {
       const secret = process.env.JWT_SECRET + user.password;
-  
+
       try {
         jwt.verify(token, secret);
+
+        await userCollection.updateOne({ _id: user._id }, { $set: { isEmailVerified: true } });
+
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+        
       } catch (error) {
         res.send("Invalid or expired token");
       }
-    }else{
+    } else {
       return res.status(404).send("User does not exist");
     }
-  } catch(error) {
+  } catch (error) {
     console.error('Error during verification:', error);
     res.status(400).send("Invalid ID format");
   }
