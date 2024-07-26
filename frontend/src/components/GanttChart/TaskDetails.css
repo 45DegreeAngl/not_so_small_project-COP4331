@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   margin-top: 10px;
-  margin-left: 12px;
+  margin-left: 10px;
   margin-right: 10px;
   flex-shrink: 0;
   margin-bottom: 20px;
@@ -72,6 +72,12 @@
   flex: 1;
   padding: 10px;
   max-height: 200px;
+  border-top: 1px solid #ddd;
+
+}
+
+.description-text{
+  margin-left: 10px;
 }
 
 .task-details-footer {
@@ -110,10 +116,11 @@
   color: #333; 
 }
 
-.dropdown {
+.dropdownDetails {
   margin: 10px 0;
   margin-top: -20px;
   flex-shrink: 0;
+  padding-bottom: 5px;
 }
 
 #todoDropdown {
@@ -130,6 +137,8 @@
 #placeHolderDivDetails {
   height: 20px;
 }
+
+
 
 .color-picker {
   position: absolute;
@@ -302,6 +311,7 @@ select[multiple] {
 #placeholder-temp {
   height: 10px;
 }
+
 
 .color-circle.clickable {
   cursor: pointer;

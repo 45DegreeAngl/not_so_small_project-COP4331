@@ -6,6 +6,7 @@ import Settings from './Settings';
 import Tasks from './Tasks';
 import TimeRange from './TimeRange';
 import TimeTable from './TimeTable';
+import TaskDetails from './TaskDetails';
 import './GanttChart.css';
 
 const app_name = 'ganttify-5b581a9c8167';
@@ -36,8 +37,8 @@ export default function GanttChart({ projectId, setUserRole, userRole }) {
     toSelectYear: currentYear.toString(),
   });
 
-  const [message, setMessage] = useState('');
-  const msgTag = " *** ";
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -124,6 +125,8 @@ export default function GanttChart({ projectId, setUserRole, userRole }) {
           setTasks={setTasks}
           setTaskDurations={setTaskDurations}
           userRole={userRole}
+          setSelectedTask={setSelectedTask}
+          setShowDetails={setShowDetails}
         />
         <TimeTable
           timeRange={timeRange}
@@ -136,6 +139,14 @@ export default function GanttChart({ projectId, setUserRole, userRole }) {
           userRole={userRole}
         />
       </Grid>
+
+      <TaskDetails
+        show={showDetails}
+        onHide={() => setShowDetails(false)}
+        task={selectedTask}
+        handleDelete={(taskId) => setTasks(tasks.filter(task => task._id !== taskId))}
+        userId={userId}
+      />
     </div>
   );
 }

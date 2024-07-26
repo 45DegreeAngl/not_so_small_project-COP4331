@@ -22,12 +22,33 @@ const AddTaskButton = ({ projectId }) => {
     color: "#DC6B2C",
     pattern: "default-pattern"
   });
-
   const [teamUsers, setTeamUsers] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [color, setColor] = useState('white'); // Default color
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
+  const colorOptions = [
+    '#e81416', '#ffa500', '#faeb36', '#79c314', '#487de7', '#4b369d', '#70369d', 
+    '#f47474', '#ffd580', '#fff77e','#b2e687', '#8fb9f9', '#9a86cc', '#b27fc6'
+  ];
 
   useEffect(() => {
     getTeamUsers(projectId);
   }, [projectId]);
+
+  useEffect(() => {
+    const handleColorPickerClickOutside = (event) => {
+      if (showColorPicker && !document.getElementById('color-picker').contains(event.target) && !document.getElementById('color-circle').contains(event.target)) {
+        setShowColorPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleColorPickerClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleColorPickerClickOutside);
+    };
+  }, [showColorPicker]);
 
   const getTeamUsers = async (projectId) => {
     try {
@@ -59,8 +80,6 @@ const AddTaskButton = ({ projectId }) => {
           body: JSON.stringify({ users: uniqueUserIds }),
         });
 
-
-
         if (!responseUsers.ok) {
           throw new Error('Failed to fetch user details');
         }
@@ -68,7 +87,6 @@ const AddTaskButton = ({ projectId }) => {
         const { usersInfo } = await responseUsers.json();
         const filteredUsers = usersInfo.filter(user => user !== null);
         const validUsers = Array.isArray(usersInfo) ? filteredUsers : [];
-
 
         setTeamUsers(validUsers);
       } catch (error) {
@@ -79,13 +97,30 @@ const AddTaskButton = ({ projectId }) => {
     }
   };
 
+  const handleColorChange = async (newColor) => {
+    setColor(newColor); 
+
+    var element = document.getElementById('color-circle');
+    element.style.backgroundColor = newColor;
+  };
+
+
+
+
+
+
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTaskData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleCheckboxChange = (userId) => {
-    setTaskData((prevData) => {const assignedUsers = prevData.assignedTasksUsers.includes(userId)? prevData.assignedTasksUsers.filter((id) => id !== userId) : [...prevData.assignedTasksUsers, userId];
+    setTaskData((prevData) => {
+      const assignedUsers = prevData.assignedTasksUsers.includes(userId)
+        ? prevData.assignedTasksUsers.filter((id) => id !== userId)
+        : [...prevData.assignedTasksUsers, userId];
 
       return { ...prevData, assignedTasksUsers: assignedUsers };
     });
@@ -93,6 +128,14 @@ const AddTaskButton = ({ projectId }) => {
 
   const handleAddTask = async (e) => {
     e.preventDefault();
+    const { startDateTime, dueDateTime } = taskData;
+
+
+    if (new Date(dueDateTime) < new Date(startDateTime)) {
+      setErrorMessage("Due date cannot be before start date.");
+      return;
+    }
+
     try {
       const newTask = {
         ...taskData,
@@ -143,6 +186,7 @@ const AddTaskButton = ({ projectId }) => {
       color: "#DC6B2C",
       pattern: "default-pattern"
     });
+    setErrorMessage(""); // Reset error message when modal is closed
   };
 
   return (
@@ -162,33 +206,34 @@ const AddTaskButton = ({ projectId }) => {
                 <h5 className="modal-title">Add a Task</h5>
                 <button type="button" className="btn-close" onClick={closeModal}></button>
               </div>
-
               <div className="modal-body">
+                {errorMessage && (
+                  <div className="alert alert-danger" role="alert">
+                    {errorMessage}
+                  </div>
+                )}
                 <form onSubmit={handleAddTask}>
                   <div className="mb-3">
                     <label htmlFor="taskTitle" className="form-label">Task Title</label>
                     <input type="text" className="form-control" id="taskTitle" name="taskTitle" value={taskData.taskTitle} onChange={handleInputChange} required />
                   </div>
 
-
                   <div className="mb-3">
                     <label htmlFor="description" className="form-label">Description</label>
                     <textarea className="form-control" id="description" name="description" value={taskData.description} onChange={handleInputChange}></textarea>
                   </div>
-
 
                   <div className="mb-3">
                     <label htmlFor="startDateTime" className="form-label">Start Date</label>
                     <input type="date" className="form-control" id="startDateTime" name="startDateTime" value={taskData.startDateTime} onChange={handleInputChange} required />
                   </div>
 
-
                   <div className="mb-3">
                     <label htmlFor="dueDateTime" className="form-label">Due Date</label>
                     <input type="date" className="form-control" id="dueDateTime" name="dueDateTime" value={taskData.dueDateTime} onChange={handleInputChange} required />
                   </div>
 
-
+                  
                   <div className="mb-3">
                     <label htmlFor="assignedTasksUsers" className="form-label">Assigned Users</label>
                     <div className="checkbox-list">
@@ -204,12 +249,19 @@ const AddTaskButton = ({ projectId }) => {
                         </div>
                       ))}
                     </div>
-
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="color" className="form-label">Color</label>
-                    <input type="color" className="form-control" id="color" name="color" value={taskData.color} onChange={handleInputChange} />
+                  <label className="form-label">Color</label>
+                    <div className= "color-circle" id="color-circle" style={{ backgroundColor: color }} onClick={() => setShowColorPicker(!showColorPicker)} />
+                    {showColorPicker && (
+                        <div id="color-picker" className="color-picker">
+                          {colorOptions.map((colorOption) => (
+                            <div key={colorOption} className="color-option" style={{ backgroundColor: colorOption }} onClick={() => handleColorChange(colorOption)} />
+                          ))}
+                          <input type="color" className="form-control form-control-color" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value)} />
+                        </div>
+                      )}
                   </div>
 
 
@@ -217,13 +269,9 @@ const AddTaskButton = ({ projectId }) => {
                     <label htmlFor="pattern" className="form-label">Pattern</label>
                     <input type="text" className="form-control" id="pattern" name="pattern" value={taskData.pattern} onChange={handleInputChange} />
                   </div>
-
-                  
                   <button type="submit" className="btn btn-primary">Add Task</button>
                 </form>
               </div>
-
-
             </div>
           </div>
         </div>
@@ -233,7 +281,3 @@ const AddTaskButton = ({ projectId }) => {
 };
 
 export default AddTaskButton;
-
-
-
-
