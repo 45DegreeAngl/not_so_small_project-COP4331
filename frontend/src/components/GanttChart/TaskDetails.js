@@ -30,7 +30,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [createdDate, setCreatedDate] = useState('');
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
-
+  const [dateError, setDateError] = useState('');
 
   const [originalTask, setOriginalTask] = useState(null);
 
@@ -47,8 +47,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       setStartDate(task.startDateTime);
       setDueDate(task.dueDateTime);
 
-  
-
       setOriginalTask({
         progress: task.progress,
         color: task.color,
@@ -60,8 +58,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       });
     }
   }, [task]);
-
-
 
   const handleClickOutside = (event) => {
     if (show && !document.getElementById('task-details-sidebar').contains(event.target)) {
@@ -191,6 +187,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const fetchAssignedUsers = async (userIds) => {
+
+
     try {
       const response = await fetch(buildPath('api/read/users'), {
         method: 'POST',
@@ -201,20 +199,26 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch assigned users details');
+        throw new Error('Error fetching assigned users');
       }
 
       const { usersInfo } = await response.json();
+
       if (Array.isArray(usersInfo)) {
-        const validUsers = filterValidUsers(usersInfo);
-        const userNames = validUsers.map(user => user.name || 'Unknown');
+
+
+        const validUsers = usersInfo.filter(user=> user !== null);
+        const userNames = validUsers.map(user => user.name || 'User not found');
+
         setAssignedUserNames(userNames);
       } else {
-        throw new Error('Invalid response structure for assigned users details');
+        throw new Error('Invalid response');
       }
     } catch (error) {
-      console.error('Error fetching assigned users details:', error);
+      console.error('Error fetching assigned users:', error);
     }
+
+
   };
 
   const filterValidUsers = (users) => {
@@ -280,6 +284,18 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleSaveChanges = async () => {
+    const currentDate = new Date();
+    const threeMonthsBefore = new Date(currentDate.getFullYear(), currentDate.getMonth() - 3, 0);
+    const threeMonthsAfter = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, 0);
+
+    if (new Date(startDate) > new Date(dueDate)) {
+      setDateError("Due date cannot be before start date.");
+      return;
+    }
+
+ 
+    setDateError(''); // Clear the error message if dates are valid
+
     try {
       const response = await fetch(buildPath(`api/tasks/${task._id}`), {
         method: 'PUT',
@@ -303,8 +319,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       const updatedTask = await response.json();
       console.log('Task updated successfully:', updatedTask);
 
-     
-      
       await updateUsersToDoList(task._id, assignedUserNames.map(name => teamUsers.find(user => user.name === name)._id).filter(id => id));
 
       setEditMode(false); 
@@ -337,6 +351,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleCheckboxChange = async (userName) => {
+    
     setAssignedUserNames((prevAssignedUserNames) => { const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName): [...prevAssignedUserNames, userName];
 
   
@@ -410,7 +425,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           <input type="color" className="form-control form-control-color" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value)} />
         </div>
       )}
-      <div className="dropdown">
+      <div className="dropdownDetails">
         <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{status}</a>
         <div className="dropdown-menu" aria-labelledby="todoDropdown">
           <a className="dropdown-item" onClick={() => handleStatusChange('Not Started')}>Not Started</a>
@@ -418,6 +433,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           <a className="dropdown-item" onClick={() => handleStatusChange('Completed')}>Completed</a>
         </div>
       </div>
+
+
+
       <div className="task-details-body">
         <div id="description-title">Description</div>
         {editMode ? (
@@ -426,6 +444,10 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           <div id="description">{task.description || 'Add a description here...'}</div>
         )}
       </div>
+
+
+
+
       <div className="task-details-footer">
         <div className="details">
           <div className="details-header">Details</div>
@@ -465,6 +487,10 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
               formatDate(task.dueDateTime)
             )}</p>
           </div>
+
+
+
+          {dateError && <p className="error">{dateError}</p>}
         </div>
         {editMode && <button type="button" className="done-button" onClick={handleSaveChanges}>Done</button>}
       </div>
@@ -473,4 +499,3 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 };
 
 export default TaskDetails;
-
