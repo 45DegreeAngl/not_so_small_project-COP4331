@@ -255,7 +255,7 @@ export default function TimeTable({
 
   const taskDurationBaseStyle = {
     position: 'absolute',
-    height: 'calc(var(--cell-height) / 1.5)',
+    height: 'calc(var(--cell-height) * 0.75)',
     top: 'calc(var(--cell-height) / 6.5)',
     zIndex: '1',
     borderRadius: 'var(--border-radius)',

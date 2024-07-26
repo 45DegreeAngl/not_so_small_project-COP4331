@@ -288,37 +288,43 @@ const isValidHexColor = (color) => /^#([0-9A-F]{3}){1,2}$/i.test(color);
 
 
 // List of valid patterns
+// Replaced the valid file as pngs instead of svgs.
 const allowedPatterns = {
   hollow_shape_family: [
-    "Hollow_Halftone_Density_1.svg",
-    "Hollow_Halftone_Density_2.svg",
-    "Hollow_Halftone_Density_3.svg",
-    "Hollow_Mac_Noodle_Density_1.svg",
-    "Hollow_Single_Circle_Density_1.svg",
-    "Hollow_Single_Dot_Density_1.svg",
-    "Hollow_Single_Rhombus_Density_1.svg",
-    "Hollow_Single_Square_Density_1.svg",
-    "Hollow_Single_Star_Density_1.svg",
-    "Hollow_Single_Triangle_Density_1.svg",
+    "Hollow_Halftone_Density_1.png",
+    "Hollow_Halftone_Density_2.png",
+    "Hollow_Halftone_Density_3.png",
+    // "Hollow_Mac_Noodle_Density_1.svg", // Removed
+    "Hollow_Single_Circle_Density_1.png",
+    "Hollow_Single_Dot_Density_1.png",
+    "Hollow_Single_Rhombus_Density_1.png",
+    "Hollow_Single_Square_Density_1.png",
+    "Hollow_Single_Star_Density_1.png",
+    "Hollow_Single_Triangle_Density_1.png",
   ],
   line_family: [
-    "Diagonal_Left_Single_Line_Density_1.svg",
-    "Diagonal_Right_Single_Line_Density_1.svg",
-    "Diagonal_Woven_Line_Density_1. svg",
-    "Single_Horizontal_Line_Density_1.svg",
-    "Single_Vertical_Line_Density_1.svg",
+    "Diagonal_Left_Single_Line_Density_1.png",
+    "Diagonal_Right_Single_Line_Density_1.png",
+    "Diagonal_Woven_Line_Density_1.png",
+    "Single_Horizontal_Line_Density_1.png",
+    "Single_Vertical_Line_Density_1.png",
   ],
   solid_shape_family: [
-    "Solid_Halftone_Density_1.svg",
-    "Solid_Halftone_Density_2.svg",
-    "Solid_Halftone_Density_3.svg",
-    "Solid_Mac_Noodle_Density_1.svg",
-    "Solid_Single_Circle_Density_1.svg",
-    "Solid_Single_Dot_Density_1.svg",
-    "Solid_Single_Rhombus_Density_1.svg",
-    "Solid_Single_Square_Density_1.svg",
-    "Solid_Single_Star_Density_1.svg",
-    "Solid_Single_Triangle_Density_1.svg",
+    "Solid_Halftone_Density_1.png",
+    "Solid_Halftone_Density_2.png",
+    "Solid_Halftone_Density_3.png",
+    // "Solid_Mac_Noodle_Density_1.svg", // Removed.
+    "Solid_Single_Circle_Density_1.png",
+    "Solid_Single_Dot_Density_1.png",
+    "Solid_Single_Rhombus_Density_1.png",
+    "Solid_Single_Square_Density_1.png",
+    "Solid_Single_Star_Density_1.png",
+    "Solid_Single_Triangle_Density_1.png",
+  ], 
+  halftone_family: [
+    "Halftone_Density_1.png",
+    "Halftone_Density_2.png",
+    "Halftone_Density_3.png",
   ]
 };
 
