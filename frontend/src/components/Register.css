@@ -2,27 +2,66 @@ body{
     font-family: "Inter", sans-serif;
     margin: 0;
     padding: 0;
+    overflow-y: auto !important;
 }
-.topDiv {
-    background-color: #DC6B2C;
-    color: white;
-    text-align: center;
-    padding: 50px 0;
-}
-.bottomDiv{
-    padding-top:30px;
+.registerContainer{
+    min-height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    margin: 0 auto;
     justify-content: center;
     align-items: center;
-    width:700px !important;
+    width: 100%;
 }
+.registerForm{
+    background: #FFEFD5;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 100%;
+    margin-top: -350px;
+    border:none;
+    height:fit-content
+}
+.registerFormHeader{
+    background-color: #FFEFD5;
+    border:none;
+}   
+.registerTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    color: #000;
+}
+
+.registerTitle::before, .registerTitle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 80px;
+    height: 2px;
+    background: #DC6B2C;
+}
+.registerTitle::before {
+    left: -90px;
+}
+.registerTitle::after {
+    right: -90px;
+}
+
 .formItem{
-    padding:0 20px;
+    border-width: 1px;
+    padding:10px 20px !important;
+    width:100% !important;
+    border-radius: 3px !important;
 }
-.formItem:valid{
-    border-color: green;
+.formItem:valid, .formItem:invalid{
+    border-color: #000;
 }
-.formItem:invalid{
-    border-color:red;
+.formLabel{
+    font-size: 20px;
 }
 .formDescription{
     font-style: italic;
@@ -48,31 +87,11 @@ body{
     color:red;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .verify-email-container {
     background-color: #ffffff;
     padding: 50px 0;
     width: 90%; 
-    margin: 0 auto;
+    margin:0 auto;
     width: 100%;
     display: flex;
     align-items: center;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Register.css';
 const app_name = 'ganttify-5b581a9c8167';
 
@@ -12,7 +12,7 @@ function buildPath(route) {
 
 function Register() {
   const [regName, setRegName] = useState('');
-  const [regUser, setRegUser] = useState('');
+  const regUser = "username"
   const [regPassword, setRegPassword] = useState('');
   const [regPasswordVerify, setRegPasswordVerify] = useState('');
   const [regPhone, setRegPhone] = useState('');
@@ -23,6 +23,7 @@ function Register() {
   const validPassUpper = RegExp("[A-Z]+");
   const validPassSymbol = RegExp("[^a-zA-Z0-9\s]+");
   const validPassDigit = RegExp("[0-9]+");
+  const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
   const msgTag = " *** ";
 
@@ -113,47 +114,105 @@ function Register() {
       });
     }, false);
   })();
-
+  function checkPhoneValidity(){
+    if(regPhone.localeCompare("") === 0){
+        setMessage("");
+    }
+    else if (!validPhone.test(regPhone)) {
+        setMessage("*** Please enter a valid 10 digit phone number ***");
+    }
+    else{
+        setMessage("");
+    }
+  };
+  function checkPasswordValidity(){
+    if(regPassword.localeCompare("") === 0){
+        setMessage("");
+        return;
+      }
+    if (regPassword === null || regPassword.length < 8) {
+        setMessage("*** Your password must be at least 8 characters ***");
+        return;
+      }
+      if (!validPassLower.test(regPassword)) {
+        setMessage("*** Your password must contain at least one lowercase letter ***");
+        return;
+      }
+      if (!validPassUpper.test(regPassword)) {
+        setMessage("*** Your password must contain at least one uppercase letter ***");
+        return;
+      }
+      if (!validPassDigit.test(regPassword)) {
+        setMessage("*** Your password must contain at least one digit ***");
+        return;
+      }
+      if (!validPassSymbol.test(regPassword)) {
+        setMessage("*** Your password must contain at least special symbol ***");
+        return;
+      }
+      if(regPasswordVerify.localeCompare("") === 0){
+        setMessage("");
+        return;
+      }
+      if (regPassword !== regPasswordVerify) {
+        setMessage("*** Passwords do not match ***");
+        return;
+      }
+      else{
+        setMessage("");
+        return;
+      }
+  }
+  function checkEmailValidity(){
+    if(regEmail.localeCompare("") === 0){
+        setMessage("");
+    }
+    else if(!validEmail.test(regEmail)){
+        setMessage("*** Please enter a valid email ***")
+    }
+    else{
+        setMessage("");
+    }
+  }
+  useEffect(()=>{checkPhoneValidity()},[regPhone])
+  useEffect(()=>{checkPasswordValidity()},[regPassword,regPasswordVerify])
+  useEffect(()=>{checkEmailValidity()},[regEmail]);
   return (
     <div>
-      <div className='topDiv'>
-        <h1>Create an Account</h1>
-      </div>
-
-      <br></br>
-      <br></br>
-      
-      <div className="mb-3 bottomDiv">
+      <div>
         {formVisible ? (
-          <form onSubmit={doRegister}>
-            <div className="form-group">
-              <label htmlFor="inputName"><h5><b>Name*</b></h5></label>
-              <input type="text" className="form-control form-control-lg" id="inputName" placeholder='Firstname Lastname' value={regName} onChange={e => setRegName(e.target.value)} required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputEmail"><h5><b>Email Address*</b></h5></label>
-              <input type="email" className="form-control form-control-lg" id="inputEmail" placeholder='example@email.com' value={regEmail} onChange={e => setRegEmail(e.target.value)} required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputPhone"><h5><b>Phone Number</b></h5></label>
-              <input type="tel" className="form-control form-control-lg" id="inputPhone" placeholder='(###) ###-####' value={regPhone} onChange={e => setRegPhone(e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputUsername"><h5><b>Username*</b></h5></label>
-              <input type="text" className="form-control form-control-lg" id="inputUsername" placeholder='Username' value={regUser} onChange={e => setRegUser(e.target.value)} required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputPassword"><h5><b>Password*</b></h5></label>
-              <input type="password" className="form-control form-control-lg" id="inputPassword" placeholder='Password1!' value={regPassword} onChange={e => setRegPassword(e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputPassword2"><h5><b>Re-enter Password*</b></h5></label>
-              <input type="password" className="form-control form-control-lg" id="inputPassword2" placeholder='Password1!' value={regPasswordVerify} onChange={e => setRegPasswordVerify(e.target.value)} />
-            </div>
-            <div className='formDescription'><span>* indicates a required field</span></div>
-            <div className="row justify-content-center buttonDiv"><button type="submit" className="btn submitButton" disabled={disable}>{disable ? 'Submitting...' : 'Create Account'}</button></div>
-            <div className='formMessage'><span>{message}</span></div>
-          </form>
+          <div class = "registerContainer">
+                <div class ="registerForm text-center mt-1">
+                    <div class ="card-header registerFormHeader">
+                        <h1 class = "registerTitle">Create an Account</h1>
+                    </div>
+                    <div class = "card-body p-0">
+                        <form onSubmit={doRegister}>
+                            <div class = "row text-start"><label class = "formLabel mb-1" for="nameForm">Full name</label></div>
+                            
+                            <div class = "row text-center mb-3"><input id="nameForm" type="text" class="formItem mx-0 mt-0" placeholder='Firstname Lastname' value={regName} onChange={(e) => setRegName(e.target.value)} required></input></div>
+                            
+                            <div class = "row text-start"><label class = "formLabel mb-1" for="emailForm">Email</label></div>
+                            
+                            <div class = "row text-center  mb-3"> <input id="emailForm" type="email" class="formItem" placeholder='example@email.com' value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required></input></div>
+                           
+                            <div class = "row text-start"><label class = "formLabel mb-1" for="telForm">10-digit phone number</label></div>
+                            
+                            <div class = "row align-items-center mb-3"><input id="telForm" type="tel" class="formItem" placeholder='(###) ###-####' value={regPhone} onChange={(e) => setRegPhone(e.target.value)} required></input></div>
+                            
+                            <div class = "row text-start"><label class = "formLabel mb-1" for="passwordForm">Password</label></div>
+                            
+                            <div class = "row text-center  mb-3"><input id="passwordForm" type="password" class="formItem" placeholder='Password1!' value={regPassword} onChange={(e) => setRegPassword(e.target.value)} required></input></div>
+                            
+                            <div class = "row text-start"><label class = "formLabel mb-1" for="verifyPasswordForm">Re-enter password</label></div>
+                            
+                            <div class = "row text-center  mb-3"><input id="verifyPasswordForm" type="password" class="formItem" placeholder='Password1!'value={regPasswordVerify} onChange={(e) => setRegPasswordVerify(e.target.value)} required></input></div>
+                            <div class = "row text-center mb-1"><span>{message}</span></div>
+                            <div class = "row text center mb-2"><button type="submit" className="btn submitButton" disabled={disable}>{disable ? 'Submitting...' : 'Create Account'}</button></div>
+                        </form>
+                    </div> 
+                </div>
+          </div>
           
         ) : (
           <div>
