@@ -5,8 +5,9 @@ body{
 }
 .navBarBody {
     background-color: #DC6B2C;
-    height:100% !important;
-    width:11% !important;
+    height:max-content !important;
+    min-width: 150px;
+    max-width:11% !important;
     float:left;
     text-align: left;
     padding-bottom: 100%;
@@ -16,8 +17,12 @@ body{
     background-color: white !important;
     color: white !important;
     text-align: left !important;
-    width: 95% !important;
-    height: 8px;
+    max-width: 95%;
+    width: 95%;
+    min-width: 90px !important;
+    min-height:min-content;
+    height: min-content;
+    max-height:min-content;
     margin-top:20px;
     cursor:pointer;
 }
@@ -31,4 +36,22 @@ body{
 }
 .message{
     color: red;
+}
+.navBarBodySmall{
+    background-color: #DC6B2C;
+    height:100px !important;
+    width: 100%;
+    float:left;
+
+}
+.navBtnSmall{
+    text-align: start;
+    background-color: white !important;
+    width:50%
+}
+.navBtnTextSmall{
+    color:black;
+    min-width:min-content;
+    width:max-content;
+    font-size: 10px;
 }

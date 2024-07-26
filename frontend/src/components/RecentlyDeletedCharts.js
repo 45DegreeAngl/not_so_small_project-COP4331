@@ -265,7 +265,7 @@ function RecentlyDeletedCharts({ projects }) {
     useEffect(() => { setChartPage() }, [projects]);
     return (
         <div>
-            <div id="top-chart-row" class="row px-0 mt-3 cardRow">
+            <div id="chart-row" class="row row-cols-xxl-3 row-cols-xl-2 row-cols-md-1 px-0 mt-3 gx-0 gy-3 cardRow">
                 <div class="col px-0">
                 {chart1.isVisible ?
                         <div class="card" >
@@ -282,7 +282,7 @@ function RecentlyDeletedCharts({ projects }) {
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                 {chart2.isVisible ?
                         <div class="card" >
                             <GanttChartIcon class="projectIcon" />
@@ -298,7 +298,7 @@ function RecentlyDeletedCharts({ projects }) {
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                 {chart3.isVisible ?
                         <div class="card" >
                             <GanttChartIcon class="projectIcon" />
@@ -314,9 +314,7 @@ function RecentlyDeletedCharts({ projects }) {
                             </div>
                         </div> : null}
                 </div>
-            </div>
-            <div id="bottom-chart-row" class="row px-0 mt-3 cardRow">
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                 {chart4.isVisible ?
                         <div class="card" >
                             <GanttChartIcon class="projectIcon" />
@@ -332,7 +330,7 @@ function RecentlyDeletedCharts({ projects }) {
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                 {chart5.isVisible ?
                         <div class="card" >
                             <GanttChartIcon class="projectIcon" />
@@ -348,7 +346,7 @@ function RecentlyDeletedCharts({ projects }) {
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                 {chart6.isVisible ?
                         <div class="card" >
                             <GanttChartIcon class="projectIcon" />
@@ -364,8 +362,6 @@ function RecentlyDeletedCharts({ projects }) {
                             </div>
                         </div> : null}
                 </div>
-
-
             </div>
             <div class="row px-0 mt-3">
                 <div class="col px-0">

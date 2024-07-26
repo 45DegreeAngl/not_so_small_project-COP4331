@@ -4,7 +4,7 @@ const path = require('path');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 const url = process.env.MONGODB_URI;
 
 const app = express();
