@@ -8,7 +8,8 @@ body {
     background-color: #DC6B2C;
     color: white;
     text-align: center;
-    padding-top: 80px;
+    padding-top: 120px;
+    padding-bottom: 20px;
 }
 
 .bottomDiv {
@@ -19,11 +20,26 @@ body {
     max-width: 1200px;
 }
 
-.team-member, .team-member-reverse {
+.team-member-reverse {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 60px;
+    background-color: #FDDC87;
+}
+.team-member{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    margin-left: 0%;
+}
+.member-text-info-reverse{
+    padding-right: 50px;
+}
+
+.member-info{
+    padding-left: 50px;
 }
 
 .team-member img, .team-member-reverse img {
@@ -42,6 +58,7 @@ body {
     width: 150px;
     height: 150;
 }
+
 
 .team-member .member-info {
     max-width: 600px;
@@ -62,9 +79,9 @@ body {
 
 
 .box{
-    padding-top: 10px;
+    padding-top: 15px;
     width: 150%;
-    height: 300vh;
+    height: 211vh;
     background-color: #f8cd62;
     border-radius: 10px;
     padding: 20px;
