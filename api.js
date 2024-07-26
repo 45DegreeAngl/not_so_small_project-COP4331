@@ -1578,4 +1578,40 @@ router.post("/updateSingleUserToDoList", async (req, res) => {
   }
 });
 
+router.get('/getProjectDetails/:projectId', async (req, res) => {
+  const projectId = req.params.projectId;
+
+  try {
+    const db = client.db("ganttify");
+    const projectCollection = db.collection("projects");
+    const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    if (!project.team || !ObjectId.isValid(project.team)) {
+      return res.status(404).json({ error: "Invalid team ID in project" });
+    }
+
+    
+
+    const teamCollection = db.collection("teams");
+    const team = await teamCollection.findOne({ _id: new ObjectId(project.team) });
+
+
+    if (!team) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+
+    project.team = team;
+    res.status(200).json(project);
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 module.exports = router;
