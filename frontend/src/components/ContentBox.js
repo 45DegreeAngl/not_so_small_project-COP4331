@@ -76,7 +76,11 @@ function ContentBox(props){
                     <div className="EndTagWrapper">
                         <div className = "endTag">
                             <div className = "align">
-                                <p>Learn More</p>
+                                <li>
+                                    <a href="https://github.com/45DegreeAngl/not_so_small_project-COP4331" target="_blank">
+                                        <button className="button">GitHub</button>
+                                    </a>
+                                </li>
                                 <li><a href = "/about-us"><button className="button">About Us</button></a></li> 
                         </div>    
                     </div>            
