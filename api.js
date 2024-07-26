@@ -164,7 +164,7 @@ router.get('/verify-email/:email/:token', async (req, res) => {
   }
 });
 
-
+let userList = [];
 //-----------------> User List Endpoint <-----------------//
 router.get("/userlist", (req, res) => {
   res.status(200).json({ users: userList });
