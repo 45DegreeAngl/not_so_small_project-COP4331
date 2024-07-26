@@ -320,7 +320,7 @@ const allowedPatterns = {
     "Solid_Single_Square_Density_1.png",
     "Solid_Single_Star_Density_1.png",
     "Solid_Single_Triangle_Density_1.png",
-  ]
+  ], 
   halftone_family: [
     "Halftone_Density_1.png",
     "Halftone_Density_2.png",
