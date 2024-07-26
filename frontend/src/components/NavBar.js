@@ -78,8 +78,16 @@ function NavBar(props) {
   });
 
   var _ud = localStorage.getItem('user_data');
-  var ud = JSON.parse(_ud);
-  var userId = ud._id;
+  var ud;
+  var userId;
+  if(_ud){
+    ud = JSON.parse(_ud);
+    userId = ud._id;
+  }
+  else{
+    userId=null;
+  }
+  
 
   let projectId = useParams();
 

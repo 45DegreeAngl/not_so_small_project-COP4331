@@ -1052,11 +1052,11 @@ router.post("/search/projects", async (req, res) => {
         ]
       }).toArray();
   
-      console.log("These are the teams: ", teams);
+     // console.log("These are the teams: ", teams);
   
       const teamIds = teams.map(team => new ObjectId(team._id));
   
-      console.log("These are the team IDs: ", teamIds);
+      //console.log("These are the team IDs: ", teamIds);
   
       const query = {
         $or: [
@@ -1066,7 +1066,7 @@ router.post("/search/projects", async (req, res) => {
         nameProject: { $regex: title, $options: "i" }
       };
   
-      console.log("These are the query: ", query);
+      //console.log("These are the query: ", query);
   
       const sortOptions = { [sortBy]: 1 }; // 1 for ascending, -1 for descending
   
@@ -1077,7 +1077,7 @@ router.post("/search/projects", async (req, res) => {
   
       res.status(200).json(projects);
   
-      console.log("These are the projects: ", projects);
+      //console.log("These are the projects: ", projects);
   
     } catch (error) {
       console.error("Error searching projects:", error);
