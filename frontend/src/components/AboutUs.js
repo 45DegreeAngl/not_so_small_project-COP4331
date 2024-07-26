@@ -4,6 +4,7 @@ import member_an from '../Images/assets/team_member_icons/AN.jpg';
 import member_nb from '../Images/assets/team_member_icons/NB.png';
 import member_tk from '../Images/assets/team_member_icons/TK.jpg';
 import member_lr from '../Images/assets/team_member_icons/LR.jpg';
+import member_kr from '../Images/assets/team_member_icons/KR.jpg';
 const app_name = 'ganttify-5b581a9c8167';
 
 
@@ -62,7 +63,7 @@ function AboutUs() {
             </div>
 
             <div className="team-member">
-                <img src="/images/kittens.webp" alt="Keyliz Rodriguez" className="team-image"/>
+                <img src={member_kr} alt="Keyliz Rodriguez" className="team-image"/>
                 <div className="member-info">
                     <h2>Keyliz Rodriguez</h2>
                     <p>Frontend developer</p>
