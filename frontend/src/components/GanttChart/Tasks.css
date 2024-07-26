@@ -28,15 +28,17 @@
   border-top: none; 
 }
 
-.task-title-input {
+.task-title-text {
   flex: 1;
   padding: 5px;
+  padding-top: 20px; 
   border: none;
   background: transparent;
   white-space: nowrap;
   overflow: hidden; 
   text-overflow: ellipsis; 
   font-size: 14px; 
+  cursor: pointer;
 }
 
 .tasks-delete-button {

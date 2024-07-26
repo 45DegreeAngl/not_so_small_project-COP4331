@@ -164,7 +164,7 @@ router.get('/verify-email/:email/:token', async (req, res) => {
   }
 });
 
-
+let userList = [];
 //-----------------> User List Endpoint <-----------------//
 router.get("/userlist", (req, res) => {
   res.status(200).json({ users: userList });
@@ -345,76 +345,69 @@ const isValidPattern = (pattern) => {
 
 router.post("/createtask", async (req, res) => {
   const {
-    description,
+    description = "",
     dueDateTime,
-    progress,
-    assignedTasksUsers,
+    progress = "Not Started",
+    assignedTasksUsers = [],
     taskTitle,
     tiedProjectId,
     taskCreatorId,
-    color,
-    pattern,
-    startDateTime
+    startDateTime,
+    color = "#DC6B2C",
+    pattern = ""
   } = req.body;
-
   let error = "";
 
-  if (
-    !description ||
-    !dueDateTime ||
-    !progress ||
-    !taskTitle ||
-    !taskCreatorId
-  ) {
-    error =
-      "Task description, dueDateTime, progress, taskTitle, taskCreatorId are required";
+  if (!dueDateTime || !taskTitle || !taskCreatorId || !startDateTime) {
+    error = "Task dueDateTime, taskTitle, taskCreatorId, and startDateTime are required";
     return res.status(400).json({ error });
   }
-  
-  // Sets default color to grey:#808080 if not specified
-  const taskColor = color && isValidHexColor(color) ? color : '#808080'
-
-  if (color && !isValidHexColor(color)) {
-    error = "Invalid color format. Please provide a valid hex color.";
-    return res.status(400).json({ error });
-  }
-
-   // Validate pattern if provided
-   if (pattern && !isValidPattern(pattern)) {
-    error = "Invalid pattern. Please provide a valid pattern name.";
-    return res.status(400).json({ error });
-  }
-
-  // Set default startDateTime if not provided
-  const taskStartDateTime = startDateTime ? new Date(startDateTime) : new Date();
 
   try {
     const db = client.db("ganttify");
     const taskCollection = db.collection("tasks");
+    const projectCollection = db.collection("projects");
+    const userCollection = db.collection("userAccounts");
 
     const newTask = {
       description,
       dueDateTime: new Date(dueDateTime),
       taskCreated: new Date(),
-      startDateTime: taskStartDateTime,
       progress,
       assignedTasksUsers: assignedTasksUsers.map((id) => new ObjectId(id)),
       taskTitle,
       tiedProjectId: new ObjectId(tiedProjectId),
       taskCreatorId: new ObjectId(taskCreatorId),
-      color: taskColor,
+      startDateTime: new Date(startDateTime),
+      color,
       pattern
     };
 
-    const task = await taskCollection.insertOne(newTask);
 
-    res.status(201).json(newTask);
+
+    const task = await taskCollection.insertOne(newTask);
+    const taskId = task.insertedId;
+
+    await projectCollection.updateOne(
+      { _id: new ObjectId(tiedProjectId) },
+      { $push: { tasks: taskId } }
+    );
+
+    if (assignedTasksUsers.length > 0) {
+      await userCollection.updateMany(
+        { _id: { $in: assignedTasksUsers.map(id => new ObjectId(id)) } },
+        { $push: { toDoList: taskId } }
+      );
+    }
+
+    res.status(201).json({ ...newTask, _id: taskId });
   } catch (error) {
     console.error("Error creating task:", error);
     error = "Internal server error";
     res.status(500).json({ error });
   }
 });
+
 
 //-----------------> Read Task <-----------------//
 router.get("/readtasks", async (req, res) => {
@@ -633,19 +626,21 @@ router.post("/createproject", async (req, res) => {
   let error = "";
 
   if (!nameProject || !founderId) {
-    error = "Project name is required";
+    error = "Project name and founder ID are required";
     return res.status(400).json({ error });
   }
 
   try {
     const db = client.db("ganttify");
     const projectCollection = db.collection("projects");
+    const teamCollection = db.collection("teams");
+    const userCollection = db.collection("userAccounts");
 
     const newProject = {
       nameProject,
       dateCreated: new Date(),
       team: new ObjectId(),
-      tasks: null,
+      tasks: [], 
       isVisible,
       founderId: new ObjectId(founderId),
       flagDeletion,
@@ -653,11 +648,33 @@ router.post("/createproject", async (req, res) => {
     };
 
     const project = await projectCollection.insertOne(newProject);
-    res.status(201).json(newProject);
+    const projectId = project.insertedId;
+
+
+    const newTeam = {founderId: new ObjectId(founderId), editors: [], members: [], projects: [projectId],};
+
+    const team = await teamCollection.insertOne(newTeam);
+
+  
+    await projectCollection.updateOne(
+      { _id: projectId },
+      { $set: { team: team.insertedId } }
+    );
+
+
+    await userCollection.updateOne(
+      { _id: new ObjectId(founderId) },
+      { $push: { projects: projectId } }
+    );
+
+    res.status(201).json({ ...newProject, _id: projectId, team: team.insertedId });
+
   } catch (error) {
+
     console.error("Error creating project:", error);
     error = "Internal server error";
     res.status(500).json({ error });
+    
   }
 });
 
@@ -1575,6 +1592,58 @@ router.post("/updateSingleUserToDoList", async (req, res) => {
     console.error("Error updating user's toDoList:", error);
     error = "Internal server error";
     res.status(500).json({ error });
+  }
+});
+router.get('/getProjectDetails/:projectId', async (req, res) => {
+  const projectId = req.params.projectId;
+
+  try {
+    const db = client.db("ganttify");
+    const projectCollection = db.collection("projects");
+    const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    if (!project.team || !ObjectId.isValid(project.team)) {
+      return res.status(404).json({ error: "Invalid team ID in project" });
+    }
+
+    
+
+    const teamCollection = db.collection("teams");
+    const team = await teamCollection.findOne({ _id: new ObjectId(project.team) });
+
+
+    if (!team) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+
+    project.team = team;
+    res.status(200).json(project);
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/teams/:teamId', async (req, res) => {
+  const teamId = req.params.teamId;
+
+  try {
+    const db = client.db("ganttify");
+    const teamCollection = db.collection("teams");
+    const team = await teamCollection.findOne({ _id: new ObjectId(teamId) });
+
+    if (!team) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+
+    res.status(200).json(team);
+  } catch (error) {
+    console.error("Error fetching team:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 module.exports = router;
