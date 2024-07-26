@@ -1598,7 +1598,7 @@ router.post("/updateSingleUserToDoList", async (req, res) => {
 router.post("/search/project/id", async (req,res) => {
     const {id} = req.body;
     var error = "";
-    if(!ids){
+    if(!id){
         error = "You need to provide project id to search for";
         res.status(300).json({error});
     }
