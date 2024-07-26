@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   monthDiff,
   getDaysInMonth,
@@ -30,8 +30,9 @@ export default function TimeTable({
   userId,
   projectId,
 }) {
+  const ganttRef = useRef(null);
 
-  //Initializing the Gantt Chart's different states
+  // Initializing the Gantt Chart's different states
   const [taskDurationElDraggedId, setTaskDurationElDraggedId] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
   const [hoveredTask, setHoveredTask] = useState(null);
@@ -43,7 +44,7 @@ export default function TimeTable({
   const [selectedTask, setSelectedTask] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  //Gets the project's details
+  // Gets the project's details
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
@@ -66,9 +67,7 @@ export default function TimeTable({
     fetchProjectData();
   }, [projectId, userId]);
 
-
-
-  //Event handlers
+  // Event handlers
   const handleOutsideClick = (e) => {
     if (e.target.closest('.task-duration') === null) {
       setHoveredTask(null);
@@ -87,10 +86,7 @@ export default function TimeTable({
     };
   }, []);
 
-
-
-
-  //Handles the "resizing" of a singular task
+  // Handles the "resizing" of a singular task
   const handleResizeStart = (e, taskDurationId, direction) => {
     e.stopPropagation();
     e.preventDefault();
@@ -142,7 +138,7 @@ export default function TimeTable({
     }
   };
 
-  //Updates the task's dates based off of the user's mouse's position 
+  // Updates the task's dates based off of the user's mouse's position 
   const handleMouseMove = (e) => {
     if (resizingTask && resizeDirection) {
       const taskDuration = taskDurations.find(
@@ -197,7 +193,7 @@ export default function TimeTable({
 
       const dateCells = Array.from(document.querySelectorAll('[data-date]'));
 
-      //Gets the cell date that is clostest to the user's mouse
+      // Gets the cell date that is closest to the user's mouse
       const closestDateCell = dateCells.reduce((closest, cell) => {
         const box = cell.getBoundingClientRect();
         const distance = Math.abs(e.clientX - (box.left + box.right) / 2);
@@ -209,7 +205,7 @@ export default function TimeTable({
         return closest;
       }, { cell: null, distance: Infinity });
 
-      //Update's the dates that is clostest to the user's mouse's postition
+      // Update's the dates that is closest to the user's mouse's position
       if (closestDateCell.cell) {
         const newStartDate = closestDateCell.cell.getAttribute('data-date');
         const daysDuration = dayDiff(new Date(taskDuration.start), new Date(taskDuration.end));
@@ -227,7 +223,7 @@ export default function TimeTable({
     }
   };
 
-  //Styling
+  // Styling
   const ganttTimePeriod = {
     display: 'grid',
     gridAutoFlow: 'column',
@@ -256,18 +252,18 @@ export default function TimeTable({
   const taskDurationBaseStyle = {
     position: 'absolute',
     height: 'calc(var(--cell-height) * 0.75)',
-    top: 'calc(var(--cell-height) / 6.5)',
+    top: 'calc(var(--cell-height) / 8)',
     zIndex: '1',
     borderRadius: 'var(--border-radius)',
     boxShadow: '3px 3px 3px rgba(0, 0, 0, 0.05)',
     cursor: isEditable && !isResizing ? 'move' : 'default', // Update cursor style
   };
 
+  const currentDate = new Date();
 
-//Gets the start and end dates
-  const startMonth = new Date(parseInt(timeRange.fromSelectYear), timeRange.fromSelectMonth);
-
-  const endMonth = new Date(parseInt(timeRange.toSelectYear), timeRange.toSelectMonth);
+  // Gets the start and end dates
+  const startMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 6);
+  const endMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6);
 
   const numMonths = monthDiff(startMonth, endMonth) + 1;
   let month = new Date(startMonth);
@@ -279,13 +275,15 @@ export default function TimeTable({
   let weekRow = [];
   let taskRows = [];
   let taskRow = [];
+  let currentDayIndex = 0;
+  let dayCounter = -1;
 
-  //Get's the st, th, and rd for the respective numbers
+  // Get the st, th, and rd for the respective numbers
   function getOrdinal(n) {
     return ["st", "nd", "rd"][((n + 90) % 100 - 10) % 10 - 1] || "th";
   }
 
-  //Begins the loops for adding elements, with styling, to their respective arrays
+  // Begins the loops for adding elements, with styling, to their respective arrays
   for (let i = 0; i < numMonths; i++) {
     monthRows.push(
       <div key={i} style={{ ...ganttTimePeriod, outline: 'none' }}>
@@ -295,6 +293,7 @@ export default function TimeTable({
       </div>
     );
 
+
     const numDays = getDaysInMonth(month.getFullYear(), month.getMonth() + 1);
     const currYear = month.getFullYear();
     const currMonth = month.getMonth() + 1;
@@ -302,21 +301,30 @@ export default function TimeTable({
     for (let j = 1; j <= numDays; j++) {
       let k = getOrdinal(j);
 
+      const formattedDate = createFormattedDateFromStr(currYear, currMonth, j);
+      if (new Date(formattedDate).toDateString() === currentDate.toDateString()) { currentDayIndex = dayCounter; }
+
       dayRow.push(
+        
         <div key={j} style={{ ...ganttTimePeriod, outline: 'none' }}>
           <span style={ganttTimePeriodSpanMonths}>
             {getDayOfWeek(currYear, currMonth - 1, j - 1)} {j}{k}
           </span>
         </div>
+
       );
 
       weekRow.push(
+        
         <div key={j} style={{ ...ganttTimePeriod, outline: 'none' }}>
           <span style={{ ...ganttTimePeriodSpanMonths, color: '#3E455B' }}>
             {getDayOfWeek(currYear, currMonth - 1, j - 1)}
           </span>
         </div>
+
       );
+
+      dayCounter++;
     }
 
     dayRows.push(
@@ -346,8 +354,10 @@ export default function TimeTable({
         const numDays = getDaysInMonth(curYear, curMonth);
 
         for (let j = 1; j <= numDays; j++) {
+
+          
           const dayOfTheWeek = getDayOfWeek(curYear, curMonth - 1, j - 1);
-          const formattedDate = createFormattedDateFromStr( curYear, curMonth, j);
+          const formattedDate = createFormattedDateFromStr(curYear, curMonth, j);
 
           taskRow.push(
             <div
@@ -355,8 +365,8 @@ export default function TimeTable({
               style={{
                 ...ganttTimePeriodCell,
                 backgroundColor:
-                  dayOfTheWeek === 'S' ? 'var(--color-tertiary)' : index % 2 === 0 ? '#f9f9f9' : '#ffffff', 
-                ...(hoveredRow === task._id && { backgroundColor: '#f0f0f0' }), 
+                  dayOfTheWeek === 'S' ? 'var(--color-tertiary)' : index % 2 === 0 ? '#f9f9f9' : '#ffffff',
+                ...(hoveredRow === task._id && { backgroundColor: '#f0f0f0' }),
               }}
               data-task={task?._id}
               data-date={formattedDate}
@@ -372,28 +382,38 @@ export default function TimeTable({
 
                 if (el?.task === task?._id && elStartDate === formattedDate) {
                   return (
+                    
                     <div
                       key={`${i}-${el?.task}`}
+
+                
                       className={`task-duration ${taskDurationElDraggedId === el?._id ? 'dragging' : ''}`}
+                                 
                       draggable={isEditable && !isResizing ? "true" : "false"}
+
                       tabIndex="0"
                       onDragStart={isEditable && !isResizing ? () => handleDragStart(el?._id) : null}
                       onDragEnd={isEditable && !isResizing ? () => handleDragEnd(el?._id) : null}
                       onMouseMove={(e) => handleMouseMove(e)}
+
+
                       onMouseUp={handleResizeEnd}
+
                       style={{
+                        
                         ...taskDurationBaseStyle,
                         width: `calc(${dayDiff(el?.start, el?.end)} * 100% - 1px)`,
                         opacity: taskDurationElDraggedId === el?._id ? '0.5' : '1',
                         background: task.color || 'var(--color-primary-light)',
                         border: hoveredTask === el?._id && !isResizing ? '2px solid black' : 'none',
-                        cursor: isEditable && !isResizing ? 'move' : 'default' 
+                        cursor: isEditable && !isResizing ? 'move' : 'default'
                       }}
                       onKeyDown={isEditable ? (e) => deleteTaskDuration(e, el?.task) : null}
-                      onClick={() => { setSelectedTask(task); setShowDetails(true); }} 
+                      onClick={() => { setSelectedTask(task); setShowDetails(true); }}
                     >
                       {isEditable && (
                         <>
+                        
                           <div
                             className="resize-handle left"
                             onMouseDown={(e) => handleResizeStart(e, el?._id, 'left')}
@@ -404,6 +424,8 @@ export default function TimeTable({
                             onMouseDown={(e) => handleResizeStart(e, el?._id, 'right')}
                             style={{ cursor: 'ew-resize', position: 'absolute', right: '0', width: '10px', height: '100%', zIndex: 2 }}
                           />
+
+                            
                         </>
                       )}
                     </div>
@@ -415,9 +437,11 @@ export default function TimeTable({
         }
 
         taskRows.push(
+          
           <div key={`${i}-${task?._id}`} style={ganttTimePeriod}>
             {taskRow}
           </div>
+
         );
 
         taskRow = [];
@@ -427,20 +451,20 @@ export default function TimeTable({
   }
 
   const handleDelete = async (taskId) => {
-
     const newTasks = tasks.filter((task) => task._id !== taskId);
     setTasks(newTasks);
 
     setTaskDurations((prevState) => {
 
-      //Delete any taskDurations associated with the selected task
+      
       const newTaskDurations = prevState.filter(
         (taskDuration) => taskDuration.task !== taskId
       );
       return newTaskDurations;
     });
 
-    //Make API call to delete task 
+
+    
     try {
       const response = await fetch(buildPath(`api/tasks/${taskId}`), {
         method: 'DELETE',
@@ -463,16 +487,19 @@ export default function TimeTable({
 
   function deleteTaskDuration(e, id) {
     if (e.key === 'Delete' || e.key === 'Backspace') {
-      const newTaskDurations = taskDurations.filter(
-        (taskDuration) => taskDuration.id !== id
-      );
+      const newTaskDurations = taskDurations.filter( (taskDuration) => taskDuration.id !== id);
+      
       setTaskDurations(newTaskDurations);
+      
       console.log("Deleted taskDuration with id:", id);
+
+      
     }
   }
 
   function handleDragStart(taskDurationId) {
     if (!resizingTask) {
+      
       setTaskDurationElDraggedId(taskDurationId);
       setHoveredTask(null);
       setIsDragging(true);
@@ -482,9 +509,14 @@ export default function TimeTable({
 
   function handleDragEnd(taskDurationId) {
     if (!resizingTask) {
+      
       setTaskDurationElDraggedId(null);
+
+      
       setHoveredTask(null);
-      setIsDragging(false); 
+      
+      setIsDragging(false);
+      
       console.log("Drag ended for taskDurationId:", taskDurationId);
     }
   }
@@ -515,11 +547,14 @@ export default function TimeTable({
 
     const newStartDate = new Date(adjustedDataDate);
     let newEndDate = new Date(newStartDate);
+
+    
     newEndDate.setDate(newEndDate.getDate() + daysDuration - 1);
 
     const allowableRange = 1;
 
     if (!targetCell.hasAttribute('draggable') || Math.abs(dayDiff(originalStartDate, newStartDate)) <= allowableRange) {
+      
       taskDuration.task = dataTask;
       taskDuration.start = createFormattedDateFromDate(newStartDate);
       taskDuration.end = createFormattedDateFromDate(newEndDate);
@@ -555,10 +590,22 @@ export default function TimeTable({
     setTaskDurationElDraggedId(null);
   }
 
+  useEffect(() => {
+   
+    if (ganttRef.current) {
+      const cellWidth = 60; 
+      const scrollPosition = currentDayIndex * cellWidth;
+  
+      ganttRef.current.scrollLeft = scrollPosition;
+      console.log("Scrolling to current day index:", currentDayIndex, "Scroll position:", scrollPosition);
+    }
+  }, [currentDayIndex]);
+
   return (
     <div
       id="gantt-grid-container__time"
       style={{ gridTemplateColumns: `repeat(${numMonths}, 1fr)` }}
+      ref={ganttRef}
     >
       {monthRows}
       {dayRows}
@@ -572,9 +619,12 @@ export default function TimeTable({
           paddingLeft: '0.5px',
           paddingBottom: '-100px',
         }}
+
+
         onMouseMove={handleMouseMove}
         onMouseUp={handleResizeEnd}
         onDragOver={(e) => e.preventDefault()}
+          
       >
         {taskRows}
       </div>
@@ -589,6 +639,3 @@ export default function TimeTable({
     </div>
   );
 }
-
-
-
