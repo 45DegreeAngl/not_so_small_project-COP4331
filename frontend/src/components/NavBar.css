@@ -1,4 +1,4 @@
-/*NavBar.css*/
+
 .base{
     background-color: #FDDC87;
     color: black;
@@ -120,5 +120,5 @@ ul li{
 
 .layout-3 #placeHolderDiv {
     flex-shrink: 0;
-    margin-bottom: 120px;
+    margin-bottom: 150px;
 }
