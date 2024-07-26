@@ -1612,6 +1612,23 @@ router.get('/getProjectDetails/:projectId', async (req, res) => {
   }
 });
 
+router.get('/teams/:teamId', async (req, res) => {
+  const teamId = req.params.teamId;
 
+  try {
+    const db = client.db("ganttify");
+    const teamCollection = db.collection("teams");
+    const team = await teamCollection.findOne({ _id: new ObjectId(teamId) });
+
+    if (!team) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+
+    res.status(200).json(team);
+  } catch (error) {
+    console.error("Error fetching team:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = router;
