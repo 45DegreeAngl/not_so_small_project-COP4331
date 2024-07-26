@@ -58,8 +58,10 @@ router.post("/register", async (req, res) => {
 
     await userCollection.insertOne(newUser)
 
-    const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET + hashedPassword, { expiresIn: "5m" });
-    const link = `https://ganttify-5b581a9c8167.herokuapp.com/api/verify-email?token=${token}`;
+    const secret = process.env.JWT_SECRET + hashedPassword;
+    const token = jwt.sign({email: newUser.email}, secret, {expiresIn: "5m",} );
+
+    let link = `https://ganttify-5b581a9c8167.herokuapp.com/verify-email/${email}/${token}`;
 
     const transporter = nodeMailer.createTransport({
       service: 'gmail',
