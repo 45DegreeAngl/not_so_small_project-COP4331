@@ -2,27 +2,65 @@ body{
     font-family: "Inter", sans-serif;
     margin: 0;
     padding: 0;
+    overflow-y: auto !important;
 }
-.topDiv {
-    background-color: #DC6B2C;
-    color: white;
-    text-align: center;
-    padding: 50px 0;
-}
-.bottomDiv{
-    padding-top:30px;
+.loginContainer{
+    min-height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    margin: 0 auto;
     justify-content: center;
     align-items: center;
-    width:700px !important;
+    width: 100%;
 }
+.loginForm{
+    background: #FFEFD5;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 100%;
+    margin-top: -350px;
+    border:none;
+    height:fit-content
+}
+.loginFormHeader{
+    background-color: #FFEFD5;
+    border:none;
+}   
+.loginTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    color: #000;
+}
+.loginTitle::before, .loginTitle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 80px;
+    height: 2px;
+    background: #DC6B2C;
+}
+.loginTitle::before {
+    left: -90px;
+}
+.loginTitle::after {
+    right: -90px;
+}
+
 .formItem{
-    padding:0 20px;
+    border-width: 1px;
+    padding:5px 20px !important;
+    width:100% !important;
+    border-radius: 3px !important;
 }
-.formItem:valid{
-    border-color: green;
+.formLabel{
+    font-size: 20px;
 }
-.formItem:invalid{
-    border-color:red;
+.formItem:valid, .formItem:invalid{
+    border-color: #000;
 }
 .formDescription{
     font-style: italic;
@@ -33,7 +71,7 @@ body{
     padding-top:10px;
 }
 .submitButton{
-    background-color: #DC6B2C;
+    background-color: #135C91;
     color: white;
     text-align: center;
     padding:15px 30px;

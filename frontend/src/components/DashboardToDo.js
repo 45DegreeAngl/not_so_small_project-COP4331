@@ -55,7 +55,7 @@ function DashboardToDo() {
             setTaskToDisplay(task);
             var turnOnDiv = 0;
             task.users.forEach(u =>{
-                console.log(u);
+                //console.log(u);
                 if(u.localeCompare(userId) === 0){return;}
                 const info = document.getElementById(u);
                 if(!info){return;}
@@ -112,8 +112,12 @@ function DashboardToDo() {
                 let currProjectId = usersTasks[i].tiedProjectId;
                 let currTaskProgress = usersTasks[i].progress
                 let currProject = allProjects.filter(project => project._id === currProjectId);
-                let currProjectName = currProject[0].nameProject;
-                let currProjectOwnerId = currProject[0].founderId;
+                var currProjectName;
+                var currProjectOwnerId;
+                if(currProject[0]){
+                    currProjectName = currProject[0].nameProject;
+                    currProjectOwnerId = currProject[0].founderId;
+                }
                 task = {
                     _id: currTaskId,
                     taskTitle: currTaskTitle,
@@ -136,7 +140,7 @@ function DashboardToDo() {
                 const response3 = await fetch(buildPath('api/search/taskworkers'),{ method: 'POST', body: js3, headers: { 'Content-Type': 'application/json' } });
                 var txt3 = await response3.text();
                 userInfoRaw = JSON.parse(txt3);
-                console.log(userInfoRaw);
+                //console.log(userInfoRaw);
 
             }
             const taskContactsDiv = document.getElementById("taskContactsDiv");
@@ -146,13 +150,13 @@ function DashboardToDo() {
             taskContactsDiv.appendChild(taskContactsHeader);
             if(userInfoRaw){
                 userInfoRaw.forEach(userRaw =>{
-                    console.log(userRaw);
+                    //console.log(userRaw);
                     const userInfoDiv = document.createElement("div");
                     userInfoDiv.setAttribute("class","contactName");
                     if(userRaw._id.localeCompare(userId) === 0){
                         return;
                     }
-                    console.log(userRaw);
+                    //console.log(userRaw);
                     let email = "Email: " + userRaw.email;
                     const emailText = document.createElement("p");
                     emailText.innerText=email;
@@ -206,7 +210,7 @@ function DashboardToDo() {
                 actionCol.appendChild(actionButton); 
                 newRow.appendChild(actionCol);
                 tableBody.appendChild(newRow);
-                if(tasks[i]['progress'].localeCompare("Done") === 0 && tasks[i]['dueDatePretty'].localeCompare("PAST DUE") === 0){
+                if(tasks[i]['progress'].localeCompare("Completed") === 0 && tasks[i]['dueDatePretty'].localeCompare("PAST DUE") === 0){
                     newRow.style.display = "None";
                 }
             }
@@ -236,7 +240,7 @@ function DashboardToDo() {
     }
     const doMarkTaskComplete = async event => {
         var error = "";
-        var obj = {progress:"Done"};
+        var obj = {progress:"Completed"};
         var js = JSON.stringify(obj);
 
         try{
@@ -279,7 +283,7 @@ function DashboardToDo() {
     function doTaskModalClose(){
         const contactInfoDiv = document.getElementById("taskContactsDiv");
         taskToDisplay.users.forEach(u =>{
-            console.log(u);
+            //console.log(u);
             if(u.localeCompare(userId) === 0){return;}
             const info = document.getElementById(u);
             if(!info){return;}
@@ -321,10 +325,10 @@ function DashboardToDo() {
                             </div>
                             <div class="modal-body">
                              {taskToDisplay ? 
-                                <div><p>{taskToDisplay['description']}</p>{taskToDisplay['progress'].localeCompare("Done") === 0 ? null:<p>{taskToDisplay['dueDatePretty'].localeCompare("PAST DUE") === 0 ? "THIS TASK WAS DUE: "+ taskToDisplay['dueDateActual']: "Due: "+ taskToDisplay['dueDatePretty']}</p>}{taskToDisplay['userInfoText']}</div> : null}<div id = "taskContactsDiv"></div></div>
+                                <div><p>{taskToDisplay['description']}</p>{taskToDisplay['progress'].localeCompare("Completed") === 0 ? null:<p>{taskToDisplay['dueDatePretty'].localeCompare("PAST DUE") === 0 ? "THIS TASK WAS DUE: "+ taskToDisplay['dueDateActual']: "Due: "+ taskToDisplay['dueDatePretty']}</p>}{taskToDisplay['userInfoText']}</div> : null}<div id = "taskContactsDiv"></div></div>
                             {taskToDisplay? 
                             <div class="modal-footer">
-                                {(taskToDisplay['progress'].localeCompare("Done") === 0) ?  <button type="button" class="btn btn-primary" onClick={()=>doMarkTaskInProgress()}>Mark Task In Progress</button>:
+                                {(taskToDisplay['progress'].localeCompare("Completed") === 0) ?  <button type="button" class="btn btn-primary" onClick={()=>doMarkTaskInProgress()}>Mark Task In Progress</button>:
                                 <button type="button" class="btn btn-primary" onClick={()=>doMarkTaskComplete()}>Mark Task Complete</button>}
                             </div>:null}
                         </div>

@@ -13,15 +13,14 @@ function buildPath(route) {
 }
 
 function Login() {
-  var loginEmail;
-  var loginPassword;
-
   const [message, setMessage] = useState('');
+  const [loginEmail,setLoginEmail] = useState('');
+  const [loginPassword,setLoginPassword] = useState('');
 
   const doLogin = async event => {
     event.preventDefault();
 
-    var obj = { email: loginEmail.value, password: loginPassword.value };
+    var obj = { email: loginEmail, password: loginPassword };
     var js = JSON.stringify(obj);
 
     try {
@@ -59,34 +58,33 @@ function Login() {
   };
 
   return (
-    <div>
-        <div class = 'topDiv'>
-            <h1>
-                Login
-            </h1>
+    <div class = "registerContainer mt-5">
+    <div class ="registerForm text-center">
+        <div class ="card-header registerFormHeader">
+            <h1 class = "registerTitle">Login</h1>
         </div>
-        <div>
-          
-            <br></br>
-            <br></br>
+        <div class = "card-body p-0">
+            <form onSubmit={doLogin}>
+                <div class = "row text-start"><label class = "formLabel mb-1" for="nameForm">Email</label></div>
+                
+                <div class = "row text-center mb-3"><input id="nameForm" type="email" class="formItem mx-0 mt-0" placeholder='Email' value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required></input></div>
+                
+                <div class = "row text-start"><label class = "formLabel mb-1" for="passwordForm">Password</label></div>
+                
+                <div class = "row text-center  mb-3"><input id="passwordForm" type="password" class="formItem" placeholder='Password1!' value ={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required></input></div>
+                
+                <div class = "row text-center mb-1"><span>{message}</span></div>
 
-        <div class="mb-3 bottomDiv">
-          <form onSubmit={doLogin}>
-            <div class="form-group">
-                <label for="inputEmail"><h5><b>Email Address</b></h5></label>
-                <input type="email" class="form-control form-control-lg" id="inputEmail" placeholder='example@email.com' ref={(c) => loginEmail = c} required/>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword"><h5><b>Password</b></h5></label>
-                <input type="password" class="form-control form-control-lg" id="inputPassword" placeholder='Password1!' ref={(c) => loginPassword = c} required/>
-            </div>
-            <div class="row justify-content-center buttonDiv"><button type="submit" class="btn submitButton">Login</button></div>
-          </form>
-          <div className='formMessage'><span>{message}</span></div>
-          <a href="/forgot-password" className="forgot-password-link">Forgot your password?</a>
-        </div>
-      </div>
+                <div class = "row text-center mb-2"><input id="submitLogin" class = "btn"type="submit" value="Login"/></div>
+
+                <div class ="row text-start mb-2"><a href="/forgot-password" className="forgot-password-link">Forgot your password?</a></div>
+                
+            </form>
+        </div> 
     </div>
+</div>
+          
+     
   );
 };
 

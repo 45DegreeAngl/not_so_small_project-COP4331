@@ -70,6 +70,9 @@ function ForgotPassword() {
   }, [disable]);
 
   return (
+    <div>
+    <br></br>
+    <br></br>
     <div className="forgot-password-container">
       <div className="forgot-password-card">
       
@@ -103,6 +106,7 @@ function ForgotPassword() {
       )}
         <a href="/login" className="forgot-password-back-link">Back to Login</a>
       </div>
+    </div>
     </div>
   );
 }

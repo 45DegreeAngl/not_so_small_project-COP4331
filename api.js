@@ -1594,34 +1594,6 @@ router.post("/updateSingleUserToDoList", async (req, res) => {
     res.status(500).json({ error });
   }
 });
-//--------->Search Projects by id for project name<--------------------//
-router.post("/search/project/id", async (req,res) => {
-    const {id} = req.body;
-    var error = "";
-    if(!id){
-        error = "You need to provide project id to search for";
-        res.status(300).json({error});
-    }
-    try{
-        const oId = new ObjectId(id);
-
-        const db = client.db("ganttify");
-        const projectCollection = db.collection("projects");
-
-        const query = {_id : {$in : id}};
-
-        const projects = await projectCollection.find(query).project({_id:0,nameProject:1})
-        console.log(projects);
-        res.status(200).json(projects);
-    }
-    catch(e){
-        error = "Internal Server Error";
-        res.status(500).json({error});
-        console.log(e);
-    }
-    
-});
-
 router.get('/getProjectDetails/:projectId', async (req, res) => {
   const projectId = req.params.projectId;
 
@@ -1674,5 +1646,4 @@ router.get('/teams/:teamId', async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 module.exports = router;
