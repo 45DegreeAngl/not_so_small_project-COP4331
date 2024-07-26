@@ -1594,6 +1594,34 @@ router.post("/updateSingleUserToDoList", async (req, res) => {
     res.status(500).json({ error });
   }
 });
+//--------->Search Projects by id for project name<--------------------//
+router.post("/search/project/ids", async (req,res) => {
+    const {ids} = req.body;
+    console.log(ids);
+    var error = "";
+    if(!ids.length){
+        error = "You need to provide project ids to search for";
+        res.status(300).json({error});
+    }
+    try{
+        const oIds = ids.map((id) => new ObjectId(id));
+
+        const db = client.db("ganttify");
+        const projectCollection = db.collection("projects");
+
+        const query = {_id : {$in : oIds}};
+
+        const projects = await projectCollection.find(query).project({nameProject:1}).toArray();
+        console.log(projects);
+        res.status(200).json(projects);
+    }
+    catch(e){
+        error = "Internal Server Error";
+        res.status(500).json({error});
+        console.log(e);
+    }
+    
+});
 
 router.get('/getProjectDetails/:projectId', async (req, res) => {
   const projectId = req.params.projectId;
