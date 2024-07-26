@@ -1586,6 +1586,7 @@ router.post("/search/project/id", async (req,res) => {
         res.status(300).json({error});
     }
     try{
+        const oId = new ObjectId(id);
 
         const db = client.db("ganttify");
         const projectCollection = db.collection("projects");
