@@ -84,7 +84,7 @@ function Register() {
       var txt = await response.text();
       var res = JSON.parse(txt);
 
-      if (res.error.length > 0) {
+      if (res.error && res.error.length > 0) {
         setMessage(msgTag.concat(res.error, msgTag));
         setDisable(false);
       } else {

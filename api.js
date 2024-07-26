@@ -228,7 +228,7 @@ router.post("/login", async (req, res) => {
 
       let link = `https://ganttify-5b581a9c8167.herokuapp.com/verify-email/${email}/${token}`;
 
-      const transporter = nodemailer.createTransport({
+      const transporter = nodeMailer.createTransport({
         service: 'gmail',
         auth: {
           user: process.env.USER_EMAIL,
@@ -803,7 +803,6 @@ router.delete("/projects/:id", async (req, res) => {
     res.status(500).json({ error });
   }
 });
-
 router.post('/forgot-password', async (req, res) => 
 {
   const {email} = req.body;

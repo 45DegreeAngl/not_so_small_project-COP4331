@@ -60,8 +60,8 @@ function DashboardChartsSearch(){
     
 
     return(
-        <div class ="container-fluid">
-            <div class = "container px-0 mt-4 mx-0 mainContainer">
+        <div class = "mt-3">
+            <div class = "container-sm px-0 mt-5 mx-0 mainContainer">
                 <h1 class="title">Charts</h1>
                 <div class="row">
                     <form>

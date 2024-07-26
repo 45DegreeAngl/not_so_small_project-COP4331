@@ -1,10 +1,9 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import './DashboardCharts.css';
 import GanttChartIcon from "./GanttChartIcon.js";
-import DeleteIcon from "./DeleteButtonIcon.js";
-import InvisibleProjectIcon from "./InvisibleChartIcon.js";
-import VisibleProjectIcon from "./VisibleChartIcon.js";
-import { Link } from "react-router-dom";
+import DeleteIcon from "../Images/assets/action_buttons/Delete_Task_or_Chart.png";
+import InvisibleProjectIcon from "../Images/assets/action_buttons/Private_Gantt_Chart.png";
+import VisibleProjectIcon from "../Images/assets/action_buttons/Public_Gantt_Chart.png";
 const app_name = 'ganttify-5b581a9c8167';
 function buildPath(route)
 {
@@ -393,103 +392,143 @@ function DashboardCharts({ projects }) {
     //whenever projects is updated by the parent component, rerender charts
     useEffect(() => { setChartPage() }, [projects]);
     return (
-        <div>
-            <div id="top-chart-row" class="row px-0 mt-3 cardRow">
-                <div class="col px-0">
-                    {chart1.isVisible ?
+        <div class="container-fluid px-0">
+            <div id="chart-row" class="row row-cols-xxl-3 row-cols-xl-2 row-cols-md-1 px-0 mt-3 gx-5 gy-3 cardRow">
+                <div class="col cardCol px-0">
+                {chart1.isVisible ?
                         <div class="card" >
-                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart1.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
-                                {userId.toString().localeCompare(chart1.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
-                                    <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart1.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart1.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart1()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart1()}/>}</button></div>
-                                    : null}
+                                {userId.toString().localeCompare(chart1.project.founderId.toString()) === 0 ? 
+                                <div class="row align-items-center mb-1">
+                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart1.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn">{chart1.project.isVisible === 1 ? <img src={VisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart1()}/> : <img src={InvisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart1()}/>}</button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Visibility</h5></div>
+                                    <div class = "col col-3 px-0 ms-4"><a class = "btn viewChartBtn" href = {`/viewchart/${chart1.project?._id}`}>View Chart</a></div>
+                                </div>
+                                    : 
+                                <div class = "row align-items-start justify-content-start mb-1">
+                                    <div class = "col mx-0"><a class = "btn viewChartBtn mx-0" href = {`/viewchart/${chart1.project?._id}`}>View Chart</a></div>
+                                </div>}
                                 <h5 class="card-title">{chart1.project.nameProject}</h5>
                                 <p class="card-text">Owner: {chart1.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart1.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                     {chart2.isVisible ?
                         <div class="card" >
-                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart2.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
-                                {userId.toString().localeCompare(chart2.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
-                                    <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart2.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart2.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/>}</button></div>
-                                    : null}
+                                {userId.toString().localeCompare(chart2.project.founderId.toString()) === 0 ? 
+                                <div class="row align-items-center mb-1">
+                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart2.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn">{chart2.project.isVisible === 1 ? <img src={VisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/> : <img src={InvisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart2()}/>}</button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Visibility</h5></div>
+                                    <div class = "col col-3 px-0 ms-4"><a class = "btn viewChartBtn" href = {`/viewchart/${chart2.project?._id}`}>View Chart</a></div>
+                                </div>
+                                    : 
+                                <div class = "row align-items-center justify-content-start mb-1">
+                                    <div class = "col mx-0"><a class = "btn viewChartBtn mx-0" href = {`/viewchart/${chart2.project?._id}`}>View Chart</a></div>
+                                </div>}
                                 <h5 class="card-title">{chart2.project.nameProject}</h5>
                                 <p class="card-text">Owner: {chart2.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart2.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
-                    {chart3.isVisible ?
+                <div class="col cardCol px-0">
+                {chart3.isVisible ?
                         <div class="card" >
-                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart3.project?._id}`} />
-                            <GanttChartIcon class="projectIcon" />
+                            <GanttChartIcon class="projectIcon mb-1" />
                             <div class="card-body">
-                                {userId.toString().localeCompare(chart3.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
-                                    <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart3.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart3.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/>}</button></div>
-                                    : null}
+                                {userId.toString().localeCompare(chart3.project.founderId.toString()) === 0 ? 
+                                <div class="row align-items-center">
+                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart3.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn">{chart3.project.isVisible === 1 ? <img src={VisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/> : <img src={InvisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart3()}/>}</button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Visibility</h5></div>
+                                    <div class = "col col-3 px-0 ms-4"><a class = "btn viewChartBtn" href = {`/viewchart/${chart3.project?._id}`}>View Chart</a></div>
+                                </div>
+                                    : 
+                                <div class = "row align-items-center justify-content-start mb-1">
+                                    <div class = "col mx-0"><a class = "btn viewChartBtn mx-0" href = {`/viewchart/${chart3.project?._id}`}>View Chart</a></div>
+                                </div>}
                                 <h5 class="card-title">{chart3.project.nameProject}</h5>
-                                <p class="card-text">Owner:{chart3.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart3.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
-            </div>
-            <div id="bottom-chart-row" class="row px-0 mt-3 cardRow">
-                <div class="col px-0">
-                    {chart4.isVisible ?
+                <div class="col cardCol px-0">
+                {chart4.isVisible ?
                         <div class="card" >
-                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart4.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
-                                {userId.toString().localeCompare(chart4.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
-                                    <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart4.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart4.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/> : <InvisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/>}</button></div>
-                                    : null}
+                                {userId.toString().localeCompare(chart4.project.founderId.toString()) === 0 ? 
+                                <div class="row align-items-center mb-1">
+                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart4.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn">{chart4.project.isVisible === 1 ? <img src={VisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/> : <img src={InvisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart4()}/>}</button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Visibility</h5></div>
+                                    <div class = "col col-3 px-0 ms-4"><a class = "btn viewChartBtn" href = {`/viewchart/${chart4.project?._id}`}>View Chart</a></div>
+                                </div>
+                                    : 
+                                <div class = "row align-items-center justify-content-start mb-1">
+                                    <div class = "col mx-0"><a class = "btn viewChartBtn mx-0" href = {`/viewchart/${chart4.project?._id}`}>View Chart</a></div>
+                                </div>}
                                 <h5 class="card-title">{chart4.project.nameProject}</h5>
                                 <p class="card-text">Owner: {chart4.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart4.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
-                    {chart5.isVisible ?
+                <div class="col cardCol px-0">
+                {chart5.isVisible ?
                         <div class="card" >
-                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart5.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
-                                {userId.toString().localeCompare(chart5.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
-                                    <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart5.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart5.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart5()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart5()} />}</button></div>
-                                    : null}
+                                {userId.toString().localeCompare(chart5.project.founderId.toString()) === 0 ? 
+                                <div class="row align-items-center mb-1">
+                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart5.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn">{chart5.project.isVisible === 1 ? <img src={VisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart5()}/> : <img src={InvisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart5()}/>}</button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Visibility</h5></div>
+                                    <div class = "col col-3 px-0 ms-4"><a class = "btn viewChartBtn" href = {`/viewchart/${chart5.project?._id}`}>View Chart</a></div>
+                                </div>
+                                    : 
+                                <div class = "row align-items-center justify-content-start mb-1">
+                                    <div class = "col mx-0"><a class = "btn viewChartBtn mx-0" href = {`/viewchart/${chart5.project?._id}`}>View Chart</a></div>
+                                </div>}
                                 <h5 class="card-title">{chart5.project.nameProject}</h5>
-                                <p class="card-text">Owner:{chart5.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Owner: {chart5.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                     {chart6.isVisible ?
                         <div class="card" >
-                            <Link className="card-block stretched-link text-decoration-none" to={`/viewchart/${chart6.project?._id}`} />
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
-                                {userId.toString().localeCompare(chart6.project.founderId.toString()) === 0 ? <div class="container-fluid ms-0 ps-0">
-                                    <button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart6.project)}><DeleteIcon class="btnIcon" /></button>
-                                    <button class="projectBtn">{chart6.project.isVisible === 1 ? <VisibleProjectIcon class="btnIcon"  onClick={()=>toggleProjectVisibilityChart6()}/> : <InvisibleProjectIcon class="btnIcon" onClick={()=>toggleProjectVisibilityChart6()} />}</button></div>
-                                    : null}
+                                {userId.toString().localeCompare(chart6.project.founderId.toString()) === 0 ? 
+                                <div class="row align-items-center mb-1">
+                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart6.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn">{chart6.project.isVisible === 1 ? <img src={VisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart6()}/> : <img src={InvisibleProjectIcon} class="btnIcon"  onClick={()=>toggleProjectVisibilityChart6()}/>}</button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Visibility</h5></div>
+                                    <div class = "col col-3 px-0 ms-4"><a class = "btn viewChartBtn" href = {`/viewchart/${chart6.project?._id}`}>View Chart</a></div>
+                                </div>
+                                    : 
+                                <div class = "row justify-content-start mb-1">
+                                    <div class = "col mx-0"><a class = "btn viewChartBtn mx-0" href = {`/viewchart/${chart6.project?._id}`}>View Chart</a></div>
+                                </div>}
                                 <h5 class="card-title">{chart6.project.nameProject}</h5>
                                 <p class="card-text">Owner: {chart6.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart6.project.isVisible === 1 ? publicText : privateText}</p>
                             </div>
                         </div> : null}
                 </div>
-
-
             </div>
+
+
             <div class="row px-0 mt-3">
                 <div class="col px-0">
                     <button class={prevButton} onClick={prevChartPage}>Previous</button>

@@ -3,25 +3,24 @@ body{
     margin: 0;
     padding: 0;
 }
+.wrapper{
+    min-height: min-content;
+    float:top;
+}
 .title{
     font:bold;
     margin-left:40px;
     margin-top:-60px;
     color: black;
 }
-.mainContainer{
-    float:left;
-    float:top;
-}
 .searchForm{
-    margin-left:40px;
-    max-width: 400px;
-    min-width: 200px;
+    margin-left:5%;
+    max-width: 20%;
+    min-width: 10%;
 }
 .table{
     margin-top: 40px;
     margin-left: 40px;
-    width:1600px;
 }
 .tr{
     line-height: 100px !important;

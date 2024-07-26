@@ -60,34 +60,46 @@ function DasboardNavBar()
         }
     }
     return(
-        <div class = "container-fluid navBarBody">
-                <a id ="ToDo List" class = "btn navBtn topNavBtn" href="/dashboard"><span class = "navBtnText">To Do List</span></a>
-                <a id ="Charts" class = "btn navBtn" href="/dashboard/charts"><span class = "navBtnText">Charts</span></a>
-                <a id ="Recently Deleted" class ="btn navBtn" href="/dashboard/recently-deleted"><span class = "navBtnText">Recently Deleted</span></a>
-                <button id ="Create Project" class ="btn navBtn" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span class = "navBtnText">Create Project</span></button> 
+        <div>
+            <div class = "d-none d-md-block container-lg navBarBody mb-5">
+                    <a id ="ToDo List" class = "btn navBtn topNavBtn" href="/dashboard"><span class = "navBtnText">To Do List</span></a>
+                    <a id ="Charts" class = "btn navBtn" href="/dashboard/charts"><span class = "navBtnText">Charts</span></a>
+                    <a id ="Recently Deleted" class ="btn navBtn" href="/dashboard/recently-deleted"><span class = "navBtnText">Recently Deleted</span></a>
+                    <button id ="Create Project" class ="btn navBtn" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span class = "navBtnText">Create Project</span></button> 
 
-                <div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                   
+            </div>
+            <div class = "d-md-none navBarBodySmall mb-5">
+                <div class = "row align-items-center mt-3">
+                    <div class = "col-3"><a id ="ToDo List" class = "btn navBtnSmall" href="/dashboard"><span class = "navBtnTextSmall">To Do</span></a></div>
+                    <div class = "col-3"><a id ="Charts" class = "btn navBtnSmall" href="/dashboard/charts"><span class = "navBtnTextSmall">Charts</span></a></div>
+                    <div class = "col-3"><a id ="Recently Deleted" class ="btn navBtnSmall" href="/dashboard/recently-deleted"><span class = "navBtnTextSmall">R.D.</span></a></div>
+                    <div class = "col-3"><button id ="Create Project" class ="btn navBtnSmall" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span class = "navBtnTextSmall">Create</span></button> </div>
+                 </div>
+            </div>
+
+            <div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="createProjectModalLabel">{projectCreated? "Project has been Created":"Create a Project"}</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={hanldeProjectCreated}></button>
+                            </div>
+                            <div class="modal-body">
+                                {projectCreated ? <button class = "btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={hanldeProjectCreated}>Got It</button>:
+                                <form onSubmit={doCreateProject}>
+                                    <label for="newProjectNameInput">Enter a name your new project:</label>
+                                    <input id="newProjectNameInput" class = "form-control mt-2" placeholder='35 characters maximum' ref={(c) => newProjectName = c}/>
+                                    <button type="submit" class="btn btn-primary">Create Project</button>
+                                </form>}
+                            </div>
+                            {projectCreated ? null :
+                            <div class = "modal-footer">
+                                <h5 class = "message">{message}</h5>
+                            </div>}
                         </div>
-                        <div class="modal-body">
-                            {projectCreated ? <button class = "btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={hanldeProjectCreated}>Got It</button>:
-                            <form onSubmit={doCreateProject}>
-                                <label for="newProjectNameInput">Enter a name your new project:</label>
-                                <input id="newProjectNameInput" class = "form-control mt-2" placeholder='35 characters maximum' ref={(c) => newProjectName = c}/>
-                                <button type="submit" class="btn btn-primary">Create Project</button>
-                            </form>}
-                        </div>
-                        {projectCreated ? null :
-                        <div class = "modal-footer">
-                            <h5 class = "message">{message}</h5>
-                        </div>}
-                    </div>
                 </div>
-                </div>
+            </div>
         </div>
     );
     

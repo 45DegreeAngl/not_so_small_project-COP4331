@@ -214,7 +214,7 @@ function DashboardToDo() {
 
         }
         catch (e) {
-            alert(e);
+            console.log(e);
         }
     }
    
@@ -289,27 +289,29 @@ function DashboardToDo() {
     }
     useLayoutEffect(() => { getTasks() }, []);
     return (
-        <div class="container-fluid">
-            <div class="container px-0 mt-5 mx-0 mainContainer">
+        <div class="wrapper mt-3">
+            <div class="container-sm px-0 mt-5 mx-0 mainContainer">
                 <h1 class="title">To Do List</h1>
                 <form>
                     <input type="search" class="form-control searchForm" placeholder='Search tasks by name or project...' id="search projects" onChange={doTaskSearch} ref={(c) => search = c} />
                 </form>
-                <table class="table table-bordereless" id="taskTableHeader">
-                    <thead>
-                        <tr>
-                            <th width="15%" scope='col'>Due Date</th>
-                            <th width="30%" scope='col'>Task Name</th>
-                            <th width="30%" scope='col'>Project</th>
-                            <th width="25%" scope='col'>Progress</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider" id="taskTableBody">
-                        <script>
+                <div class="table-responsive-lg">
+                    <table class="table table-bordereless" id="taskTableHeader">
+                        <thead>
+                            <tr>
+                                <th width="15%" scope='col'>Due Date</th>
+                                <th width="30%" scope='col'>Task Name</th>
+                                <th width="30%" scope='col'>Project</th>
+                                <th width="25%" scope='col'>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider" id="taskTableBody">
+                            <script>
 
-                        </script>
-                    </tbody>
-                </table>
+                            </script>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="modal fade" tabindex="-1" id="taskModal" data-bs-backdrop="static" data-bs-keyboard="false">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">

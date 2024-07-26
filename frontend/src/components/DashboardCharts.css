@@ -10,6 +10,7 @@ body{
     color: black;
 }
 .mainContainer{
+    width: 100% !important;;
     float:left;
     float:top;
 }
@@ -20,6 +21,9 @@ body{
 }
 .cardRow{
     margin-left:40px;
+}
+.cardCol{
+    max-width: 425px;
 }
 .chartNavButton{
     border-radius: 5px;
@@ -64,10 +68,45 @@ body{
     border:none;
     margin:0px;
 }
-
+.btnRow{
+    vertical-align: center !important;
+}
+.btnCol{
+    vertical-align: middle;
+    margin: 0 0 0 0;
+    padding: 0!important;
+    width:10%;
+}
+.viewChartCol{
+    width:55%;
+    padding-inline-start: 10px;
+    padding-inline-end: 0px;
+    margin-top: -10px;
+    vertical-align: middle;
+}
+.labelCol{
+    vertical-align: middle;
+    margin: 0;
+    padding-inline-start: 10px!important;
+    width:17.5%;
+    align-content: start;
+    float: inline-end;
+}
+.viewChartBtn{
+    font-size: smaller;
+    width: fit-content;
+    padding-inline: 10px;
+}
 .btnIcon{
     width:2em;
     height:2em;
+}
+.btnLabel{
+    font: bold 12px;
+    margin: 0px;
+    display: table-cell;
+    vertical-align: middle;
+    padding:0;
 }
 .projectIcon{
     width:100%;
