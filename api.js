@@ -1578,23 +1578,21 @@ router.post("/updateSingleUserToDoList", async (req, res) => {
   }
 });
 //--------->Search Projects by id for project name<--------------------//
-router.post("/search/project/ids", async (req,res) => {
-    const {ids} = req.body;
-    console.log(ids);
+router.post("/search/project/id", async (req,res) => {
+    const {id} = req.body;
     var error = "";
-    if(!ids.length){
-        error = "You need to provide project ids to search for";
+    if(!ids){
+        error = "You need to provide project id to search for";
         res.status(300).json({error});
     }
     try{
-        const oIds = ids.map((id) => new ObjectId(id));
 
         const db = client.db("ganttify");
         const projectCollection = db.collection("projects");
 
-        const query = {_id : {$in : oIds}};
+        const query = {_id : {$in : id}};
 
-        const projects = await projectCollection.find(query).project({nameProject:1}).toArray();
+        const projects = await projectCollection.find(query).project({_id:0,nameProject:1})
         console.log(projects);
         res.status(200).json(projects);
     }
