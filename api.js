@@ -438,24 +438,6 @@ router.put("/tasks/:id", async (req, res) => {
     return res.status(400).json({ error });
   }
 
-  // Validate color field if provided
-  if (updateFields.color && !isValidHexColor(updateFields.color)) {
-    error = "Invalid color format. Please provide a valid hex color.";
-    return res.status(400).json({ error });
-  }
-
-   // Validate pattern field if provided
-  if (updateFields.pattern && !isValidPattern(updateFields.pattern)) {
-    error = "Invalid pattern. Please provide a valid pattern name.";
-    return res.status(400).json({ error });
-  }
-
-  // Validate startDateTime if provided
-  if (updateFields.startDateTime && !isValidDate(updateFields.startDateTime)) {
-    error = "Invalid startDateTime format. Please provide a valid date.";
-    return res.status(400).json({ error });
-  }
-
   try {
     const db = client.db("ganttify");
     const taskCollection = db.collection("tasks");
@@ -474,9 +456,6 @@ router.put("/tasks/:id", async (req, res) => {
     }
     if (updateFields.dueDateTime) {
       updateFields.dueDateTime = new Date(updateFields.dueDateTime);
-    }
-    if (updateFields.startDateTime) {
-      updateFields.startDateTime = new Date(updateFields.startDateTime);
     }
 
     const result = await taskCollection.updateOne(
