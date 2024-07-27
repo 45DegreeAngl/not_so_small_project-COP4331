@@ -13,22 +13,6 @@ const baseStyle = {
   paddingBottom: "10px"
 };
 
-const buttonStyle = {
-  border: "none",
-  textJustify: "center",
-  position: "relative",
-  right: "20px",
-  bottom: "47.5px",
-  float: "right",
-  width: "120px",
-  height: "35px",
-  backgroundColor: "#DC6B2C",
-  color: "#ffffff",
-  marginRight: "30px",
-  cursor: "pointer",
-  borderRadius: "7.5px"
-};
-
 const dashboardNav = {
   position: "relative",
   float: "top",
@@ -65,11 +49,13 @@ async function createTask(newTask) {
   }
 }
 
+
 function NavBar(props) {
   const [showModal, setShowModal] = useState(false);
   const [inviteModal, setInviteModal] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteMessage, setInviteMessage] = useState("");
   const [taskData, setTaskData] = useState({
     taskTitle: "",
     description: "",
@@ -116,6 +102,7 @@ function NavBar(props) {
     }
   };
 
+  
   const filterValidUsers = (users) => {
     return users.filter(user => user !== null);
   };
@@ -128,18 +115,41 @@ function NavBar(props) {
     }));
   };
 
+  
   const handleInviteEmailChange = (e) => {
     setInviteEmail(e.target.value);
   };
 
   const handleInviteSubmit = async () => {
+    if (!inviteEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setInviteMessage('Please enter a valid email address.');
+      return;
+    }
+
     try {
+      const response = await fetch(buildPath('api/invite-user'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: inviteEmail, projectId }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setInviteMessage('Invitation email sent successfully.');
+      } else {
+        setInviteMessage(result.error || 'An error occurred while sending the invitation.');
+      }
+
       setInviteEmail("");
       setInviteModal(false);
     } catch (error) {
       console.error('Error sending invite:', error);
+      setInviteMessage('An error occurred while sending the invitation.');
     }
   };
+
+  
 
   const handleAddTask = async (e) => {
     e.preventDefault();
@@ -191,11 +201,13 @@ function NavBar(props) {
           </a>
           <h1> Ganttify </h1>
           <ul>
+      
             <li><Link to="/"><button id="button"> Home</button></Link></li>
             <li><Link to="/about-us"><button id="button">About Us</button></Link></li>
             <li><Link to="/register"><button id="button">Create Account</button></Link></li>
             <li><Link to="/login"><button id="button">Login</button></Link></li>
           </ul>
+      
         </div>
       </div>
     );
@@ -215,12 +227,15 @@ function NavBar(props) {
     );
   } else if (props.layout == 3) {
     return (
+      
       <div className="layout-3">
         <div id="navBarDiv" style={dashboardNav} role="navigation">
           <div className="navbarDash">
+      
             <a href="/">
               <img src={Logo} alt="" className="logo" />
             </a>
+      
             <ProjectTitle projectId={projectId} />
             <ul>
               <li className="nav-item dropdown">
@@ -241,7 +256,6 @@ function NavBar(props) {
           </div>
         </div>
 
-
         <div id="placeHolderDiv"></div>
         <div className="modal fade modal-custom" id="addTaskModal" tabIndex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
           <div className="modal-dialog">
@@ -250,71 +264,56 @@ function NavBar(props) {
                 <h1 className="modal-title fs-5" id="addTaskModalLabel">Add a Task</h1>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={closeModal}></button>
               </div>
-
-
               <div className="modal-body">
                 <form onSubmit={handleAddTask}>
-
+                    
                   <div className="mb-3">
                     <label htmlFor="taskTitle" className="form-label">Task Title</label>
                     <input type="text" className="form-control" id="taskTitle" name="taskTitle" value={taskData.taskTitle} onChange={handleInputChange} required />
                   </div>
-
-                  
+                    
                   <div className="mb-3">
                     <label htmlFor="description" className="form-label">Description</label>
                     <textarea className="form-control" id="description" name="description" value={taskData.description} onChange={handleInputChange}></textarea>
                   </div>
-
-
+                    
                   <div className="mb-3">
                     <label htmlFor="startDateTime" className="form-label">Start Date</label>
                     <input type="date" className="form-control" id="startDateTime" name="startDateTime" value={taskData.startDateTime} onChange={handleInputChange} required />
                   </div>
-
-
+                    
                   <div className="mb-3">
                     <label htmlFor="dueDateTime" className="form-label">Due Date</label>
                     <input type="date" className="form-control" id="dueDateTime" name="dueDateTime" value={taskData.dueDateTime} onChange={handleInputChange} required />
                   </div>
 
-
+                    
                   <div className="mb-3">
                     <label htmlFor="assignedTasksUsers" className="form-label">Assigned Users (comma separated IDs)</label>
-                    
-                    
-                    
-                    
-                    
                     <input type="text" className="form-control" id="assignedTasksUsers" name="assignedTasksUsers" value={taskData.assignedTasksUsers.join(',')} onChange={(e) =>
                       setTaskData((prevData) => ({
                         ...prevData,
                         assignedTasksUsers: e.target.value.split(','),
                       }))
-                    }
-                    />
+                    } />
 
-
-
-
+                      
                   </div>
                   <div className="mb-3">
                     <label htmlFor="color" className="form-label">Color</label>
                     <input type="color" className="form-control" id="color" name="color" value={taskData.color} onChange={handleInputChange} />
                   </div>
 
-
+                      
                   <div className="mb-3">
                     <label htmlFor="pattern" className="form-label">Pattern</label>
                     <input type="text" className="form-control" id="pattern" name="pattern" value={taskData.pattern} onChange={handleInputChange} />
                   </div>
-
-
+                      
                   <button type="submit" className="btn btn-primary">Add Task</button>
                 </form>
               </div>
-
-
+                      
               <div className="modal-footer">
                 <h5 className="message">{props.message}</h5>
               </div>
@@ -322,31 +321,30 @@ function NavBar(props) {
           </div>
         </div>
 
-
-
         <div className={`modal ${inviteModal ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: inviteModal ? 'block' : 'none' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Invite Team Member</h5>
-                <button type="button" className="close" aria-label="Close" onClick={closeInviteModal}>
+                <button type="button" className="closeEmailModal" aria-label="Close" onClick={closeInviteModal}>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+                      
               <div className="modal-body">
                 <p>Enter the email address of the person you want to invite to the team.</p>
                 <input type="email" className="form-control" value={inviteEmail} onChange={handleInviteEmailChange} placeholder="Email address" required />
+                <div className="invite-message">{inviteMessage}</div>
+                      
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={closeInviteModal}>Close</button>
                 <button type="button" className="btn btn-primary" onClick={handleInviteSubmit}>Send Invite</button>
               </div>
+                      
             </div>
           </div>
         </div>
       </div>
-
-      
     );
   }
 }
