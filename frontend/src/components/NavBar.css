@@ -1,4 +1,4 @@
-
+/*NavBar.css*/
 .base{
     background-color: #FDDC87;
     color: black;
@@ -122,3 +122,19 @@ ul li{
     flex-shrink: 0;
     margin-bottom: 150px;
 }
+
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .closeEmailModal {
+    outline: none;
+    border: none;
+    background: none;
+    color: #000; 
+    font-size: 1.5rem; 
+    cursor: pointer;
+  }
