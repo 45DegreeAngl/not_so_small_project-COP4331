@@ -1646,4 +1646,204 @@ router.get('/teams/:teamId', async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+
+
+
+
+//Invite team member api's//
+
+ router.post('/invite-user', async (req, res) => {
+    const { email, projectId } = req.body;
+  
+    if (!email || !projectId) {
+      return res.status(400).json({ error: 'Email and Project ID are required' });
+    }
+  
+    try {
+      const db = client.db('ganttify');
+      const userAccounts = db.collection('userAccounts');
+      const user = await userAccounts.findOne({ email });
+  
+      const secret = process.env.JWT_SECRET + (user ? user.password : 'newuseraccount');
+      const token = jwt.sign({ email, projectId }, secret, { expiresIn: '5m' });
+      
+      const link = user 
+        ? `http://localhost:3000/accept-invite/${token}`
+        : `http://localhost:3000/register/${token}`;
+  
+      const transporter = nodeMailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.USER_EMAIL,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+  
+      const mailDetails = {
+        from: process.env.USER_EMAIL,
+        to: email,
+        subject: 'Invitation to Join Ganttify',
+        text: `Hello,\n\nYou have been invited to join a project on Ganttify. Click the link to ${user ? 'accept the invitation' : 'create an account and join'}: ${link}`,
+        html: `<p>Hello,</p><p>You have been invited to join a project on Ganttify. Click the button below to ${user ? 'accept the invitation' : 'create an account and join'}:</p><a href="${link}" class="btn">Join Ganttify</a>`,
+      };
+  
+      transporter.sendMail(mailDetails, (err, data) => {
+        if (err) {
+          return res.status(500).json({ error: 'Error sending email' });
+        } else {
+          return res.status(200).json({ message: 'Invitation email sent' });
+        }
+      });
+    } catch (error) {
+      console.error('Error inviting user:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
+
+
+
+  router.get('/accept-invite/:token', async (req, res) => {
+    const { token } = req.params;
+  
+    try {
+      const decodedToken = jwt.decode(token);
+      const { email, projectId } = decodedToken;
+  
+      const db = client.db('ganttify');
+      const userAccounts = db.collection('userAccounts');
+      const projectCollection = db.collection('projects');
+      const teamCollection = db.collection('teams');
+  
+      const user = await userAccounts.findOne({ email });
+  
+      if (user) {
+        const secret = process.env.JWT_SECRET + user.password;
+  
+        try {
+          jwt.verify(token, secret);
+  
+          await userAccounts.updateOne(
+            { _id: user._id },
+            { $addToSet: { projects: new ObjectId(projectId) } }
+          );
+  
+          const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+          if (!project) {
+            return res.status(404).send('Project does not exist');
+          }
+  
+          await teamCollection.updateOne(
+            { _id: new ObjectId(project.team) },
+            { $addToSet: { members: user._id } }
+          );
+  
+          res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+        } catch (error) {
+          console.error('Invalid or expired token:', error);
+          res.status(400).send('Invalid or expired token');
+        }
+
+        
+      } else {
+        return res.status(404).send('User does not exist');
+      }
+    } catch (error) {
+      console.error('Error during invitation acceptance:', error);
+      res.status(400).send('Invalid ID format');
+    }
+  });
+
+
+
+  router.post("/register/:token", async (req, res) => {
+    const { token } = req.params;
+    const { email, name, phone, password, username } = req.body;
+  
+    if (!email || !name || !phone || !password || !username) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+  
+    try {
+      const decodedToken = jwt.decode(token);
+      const { projectId, isNewUser } = decodedToken;
+  
+      const db = client.db("ganttify");
+      const userCollection = db.collection("userAccounts");
+      const teamCollection = db.collection("teams");
+      const projectCollection = db.collection("projects");
+
+      const existingUser = await userCollection.findOne({ email });
+      if (existingUser && !isNewUser) {
+        return res.status(400).json({ error: "Email already used" });
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const newUser = {
+        email,
+        name,
+        phone,
+        password: hashedPassword,
+        username,
+        accountCreated: new Date(),
+        projects: projectId ? [projectId] : [],
+        toDoList: [],
+        isEmailVerified: false,
+      };
+  
+      // Insert the new user
+      const insertedUser = await userCollection.insertOne(newUser);
+      const userId = insertedUser.insertedId;
+  
+     
+      if (projectId) {
+        const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+        if (project && project.team) {
+          await teamCollection.updateOne(
+            { _id: new ObjectId(project.team) },
+            { $addToSet: { members: userId } }
+          );
+        } else {
+          return res.status(400).json({ error: "Invalid project ID" });
+        }
+      }
+  
+      const secret = process.env.JWT_SECRET + hashedPassword;
+      const verificationToken = jwt.sign({ email: newUser.email }, secret, { expiresIn: "5m" });
+  
+      let link = `http://localhost:3000/verify-email/${email}/${verificationToken}`;
+  
+      const transporter = nodeMailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.USER_EMAIL,
+          pass: process.env.EMAIL_PASSWORD
+        }
+      });
+  
+      let mailDetails = {
+        from: process.env.USER_EMAIL,
+        to: email,
+        subject: 'Verify Your Ganttify Account',
+        text: `Hello ${newUser.name},\n Please verify your Ganttify account by clicking the following link: ${link}`,
+        html: `<p>Hello ${newUser.name},</p> <p>Please verify your Ganttify account by clicking the following link:\n</p> <a href="${link}" className="btn">Verify Account</a>`
+      };
+  
+      transporter.sendMail(mailDetails, function (err, data) {
+        if (err) {
+          return res.status(500).json({ error: 'Error sending verification email' });
+        } else {
+          return res.status(200).json({ message: 'Verification email sent' });
+        }
+      });
+    } catch (error) {
+      console.error('An error has occurred:', error);
+      return res.status(500).json({ error });
+    }
+  });
+
+
 module.exports = router;
