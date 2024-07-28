@@ -151,7 +151,7 @@ function RecentlyDeletedCharts({ projects }) {
     const doProjectDelete = async event =>{
         try
         {   
-            const response = await fetch(buildPath('api/recently-deleted/'+projectToDelete._id.toString()),
+            const response = await fetch(buildPath('api/wipeproject/'+projectToDelete._id.toString()),
             {method:'DELETE',headers:{'Content-Type': 'application/json'}});
 
             var txt = await response.text();
