@@ -1387,8 +1387,11 @@ router.put('/teams/:teamId/members', async (req, res) => {
 
 // Update the role of an existing member
 router.put('/teams/:teamId/update-role', async (req, res) => {
+
+
   const { teamId } = req.params;
   const { userId, newRole } = req.body;
+
 
   if (!teamId || !userId || !newRole) {
     return res.status(400).json({ error: "Team ID, user ID, and new role are required" });
@@ -1399,48 +1402,56 @@ router.put('/teams/:teamId/update-role', async (req, res) => {
     const teamCollection = db.collection("teams");
     const userCollection = db.collection("userAccounts");
 
-    // Validate teamId and userId
+   
     if (!ObjectId.isValid(teamId) || !ObjectId.isValid(userId)) {
       return res.status(400).json({ error: "Invalid Team ID or User ID format" });
     }
 
-    // Convert teamId and userId to ObjectId
     const teamObjectId = new ObjectId(teamId);
     const userObjectId = new ObjectId(userId);
 
-    // Check if the team exists
+  
     const team = await teamCollection.findOne({ _id: teamObjectId });
     if (!team) {
       return res.status(404).json({ error: "Team not found" });
     }
 
-    // Check if the user exists
+    
     const user = await userCollection.findOne({ _id: userObjectId });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Check if the user is a member or editor of the team
-    const isMember = team.members.some(memberId => memberId.equals(userObjectId));
-    const isEditor = team.editors.some(editorId => editorId.equals(userObjectId));
+    const isMember = teamCollection.findOne({members: userObjectId});
+    const isEditor = teamCollection.findOne({editors: userObjectId});
+    
+
 
     if (!isMember && !isEditor) {
       return res.status(404).json({ error: "User not found in the team" });
     }
 
-    // Update the user's role in the team
     let update;
+
+
     if (newRole === "editor") {
       update = {
         $addToSet: { editors: userObjectId },
         $pull: { members: userObjectId }
       };
+
+
+
     } else if (newRole === "member") {
       update = {
         $addToSet: { members: userObjectId },
         $pull: { editors: userObjectId }
       };
-    } else {
+   
+
+    } 
+    
+    else {
       return res.status(400).json({ error: "Invalid role. Role must be 'editor' or 'member'." });
     }
 
@@ -1451,19 +1462,23 @@ router.put('/teams/:teamId/update-role', async (req, res) => {
     }
 
     return res.status(200).json({ message: "User's role updated successfully" });
+
   } catch (error) {
     console.error("Error updating user's role in the team:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
 
+
+
 // Removes members or editors from a team
 router.put('/teams/:teamId/removeteammember', async (req, res) => {
-  const { teamId } = req.params;
-  const { members = [], editors = [] } = req.body;
 
-  if (!teamId) {
-    return res.status(400).json({ error: "Team ID is required" });
+  const { teamId } = req.params;
+  const { userId, projectId } = req.body;
+
+  if (!teamId || !userId || !projectId) {
+    return res.status(400).json({ error: "Team ID, User ID, and Project ID are required" });
   }
 
   try {
@@ -1471,48 +1486,47 @@ router.put('/teams/:teamId/removeteammember', async (req, res) => {
     const teamCollection = db.collection("teams");
     const userCollection = db.collection("userAccounts");
 
-    // Validate teamId
-    if (!ObjectId.isValid(teamId)) {
-      return res.status(400).json({ error: "Invalid Team ID format" });
+   
+    
+
+    if (!ObjectId.isValid(teamId) || !ObjectId.isValid(userId) || !ObjectId.isValid(projectId)) {
+      return res.status(400).json({ error: "Invalid ID format" });
     }
 
-    // Convert teamId to ObjectId
     const teamObjectId = new ObjectId(teamId);
+    const userObjectId = new ObjectId(userId);
+    const projectObjectId = new ObjectId(projectId);
 
-    // Check if the team exists
+ 
+
+   
+    
     const team = await teamCollection.findOne({ _id: teamObjectId });
     if (!team) {
       return res.status(404).json({ error: "Team not found" });
     }
 
-    // Validate user IDs
-    const allUserIds = [...members, ...editors];
-    for (const id of allUserIds) {
-      if (!ObjectId.isValid(id)) {
-        return res.status(400).json({ error: `Invalid user ID format: ${id}` });
-      }
+    const user = await userCollection.findOne({ _id: userObjectId });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
 
-    // Convert user IDs to ObjectId
-    const memberObjectIds = members.map(id => new ObjectId(id));
-    const editorObjectIds = editors.map(id => new ObjectId(id));
+   
+    const isMember = team.members.some(memberId => memberId.equals(userObjectId));
+    const isEditor = team.editors.some(editorId => editorId.equals(userObjectId));
 
-    // Verify that all members and editors are valid users
-    const users = await userCollection.find({ _id: { $in: [...memberObjectIds, ...editorObjectIds] } }).toArray();
-    const validUserIds = users.map(user => user._id.toString());
+    console.log("Member: ", isMember, " , isEditor: ", isEditor);
 
-    const invalidMembers = members.filter(id => !validUserIds.includes(id));
-    const invalidEditors = editors.filter(id => !validUserIds.includes(id));
-
-    if (invalidMembers.length > 0 || invalidEditors.length > 0) {
-      return res.status(400).json({ error: "Some provided user IDs are invalid", invalidMembers, invalidEditors });
+    if (!isMember && !isEditor) {
+      return res.status(404).json({ error: "User not found in the team" });
     }
 
-    // Remove the members and editors from the team
+ 
+
     const update = {
       $pull: {
-        members: { $in: memberObjectIds },
-        editors: { $in: editorObjectIds }
+        members: userObjectId,
+        editors: userObjectId
       }
     };
 
@@ -1522,12 +1536,23 @@ router.put('/teams/:teamId/removeteammember', async (req, res) => {
       return res.status(500).json({ error: "Failed to update team" });
     }
 
-    return res.status(200).json({ message: "Members and editors removed successfully" });
+ 
+    const userUpdateResult = await userCollection.updateOne(
+      { _id: userObjectId },
+      { $pull: { projects: projectObjectId } }
+    );
+
+  
+
+    return res.status(200).json({ message: "Member removed successfully" });
   } catch (error) {
     console.error("Error updating team:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+
 
 router.post("/search/tasks/project", async (req, res) => {
   const { projectId } = req.body;
