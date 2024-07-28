@@ -22,11 +22,13 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 function toRecoverDate(timestamp) {
-    timestamp = timestamp.addDays(30);
+    var addDate = new Date(timestamp);
+    addDate = addDate.addDays(30);
+    var date = addDate.toISOString();
     var i = 0;
-    var date = "";
-    date += timestamp.slice(5, 7) + "/" + timestamp.slice(8, 10) + "/" + timestamp.slice(0, 4);
-    return date;
+    var recoverDate = "";
+    recoverDate += date.slice(5, 7) + "/" + date.slice(8, 10) + "/" + date.slice(0, 4);
+    return recoverDate;
 }
 // MM/DD/YYYY
 
