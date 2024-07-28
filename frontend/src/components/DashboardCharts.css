@@ -68,30 +68,6 @@ body{
     border:none;
     margin:0px;
 }
-.btnRow{
-    vertical-align: center !important;
-}
-.btnCol{
-    vertical-align: middle;
-    margin: 0 0 0 0;
-    padding: 0!important;
-    width:10%;
-}
-.viewChartCol{
-    width:55%;
-    padding-inline-start: 10px;
-    padding-inline-end: 0px;
-    margin-top: -10px;
-    vertical-align: middle;
-}
-.labelCol{
-    vertical-align: middle;
-    margin: 0;
-    padding-inline-start: 10px!important;
-    width:17.5%;
-    align-content: start;
-    float: inline-end;
-}
 .viewChartBtn{
     font-size: smaller;
     width: fit-content;

@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient, ObjectId, Timestamp } = require("mongodb");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
@@ -776,9 +776,17 @@ router.put("/projects/:id", async (req, res) => {
 });
 
 //-----------------> Delete a project <-----------------//
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
 router.delete("/projects/:id", async (req, res) => {
   const { id } = req.params;
   let error = "";
+  const today = new Date();
+  const deleteDate = today.addDays(30);
+  //console.log(deleteDate);
 
   try {
     const db = client.db("ganttify");
@@ -787,6 +795,7 @@ router.delete("/projects/:id", async (req, res) => {
       "recently_deleted_projects",
     );
 
+
     // Find the project to delete
     const project = await projectCollection.findOne({ _id: new ObjectId(id) });
 
@@ -794,6 +803,7 @@ router.delete("/projects/:id", async (req, res) => {
       error = "Project not found";
       return res.status(404).json({ error });
     }
+    project['stayTime'] = deleteDate;
 
     // Insert the project into recently deleted collection
     await recentlyDeletedCollection.insertOne(project);
@@ -1039,29 +1049,29 @@ router.post("/searchusers", async (req, res) => {
   }
 });
 
-//-> Search Project by Title & Sort by Due Date <-//
+//-> Search Project by Title & Sort by Date Created <-//
 router.post("/search/projects", async (req, res) => {
 
-    const { founderId, title, sortBy = "dueDate" } = req.body;
+    const { founderId, title, sortBy = "dateCreated" } = req.body;
   
     try {
       const db = client.db("ganttify");
       const projectCollection = db.collection("projects");
-      const teamCollection = db.collection("team");
+      const teamCollection = db.collection("teams");
   
       const teams = await teamCollection.find({
         $or: [
           { founderId: new ObjectId(founderId) },
-          { editor: new ObjectId(founderId) },
-          { member: new ObjectId(founderId) }
+          { editors: new ObjectId(founderId) },
+          { members: new ObjectId(founderId) }
         ]
       }).toArray();
   
-     // console.log("These are the teams: ", teams);
+     console.log("These are the teams: ", teams);
   
       const teamIds = teams.map(team => new ObjectId(team._id));
   
-      //console.log("These are the team IDs: ", teamIds);
+     console.log("These are the team IDs: ", teamIds);
   
       const query = {
         $or: [
@@ -1071,7 +1081,7 @@ router.post("/search/projects", async (req, res) => {
         nameProject: { $regex: title, $options: "i" }
       };
   
-      //console.log("These are the query: ", query);
+      console.log("These are the query: ", query);
   
       const sortOptions = { [sortBy]: 1 }; // 1 for ascending, -1 for descending
   
@@ -1082,7 +1092,7 @@ router.post("/search/projects", async (req, res) => {
   
       res.status(200).json(projects);
   
-      //console.log("These are the projects: ", projects);
+      console.log("These are the projects: ", projects);
   
     } catch (error) {
       console.error("Error searching projects:", error);
@@ -1575,7 +1585,6 @@ router.post("/updateSingleUserToDoList", async (req, res) => {
 });
 router.get('/getProjectDetails/:projectId', async (req, res) => {
   const projectId = req.params.projectId;
-
   try {
     const db = client.db("ganttify");
     const projectCollection = db.collection("projects");
