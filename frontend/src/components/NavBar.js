@@ -117,8 +117,10 @@ function NavBar(props) {
         });
 
         
-        let filteredUsers = usersInfo.filter(user => user !== null);
+        
         const { usersInfo } = await userResponse.json();
+
+        let filteredUsers = usersInfo.filter(user => user !== null);
         const validUsers = Array.isArray(usersInfo) ? filteredUsers : [];
 
         setTeamMembers(validUsers);
