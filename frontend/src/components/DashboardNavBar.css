@@ -26,6 +26,10 @@ body{
     margin-top:20px;
     cursor:pointer;
 }
+.navBtn:hover{
+    background-color: #DC6B2C;
+    color:#DC6B2C;
+}
 .topNavBtn{
     margin-top: 30px !important;
 }

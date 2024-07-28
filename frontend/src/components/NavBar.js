@@ -196,8 +196,8 @@ function NavBar(props) {
     return (
       <div id="navBarDiv">
         <div className="navbar">
-          <a href="/">
-            <img src={Logo} alt="" className="logo" />
+          <a href="/" aria-label="Go back to home page">
+            <img src={Logo} alt="GanttifyHomePage" className="logo" />
           </a>
           <h1> Ganttify </h1>
           <ul>
@@ -215,8 +215,8 @@ function NavBar(props) {
     return (
       <div id="navBarDiv" style={dashboardNav}>
         <div className="navbarDash">
-          <a href="/">
-            <img src={Logo} alt="" className="logo" />
+          <a href="/" aria-label="Go back to home page">
+            <img src={Logo} alt="GanttifyHomePage" className="logo" />
           </a>
           <h1> Dashboard </h1>
           <ul>
@@ -232,8 +232,8 @@ function NavBar(props) {
         <div id="navBarDiv" style={dashboardNav} role="navigation">
           <div className="navbarDash">
       
-            <a href="/">
-              <img src={Logo} alt="" className="logo" />
+            <a href="/" aria-label="Go back to home page">
+              <img src={Logo} alt="GanttifyHomePage" className="logo" />
             </a>
       
             <ProjectTitle projectId={projectId} />

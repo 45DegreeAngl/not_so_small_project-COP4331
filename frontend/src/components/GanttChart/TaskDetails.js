@@ -31,9 +31,10 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [dateError, setDateError] = useState('');
+  const [editProgressPermission, setProgressEditPermission] = useState(false)
 
   const [originalTask, setOriginalTask] = useState(null);
-
+  
   useEffect(() => {
     if (task) {
       setStatus(task.progress);
@@ -64,6 +65,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       if (editMode) {
         resetTaskDetails(); 
         setEditMode(false);
+        setProgressEditPermission(false);
       }
       onHide();
     }
@@ -114,7 +116,10 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
       const isFounder = project.founderId === userId;
       const isEditor = project.team.editors.includes(userId);
-
+      //if a user is the founder ot editor they can change the progress of a task
+      if(isFounder || isEditor){
+        setProgressEditPermission(true);
+      }
       setIsEditable(isFounder || isEditor);
       fetchTeamUsers(project.team._id);
     } catch (error) {
@@ -211,6 +216,11 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         const userNames = validUsers.map(user => user.name || 'User not found');
 
         setAssignedUserNames(userNames);
+        //if user is a  assigned to the task they can edit task progress
+        if(userIds.includes(userId)){
+            setProgressEditPermission(true);
+        }
+
       } else {
         throw new Error('Invalid response');
       }
@@ -255,6 +265,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleColorChange = async (newColor) => {
+    //console.log(newColor);
     setColor(newColor); 
 
     var element = document.getElementById('color-circle');
@@ -427,7 +438,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       )}
       <div className="dropdownDetails">
         <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{status}</a>
-        <div className="dropdown-menu" aria-labelledby="todoDropdown">
+        <div className="dropdown-menu" aria-labelledby="todoDropdown" aria-disabled = {!editProgressPermission}>
           <a className="dropdown-item" onClick={() => handleStatusChange('Not Started')}>Not Started</a>
           <a className="dropdown-item" onClick={() => handleStatusChange('In-Progress')}>In-Progress</a>
           <a className="dropdown-item" onClick={() => handleStatusChange('Completed')}>Completed</a>

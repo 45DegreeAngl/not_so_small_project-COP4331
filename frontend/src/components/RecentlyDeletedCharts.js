@@ -3,6 +3,7 @@ import './DashboardCharts.css';
 import GanttChartIcon from "./GanttChartIcon.js";
 import DeleteIcon from "../Images/assets/action_buttons/Delete_Task_or_Chart.png";
 import RestoreIcon from "../Images/assets/action_buttons/Restore_Chart.png";
+
 const app_name = 'ganttify-5b581a9c8167';
 function buildPath(route)
 {
@@ -15,7 +16,13 @@ function buildPath(route)
         return 'http://localhost:5000/' + route;
     }
 }
-
+function toDate(timestanp) {
+    var i = 0;
+    var date = "";
+    date += timestanp.slice(5, 7) + "/" + timestanp.slice(8, 10) + "/" + timestanp.slice(0, 4);
+    return date;
+}
+// MM/DD/YYYY
 
 
 function RecentlyDeletedCharts({ projects }) {
@@ -266,19 +273,19 @@ function RecentlyDeletedCharts({ projects }) {
     return (
         <div>
             <div id="chart-row" class="row row-cols-xxl-3 row-cols-xl-2 row-cols-md-1 px-0 mt-3 gx-0 gy-3 cardRow">
-                <div class="col px-0">
+                <div class="col cardCol px-0">
                 {chart1.isVisible ?
                         <div class="card" >
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 <div class="row align-items-center mb-1">
-                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton1" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart1.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
-                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Permanently Delete</h5></div>
-                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart1()}/></button></div>
-                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Resotre</h5></div>
+                                    <div class = "col col-1 px-0 me-3"><button name="DeleteButton1" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart1.project)}><img alt="DeleteButtonIcon" src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img alt="RestoreButtonIcon" src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart1()}/></button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart1.project.nameProject}</h5>
-                                <p class="card-text">Owner: {chart1.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart1.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Recover Until: {toDate(chart1.project.stayTime)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -288,13 +295,13 @@ function RecentlyDeletedCharts({ projects }) {
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 <div class="row align-items-center mb-1">
-                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton1" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart2.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
-                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Permanently Delete</h5></div>
-                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart2()}/></button></div>
-                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Resotre</h5></div>
+                                    <div class = "col col-1 px-0 me-3"><button name="DeleteButton2" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart2.project)}><img alt="DeleteButtonIcon" src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img alt="RestoreButtonIcon" src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart2()}/></button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart2.project.nameProject}</h5>
-                                <p class="card-text">Owner: {chart2.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart2.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Recover Until: {toDate(chart2.project.stayTime)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -304,13 +311,13 @@ function RecentlyDeletedCharts({ projects }) {
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 <div class="row align-items-center mb-1">
-                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton1" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart3.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
-                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Permanently Delete</h5></div>
-                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart3()}/></button></div>
-                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Resotre</h5></div>
+                                    <div class = "col col-1 px-0 me-3"><button name="DeleteButton3" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart3.project)}><img alt="DeleteButtonIcon" src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img alt="RestoreButtonIcon" src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart3()}/></button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart3.project.nameProject}</h5>
-                                <p class="card-text">Owner: {chart3.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart3.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Recover Until: {toDate(chart3.project.stayTime)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -320,13 +327,13 @@ function RecentlyDeletedCharts({ projects }) {
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 <div class="row align-items-center mb-1">
-                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton1" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart4.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
-                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Permanently Delete</h5></div>
-                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart4()}/></button></div>
-                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Resotre</h5></div>
+                                    <div class = "col col-1 px-0 me-3"><button name="DeleteButton4" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart4.project)}><img alt="DeleteButtonIcon" src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img alt="RestoreButtonIcon" src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart4()}/></button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart4.project.nameProject}</h5>
-                                <p class="card-text">Owner: {chart4.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart4.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Recover Until: {toDate(chart4.project.stayTime)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -336,13 +343,13 @@ function RecentlyDeletedCharts({ projects }) {
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 <div class="row align-items-center mb-1">
-                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton1" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart5.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
-                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Permanently Delete</h5></div>
-                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart5()}/></button></div>
-                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Resotre</h5></div>
+                                    <div class = "col col-1 px-0 me-3"><button name="DeleteButton5" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart5.project)}><img alt="DeleteButtonIcon" src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img alt="RestoreButtonIcon" src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart5()}/></button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart5.project.nameProject}</h5>
-                                <p class="card-text">Owner: {chart5.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart5.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Recover Until: {toDate(chart5.project.stayTime)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -352,13 +359,13 @@ function RecentlyDeletedCharts({ projects }) {
                             <GanttChartIcon class="projectIcon" />
                             <div class="card-body">
                                 <div class="row align-items-center mb-1">
-                                    <div class = "col col-1 px-0 me-3"><button id="DeleteButton1" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart6.project)}><img src={DeleteIcon} class="btnIcon" /></button></div>
-                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Permanently Delete</h5></div>
-                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart6()}/></button></div>
-                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Resotre</h5></div>
+                                    <div class = "col col-1 px-0 me-3"><button name="DeleteButton6" class="projectBtn" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onClick={()=>setProjectToDelete(chart6.project)}><img alt="DeleteButtonIcon" src={DeleteIcon} class="btnIcon" /></button></div>
+                                    <div class = "col col-2 px-0"><h5 class="btnLabel">Delete</h5></div>
+                                    <div class="col col-1 ps-0 me-3"><button class="projectBtn"><img alt="RestoreButtonIcon" src={RestoreIcon} class="btnIcon"  onClick={()=>setProjectToRestoreChart6()}/></button></div>
+                                    <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart6.project.nameProject}</h5>
-                                <p class="card-text">Owner: {chart6.project.founderId.toString().localeCompare(userId.toString()) === 0 ? meText : friendText} {chart6.project.isVisible === 1 ? publicText : privateText}</p>
+                                <p class="card-text">Recover Until: {toDate(chart6.project.stayTime)}</p>
                             </div>
                         </div> : null}
                 </div>

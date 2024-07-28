@@ -10,7 +10,7 @@ function buildPath(route) {
     return 'http://localhost:5000/' + route;
   }
 }
-
+const GanttifyOrange = "#DC6B2C"
 const AddTaskButton = ({ projectId }) => {
   const [showModal, setShowModal] = useState(false);
   const [taskData, setTaskData] = useState({
@@ -19,12 +19,12 @@ const AddTaskButton = ({ projectId }) => {
     dueDateTime: "",
     startDateTime: "",
     assignedTasksUsers: [],
-    color: "#DC6B2C",
+    color: GanttifyOrange,
     pattern: "default-pattern"
   });
   const [teamUsers, setTeamUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [color, setColor] = useState('white'); // Default color
+  const [color, setColor] = useState('#DC6B2C'); // Default color
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   const colorOptions = [
@@ -40,6 +40,7 @@ const AddTaskButton = ({ projectId }) => {
     const handleColorPickerClickOutside = (event) => {
       if (showColorPicker && !document.getElementById('color-picker').contains(event.target) && !document.getElementById('color-circle').contains(event.target)) {
         setShowColorPicker(false);
+        setColor(GanttifyOrange);
       }
     };
 
@@ -98,10 +99,13 @@ const AddTaskButton = ({ projectId }) => {
   };
 
   const handleColorChange = async (newColor) => {
+    console.log(newColor);
     setColor(newColor); 
 
     var element = document.getElementById('color-circle');
     element.style.backgroundColor = newColor;
+
+    setTaskData(oldData => ({...oldData,color:newColor}));
   };
 
 
@@ -183,9 +187,10 @@ const AddTaskButton = ({ projectId }) => {
       dueDateTime: "",
       startDateTime: "",
       assignedTasksUsers: [],
-      color: "#DC6B2C",
+      color: GanttifyOrange,
       pattern: "default-pattern"
     });
+    setColor(GanttifyOrange);
     setErrorMessage(""); // Reset error message when modal is closed
   };
 
@@ -259,7 +264,7 @@ const AddTaskButton = ({ projectId }) => {
                           {colorOptions.map((colorOption) => (
                             <div key={colorOption} className="color-option" style={{ backgroundColor: colorOption }} onClick={() => handleColorChange(colorOption)} />
                           ))}
-                          <input type="color" className="form-control form-control-color" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value)} />
+                          <input type="color" className="form-control form-control-color" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value) } />
                         </div>
                       )}
                   </div>
