@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
 require("dotenv").config();
 
-// Replaced app.post with router.post for modularity and best practices.
+
 const router = express.Router();
 const url = process.env.MONGODB_URI;
 
@@ -35,13 +35,13 @@ router.post("/register", async (req, res) => {
     const db = client.db("ganttify");
     const userCollection = db.collection("userAccounts");
 
-    // Check if the user already exists
+  
     const existingUser = await userCollection.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "Email already used" });
     }
 
-    // Hash the password before storing it
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
@@ -51,7 +51,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       username,
       accountCreated: new Date(),
-      isEmailVerified: false, // Set email verification status to false
+      isEmailVerified: false, 
       projects: [],
       toDoList: [],
     };
@@ -187,7 +187,7 @@ router.post("/read/users", async (req, res) => {
             const db = client.db("ganttify");
             const results = db.collection("userAccounts");
         
-            // Find user by email
+          
             const user = await results.findOne({ _id:new ObjectId(users[i])});
             usersInfo.push(user);
         }
@@ -222,7 +222,7 @@ router.post("/login", async (req, res) => {
     const db = client.db("ganttify");
     const userCollection = db.collection("userAccounts");
 
-    // Find user by email
+
     const user = await userCollection.findOne({ email });
 
     if (!user) {
@@ -230,7 +230,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error });
     }
 
-    // Check if the user's email is verified
+
     if (!user.isEmailVerified) {
       const secret = process.env.JWT_SECRET + user.password;
       const token = jwt.sign({ email: user.email }, secret, { expiresIn: "5m" });
@@ -263,14 +263,14 @@ router.post("/login", async (req, res) => {
       return;
     }
 
-    // Check password
+ 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       error = "Invalid email or password";
       return res.status(401).json({ error });
     }
 
-    // Generate JWT token
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
     res.status(200).json({
       token,
@@ -1387,8 +1387,11 @@ router.put('/teams/:teamId/members', async (req, res) => {
 
 // Update the role of an existing member
 router.put('/teams/:teamId/update-role', async (req, res) => {
+
+
   const { teamId } = req.params;
   const { userId, newRole } = req.body;
+
 
   if (!teamId || !userId || !newRole) {
     return res.status(400).json({ error: "Team ID, user ID, and new role are required" });
@@ -1399,48 +1402,56 @@ router.put('/teams/:teamId/update-role', async (req, res) => {
     const teamCollection = db.collection("teams");
     const userCollection = db.collection("userAccounts");
 
-    // Validate teamId and userId
+   
     if (!ObjectId.isValid(teamId) || !ObjectId.isValid(userId)) {
       return res.status(400).json({ error: "Invalid Team ID or User ID format" });
     }
 
-    // Convert teamId and userId to ObjectId
     const teamObjectId = new ObjectId(teamId);
     const userObjectId = new ObjectId(userId);
 
-    // Check if the team exists
+  
     const team = await teamCollection.findOne({ _id: teamObjectId });
     if (!team) {
       return res.status(404).json({ error: "Team not found" });
     }
 
-    // Check if the user exists
+    
     const user = await userCollection.findOne({ _id: userObjectId });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Check if the user is a member or editor of the team
-    const isMember = team.members.some(memberId => memberId.equals(userObjectId));
-    const isEditor = team.editors.some(editorId => editorId.equals(userObjectId));
+    const isMember = teamCollection.findOne({members: userObjectId});
+    const isEditor = teamCollection.findOne({editors: userObjectId});
+    
+
 
     if (!isMember && !isEditor) {
       return res.status(404).json({ error: "User not found in the team" });
     }
 
-    // Update the user's role in the team
     let update;
+
+
     if (newRole === "editor") {
       update = {
         $addToSet: { editors: userObjectId },
         $pull: { members: userObjectId }
       };
+
+
+
     } else if (newRole === "member") {
       update = {
         $addToSet: { members: userObjectId },
         $pull: { editors: userObjectId }
       };
-    } else {
+   
+
+    } 
+    
+    else {
       return res.status(400).json({ error: "Invalid role. Role must be 'editor' or 'member'." });
     }
 
@@ -1451,19 +1462,23 @@ router.put('/teams/:teamId/update-role', async (req, res) => {
     }
 
     return res.status(200).json({ message: "User's role updated successfully" });
+
   } catch (error) {
     console.error("Error updating user's role in the team:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
 
+
+
 // Removes members or editors from a team
 router.put('/teams/:teamId/removeteammember', async (req, res) => {
-  const { teamId } = req.params;
-  const { members = [], editors = [] } = req.body;
 
-  if (!teamId) {
-    return res.status(400).json({ error: "Team ID is required" });
+  const { teamId } = req.params;
+  const { userId, projectId } = req.body;
+
+  if (!teamId || !userId || !projectId) {
+    return res.status(400).json({ error: "Team ID, User ID, and Project ID are required" });
   }
 
   try {
@@ -1471,48 +1486,47 @@ router.put('/teams/:teamId/removeteammember', async (req, res) => {
     const teamCollection = db.collection("teams");
     const userCollection = db.collection("userAccounts");
 
-    // Validate teamId
-    if (!ObjectId.isValid(teamId)) {
-      return res.status(400).json({ error: "Invalid Team ID format" });
+   
+    
+
+    if (!ObjectId.isValid(teamId) || !ObjectId.isValid(userId) || !ObjectId.isValid(projectId)) {
+      return res.status(400).json({ error: "Invalid ID format" });
     }
 
-    // Convert teamId to ObjectId
     const teamObjectId = new ObjectId(teamId);
+    const userObjectId = new ObjectId(userId);
+    const projectObjectId = new ObjectId(projectId);
 
-    // Check if the team exists
+ 
+
+   
+    
     const team = await teamCollection.findOne({ _id: teamObjectId });
     if (!team) {
       return res.status(404).json({ error: "Team not found" });
     }
 
-    // Validate user IDs
-    const allUserIds = [...members, ...editors];
-    for (const id of allUserIds) {
-      if (!ObjectId.isValid(id)) {
-        return res.status(400).json({ error: `Invalid user ID format: ${id}` });
-      }
+    const user = await userCollection.findOne({ _id: userObjectId });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
 
-    // Convert user IDs to ObjectId
-    const memberObjectIds = members.map(id => new ObjectId(id));
-    const editorObjectIds = editors.map(id => new ObjectId(id));
+   
+    const isMember = team.members.some(memberId => memberId.equals(userObjectId));
+    const isEditor = team.editors.some(editorId => editorId.equals(userObjectId));
 
-    // Verify that all members and editors are valid users
-    const users = await userCollection.find({ _id: { $in: [...memberObjectIds, ...editorObjectIds] } }).toArray();
-    const validUserIds = users.map(user => user._id.toString());
+    console.log("Member: ", isMember, " , isEditor: ", isEditor);
 
-    const invalidMembers = members.filter(id => !validUserIds.includes(id));
-    const invalidEditors = editors.filter(id => !validUserIds.includes(id));
-
-    if (invalidMembers.length > 0 || invalidEditors.length > 0) {
-      return res.status(400).json({ error: "Some provided user IDs are invalid", invalidMembers, invalidEditors });
+    if (!isMember && !isEditor) {
+      return res.status(404).json({ error: "User not found in the team" });
     }
 
-    // Remove the members and editors from the team
+ 
+
     const update = {
       $pull: {
-        members: { $in: memberObjectIds },
-        editors: { $in: editorObjectIds }
+        members: userObjectId,
+        editors: userObjectId
       }
     };
 
@@ -1522,12 +1536,23 @@ router.put('/teams/:teamId/removeteammember', async (req, res) => {
       return res.status(500).json({ error: "Failed to update team" });
     }
 
-    return res.status(200).json({ message: "Members and editors removed successfully" });
+ 
+    const userUpdateResult = await userCollection.updateOne(
+      { _id: userObjectId },
+      { $pull: { projects: projectObjectId } }
+    );
+
+  
+
+    return res.status(200).json({ message: "Member removed successfully" });
   } catch (error) {
     console.error("Error updating team:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+
 
 router.post("/search/tasks/project", async (req, res) => {
   const { projectId } = req.body;
@@ -1642,7 +1667,7 @@ router.get('/teams/:teamId', async (req, res) => {
 
 //Invite team member api's//
 
- router.post('/invite-user', async (req, res) => {
+  router.post('/invite-user', async (req, res) => {
     const { email, projectId } = req.body;
   
     if (!email || !projectId) {
@@ -1657,9 +1682,7 @@ router.get('/teams/:teamId', async (req, res) => {
       const secret = process.env.JWT_SECRET + (user ? user.password : 'newuseraccount');
       const token = jwt.sign({ email, projectId }, secret, { expiresIn: '5m' });
       
-      const link = user 
-        ? `http://localhost:3000/accept-invite/${token}`
-        : `http://localhost:3000/register/${token}`;
+      const link = user ? `https://ganttify-5b581a9c8167.herokuapp.com/accept-invite/${token}` : `https://ganttify-5b581a9c8167.herokuapp.com/register/${token}`;
   
       const transporter = nodeMailer.createTransport({
         service: 'gmail',
@@ -1678,11 +1701,13 @@ router.get('/teams/:teamId', async (req, res) => {
       };
   
       transporter.sendMail(mailDetails, (err, data) => {
+
         if (err) {
           return res.status(500).json({ error: 'Error sending email' });
         } else {
           return res.status(200).json({ message: 'Invitation email sent' });
         }
+
       });
     } catch (error) {
       console.error('Error inviting user:', error);
@@ -1693,7 +1718,7 @@ router.get('/teams/:teamId', async (req, res) => {
 
 
 
-  router.get('/accept-invite/:token', async (req, res) => {
+   router.get('/accept-invite/:token', async (req, res) => {
     const { token } = req.params;
   
     try {
@@ -1719,6 +1744,8 @@ router.get('/teams/:teamId', async (req, res) => {
           );
   
           const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+
+
           if (!project) {
             return res.status(404).send('Project does not exist');
           }
@@ -1728,16 +1755,17 @@ router.get('/teams/:teamId', async (req, res) => {
             { $addToSet: { members: user._id } }
           );
   
+
           res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
         } catch (error) {
           console.error('Invalid or expired token:', error);
           res.status(400).send('Invalid or expired token');
         }
-
-        
       } else {
         return res.status(404).send('User does not exist');
       }
+
+
     } catch (error) {
       console.error('Error during invitation acceptance:', error);
       res.status(400).send('Invalid ID format');
@@ -1746,7 +1774,9 @@ router.get('/teams/:teamId', async (req, res) => {
 
 
 
-  router.post("/register/:token", async (req, res) => {
+   router.post("/register/:token", async (req, res) => {
+
+
     const { token } = req.params;
     const { email, name, phone, password, username } = req.body;
   
@@ -1755,19 +1785,22 @@ router.get('/teams/:teamId', async (req, res) => {
     }
   
     try {
+
+
       const decodedToken = jwt.decode(token);
-      const { projectId, isNewUser } = decodedToken;
+
+      const { projectId } = decodedToken;
   
       const db = client.db("ganttify");
       const userCollection = db.collection("userAccounts");
-      const teamCollection = db.collection("teams");
-      const projectCollection = db.collection("projects");
+  
 
       const existingUser = await userCollection.findOne({ email });
-      if (existingUser && !isNewUser) {
+      if (existingUser) {
         return res.status(400).json({ error: "Email already used" });
       }
   
+
       const hashedPassword = await bcrypt.hash(password, 10);
   
       const newUser = {
@@ -1777,32 +1810,18 @@ router.get('/teams/:teamId', async (req, res) => {
         password: hashedPassword,
         username,
         accountCreated: new Date(),
-        projects: projectId ? [projectId] : [],
+        projects: [],
         toDoList: [],
         isEmailVerified: false,
       };
   
       // Insert the new user
       const insertedUser = await userCollection.insertOne(newUser);
-      const userId = insertedUser.insertedId;
-  
-     
-      if (projectId) {
-        const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
-        if (project && project.team) {
-          await teamCollection.updateOne(
-            { _id: new ObjectId(project.team) },
-            { $addToSet: { members: userId } }
-          );
-        } else {
-          return res.status(400).json({ error: "Invalid project ID" });
-        }
-      }
   
       const secret = process.env.JWT_SECRET + hashedPassword;
-      const verificationToken = jwt.sign({ email: newUser.email }, secret, { expiresIn: "5m" });
+      const verificationToken = jwt.sign({ email: newUser.email, projectId }, secret, { expiresIn: "5m" });
   
-      let link = `http://localhost:3000/verify-email/${email}/${verificationToken}`;
+      let link = `https://ganttify-5b581a9c8167.herokuapp.com/verify-invite/${verificationToken}`;
   
       const transporter = nodeMailer.createTransport({
         service: 'gmail',
@@ -1832,6 +1851,88 @@ router.get('/teams/:teamId', async (req, res) => {
       return res.status(500).json({ error });
     }
   });
+
+
+router.post('/decode-token', (req, res) => {
+  const { token } = req.body;
+  
+  if (!token) {
+    return res.status(400).json({ error: 'Token is required' });
+  }
+
+  try {
+    const decoded = jwt.decode(token);
+    if (!decoded || !decoded.email) {
+      return res.status(400).json({ error: 'Invalid token' });
+    }
+
+    res.json({ email: decoded.email });
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    res.status(500).json({ error: 'Failed to decode token' });
+  }
+});
+
+
+
+router.get('/verify-invite/:token', async (req, res) => {
+  const { token } = req.params;
+
+  try {
+
+    const decodedToken = jwt.decode(token);
+    if (!decodedToken) {
+      return res.status(400).send("Invalid token");
+    }
+
+    const { email, projectId } = decodedToken;
+
+
+    const db = client.db("ganttify");
+    const userCollection = db.collection("userAccounts");
+    const projectCollection = db.collection("projects");
+    const teamCollection = db.collection("teams");
+
+    const user = await userCollection.findOne({ email });
+
+
+    if (!user) {
+      return res.status(404).send("User does not exist");
+    }
+
+    const secret = process.env.JWT_SECRET + user.password;
+
+
+    try {
+      jwt.verify(token, secret);
+
+
+      await userCollection.updateOne(
+        { _id: user._id },
+        { $set: { isEmailVerified: true }, $addToSet: { projects: projectId } }
+      );
+
+      const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+      if (!project) {
+        return res.status(404).send('Project does not exist');
+      }
+
+      await teamCollection.updateOne(
+        { _id: new ObjectId(project.team) },
+        { $addToSet: { members: user._id } }
+      );
+
+
+      return res.status(200).send("User verified and added to project and team");
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      return res.status(400).send("Invalid or expired token");
+    }
+  } catch (error) {
+    console.error('Error during invitation acceptance:', error);
+    return res.status(400).send("Invalid ID format");
+  }
+});
 
 
 module.exports = router;
