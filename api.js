@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
 require("dotenv").config();
 
-// Replaced app.post with router.post for modularity and best practices.
+
 const router = express.Router();
 const url = process.env.MONGODB_URI;
 
@@ -35,13 +35,13 @@ router.post("/register", async (req, res) => {
     const db = client.db("ganttify");
     const userCollection = db.collection("userAccounts");
 
-    // Check if the user already exists
+  
     const existingUser = await userCollection.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "Email already used" });
     }
 
-    // Hash the password before storing it
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
@@ -51,7 +51,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       username,
       accountCreated: new Date(),
-      isEmailVerified: false, // Set email verification status to false
+      isEmailVerified: false, 
       projects: [],
       toDoList: [],
     };
@@ -187,7 +187,7 @@ router.post("/read/users", async (req, res) => {
             const db = client.db("ganttify");
             const results = db.collection("userAccounts");
         
-            // Find user by email
+          
             const user = await results.findOne({ _id:new ObjectId(users[i])});
             usersInfo.push(user);
         }
@@ -222,7 +222,7 @@ router.post("/login", async (req, res) => {
     const db = client.db("ganttify");
     const userCollection = db.collection("userAccounts");
 
-    // Find user by email
+
     const user = await userCollection.findOne({ email });
 
     if (!user) {
@@ -230,7 +230,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error });
     }
 
-    // Check if the user's email is verified
+
     if (!user.isEmailVerified) {
       const secret = process.env.JWT_SECRET + user.password;
       const token = jwt.sign({ email: user.email }, secret, { expiresIn: "5m" });
@@ -263,14 +263,14 @@ router.post("/login", async (req, res) => {
       return;
     }
 
-    // Check password
+ 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       error = "Invalid email or password";
       return res.status(401).json({ error });
     }
 
-    // Generate JWT token
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
     res.status(200).json({
       token,
@@ -1854,14 +1854,14 @@ router.get('/verify-invite/:token', async (req, res) => {
   const { token } = req.params;
 
   try {
-    console.log("Token received for verification:", token);
+
     const decodedToken = jwt.decode(token);
     if (!decodedToken) {
       return res.status(400).send("Invalid token");
     }
 
     const { email, projectId } = decodedToken;
-    console.log("Decoded token:", decodedToken);
+
 
     const db = client.db("ganttify");
     const userCollection = db.collection("userAccounts");
@@ -1869,18 +1869,18 @@ router.get('/verify-invite/:token', async (req, res) => {
     const teamCollection = db.collection("teams");
 
     const user = await userCollection.findOne({ email });
-    console.log("User found:", user);
+
 
     if (!user) {
       return res.status(404).send("User does not exist");
     }
 
     const secret = process.env.JWT_SECRET + user.password;
-    console.log("Secret used for verification:", secret);
+
 
     try {
       jwt.verify(token, secret);
-      console.log("Token verification successful");
+
 
       await userCollection.updateOne(
         { _id: user._id },
@@ -1897,7 +1897,7 @@ router.get('/verify-invite/:token', async (req, res) => {
         { $addToSet: { members: user._id } }
       );
 
-      console.log("User added to project and team successfully");
+
       return res.status(200).send("User verified and added to project and team");
     } catch (error) {
       console.error('Token verification failed:', error);
