@@ -65,6 +65,7 @@ function NavBar(props) {
   const [isEditor, setIsEditor] = useState(false);
   const [founderId, setFounderId] = useState(null);
   const [team, setTeam] = useState(null); 
+  const [isPublic,setIsPublic] = useState(false);
 
   const [taskData, setTaskData] = useState({
     taskTitle: "",
@@ -96,12 +97,13 @@ function NavBar(props) {
       const response = await fetch(buildPath(`api/getProjectDetails/${projectId}`));
       const project = await response.json();
 
-      if (project && project.team) {
+      if (project && project.team && project.isVisible && project.isVisible === 1) {
 
 
         const teamId = project.team._id;
         setFounderId(project.team.founderId);
         setTeam(project.team); 
+        setIsPublic(true);
 
         const teamResponse = await fetch(buildPath(`api/teams/${teamId}`));
         const teamData = await teamResponse.json();
@@ -126,6 +128,9 @@ function NavBar(props) {
         if (userId === teamData.founderId || teamData.editors.includes(userId)) {
           setIsEditor(true);
         }
+      }
+      else if(project.isVisible && project.isVisible === 0){
+        setIsPublic(false);
       }
     } catch (error) {
       console.error('Error fetching team members:', error);
@@ -388,7 +393,7 @@ function NavBar(props) {
 
             <ul>
 
-              {isEditor && (
+              {(isEditor && isPublic)?(
                 <li className="nav-item dropdown">
 
                   <a className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -407,7 +412,7 @@ function NavBar(props) {
 
 
                 </li>
-              )}
+              ):null}
               <li><Link to="/dashboard"><button id="button">Dashboard</button></Link></li>
               <li><Link to="/"><button id="button">Sign Out</button></Link></li>
             </ul>
