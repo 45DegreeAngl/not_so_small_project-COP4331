@@ -30,6 +30,16 @@
 
 }
 
+ul{
+  display: flex;
+  flex: 1 1;
+  height: 600px;
+  margin-right: 50px;
+  position: relative;
+  top: 450px;
+  width: 100%;
+}
+
 .Box{
     position: absolute;
     width: 100%;
