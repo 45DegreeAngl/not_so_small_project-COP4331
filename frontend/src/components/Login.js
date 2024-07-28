@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import './Login.css';
 const app_name = 'ganttify-5b581a9c8167';
@@ -58,26 +59,30 @@ function Login() {
   };
 
   return (
-    <div class = "registerContainer mt-5">
-    <div class ="registerForm text-center">
-        <div class ="card-header registerFormHeader">
-            <h1 class = "registerTitle">Login</h1>
+
+    
+    <div className = "loginContainer mt-5">
+    <div className ="loginForm text-center">
+        <div className ="card-header registerFormHeader">
+            <h1 className = "loginTitle">Login</h1>
         </div>
-        <div class = "card-body p-0">
+    
+        <div className = "card-body p-0">
+    
             <form onSubmit={doLogin}>
-                <div class = "row text-start"><label class = "formLabel mb-1" for="nameForm">Email</label></div>
+                <div className = "row text-start"><label className = "formLabel mb-1" htmlFor="nameForm">Email</label></div>
                 
-                <div class = "row text-center mb-3"><input id="nameForm" type="email" class="formItem mx-0 mt-0" placeholder='Email' value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required></input></div>
+                <div className = "row text-center mb-3"><input id="nameForm" type="email" className="formItem mx-0 mt-0" placeholder='Email' value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required></input></div>
                 
-                <div class = "row text-start"><label class = "formLabel mb-1" for="passwordForm">Password</label></div>
+                <div className = "row text-start"><label className = "formLabel mb-1" htmlFor="passwordForm">Password</label></div>
                 
-                <div class = "row text-center  mb-3"><input id="passwordForm" type="password" class="formItem" placeholder='Password1!' value ={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required></input></div>
+                <div className = "row text-center  mb-3"><input id="passwordForm" type="password" className="formItem" placeholder='Password1!' value ={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required></input></div>
                 
-                <div class = "row text-center mb-1"><span>{message}</span></div>
+                <div className = "row text-center mb-1"><span>{message}</span></div>
 
-                <div class = "row text-center mb-2"><input id="submitLogin" class = "btn"type="submit" value="Login"/></div>
+                <div className = "row text-center mb-2"><input id="submitLogin" className = "btn"type="submit" value="Login"/></div>
 
-                <div class ="row text-start mb-2"><a href="/forgot-password" className="forgot-password-link">Forgot your password?</a></div>
+                <div className ="row text-start mb-2"><a href="/forgot-password" className="forgot-password-link">Forgot your password?</a></div>
                 
             </form>
         </div> 
