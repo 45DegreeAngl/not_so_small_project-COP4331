@@ -1854,8 +1854,14 @@ router.get('/verify-invite/:token', async (req, res) => {
   const { token } = req.params;
 
   try {
+    console.log("Token received for verification:", token);
     const decodedToken = jwt.decode(token);
+    if (!decodedToken) {
+      return res.status(400).send("Invalid token");
+    }
+
     const { email, projectId } = decodedToken;
+    console.log("Decoded token:", decodedToken);
 
     const db = client.db("ganttify");
     const userCollection = db.collection("userAccounts");
@@ -1863,38 +1869,43 @@ router.get('/verify-invite/:token', async (req, res) => {
     const teamCollection = db.collection("teams");
 
     const user = await userCollection.findOne({ email });
+    console.log("User found:", user);
 
-    if (user) {
-      const secret = process.env.JWT_SECRET + user.password;
-
-      try {
-        jwt.verify(token, secret);
-
-        await userCollection.updateOne(
-          { _id: user._id },
-          { $set: { isEmailVerified: true }, $addToSet: { projects: projectId } }
-        );
-
-        const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
-        if (!project) {
-          return res.status(404).send('Project does not exist');
-        }
-
-        await teamCollection.updateOne(
-          { _id: new ObjectId(project.team) },
-          { $addToSet: { members: user._id } }
-        );
-
-        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-      } catch (error) {
-        res.status(400).send("Invalid or expired token");
-      }
-    } else {
+    if (!user) {
       return res.status(404).send("User does not exist");
+    }
+
+    const secret = process.env.JWT_SECRET + user.password;
+    console.log("Secret used for verification:", secret);
+
+    try {
+      jwt.verify(token, secret);
+      console.log("Token verification successful");
+
+      await userCollection.updateOne(
+        { _id: user._id },
+        { $set: { isEmailVerified: true }, $addToSet: { projects: projectId } }
+      );
+
+      const project = await projectCollection.findOne({ _id: new ObjectId(projectId) });
+      if (!project) {
+        return res.status(404).send('Project does not exist');
+      }
+
+      await teamCollection.updateOne(
+        { _id: new ObjectId(project.team) },
+        { $addToSet: { members: user._id } }
+      );
+
+      console.log("User added to project and team successfully");
+      return res.status(200).send("User verified and added to project and team");
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      return res.status(400).send("Invalid or expired token");
     }
   } catch (error) {
     console.error('Error during invitation acceptance:', error);
-    res.status(400).send("Invalid ID format");
+    return res.status(400).send("Invalid ID format");
   }
 });
 
