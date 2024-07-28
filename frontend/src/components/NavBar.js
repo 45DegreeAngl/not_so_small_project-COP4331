@@ -1,4 +1,5 @@
 
+
 import { Link, useParams } from "react-router-dom";
 import Logo from '../Images/assets/logo/Logo.png';
 import './NavBar.css';
@@ -61,7 +62,9 @@ function NavBar(props) {
   const [editMessage, setEditMessage] = useState("");
   const [selectedMember, setSelectedMember] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
-
+  const [isEditor, setIsEditor] = useState(false);
+  const [founderId, setFounderId] = useState(null);
+  const [team, setTeam] = useState(null); 
 
   const [taskData, setTaskData] = useState({
     taskTitle: "",
