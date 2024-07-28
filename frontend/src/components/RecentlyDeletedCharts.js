@@ -16,10 +16,16 @@ function buildPath(route)
         return 'http://localhost:5000/' + route;
     }
 }
-function toDate(timestanp) {
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
+function toRecoverDate(timestamp) {
+    timestamp = timestamp.addDays(30);
     var i = 0;
     var date = "";
-    date += timestanp.slice(5, 7) + "/" + timestanp.slice(8, 10) + "/" + timestanp.slice(0, 4);
+    date += timestamp.slice(5, 7) + "/" + timestamp.slice(8, 10) + "/" + timestamp.slice(0, 4);
     return date;
 }
 // MM/DD/YYYY
@@ -32,10 +38,6 @@ function RecentlyDeletedCharts({ projects }) {
     const [chartListPage, setChartListPage] = useState(0);
     const [projectToDelete, setProjectToDelete] = useState({});
     const [projectIsDeleted,setProjectIsDeleted] = useState(false);
-    const friendText = "Friend";
-    const meText = "Me";
-    const publicText = "(public)"
-    const privateText = "(private)";
 
 
 
@@ -285,7 +287,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart1.project.nameProject}</h5>
-                                <p class="card-text">Recover Until: {toDate(chart1.project.stayTime)}</p>
+                                <p class="card-text">Recover Until: {toRecoverDate(chart1.project.dateMoved)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -301,7 +303,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart2.project.nameProject}</h5>
-                                <p class="card-text">Recover Until: {toDate(chart2.project.stayTime)}</p>
+                                <p class="card-text">Recover Until: {toRecoverDate(chart2.project.dateMoved)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -317,7 +319,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart3.project.nameProject}</h5>
-                                <p class="card-text">Recover Until: {toDate(chart3.project.stayTime)}</p>
+                                <p class="card-text">Recover Until: {toRecoverDate(chart3.project.dateMoved)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -333,7 +335,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart4.project.nameProject}</h5>
-                                <p class="card-text">Recover Until: {toDate(chart4.project.stayTime)}</p>
+                                <p class="card-text">Recover Until: {toRecoverDate(chart4.project.dateMoved)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -349,7 +351,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart5.project.nameProject}</h5>
-                                <p class="card-text">Recover Until: {toDate(chart5.project.stayTime)}</p>
+                                <p class="card-text">Recover Until: {toRecoverDate(chart5.project.dateMoved)}</p>
                             </div>
                         </div> : null}
                 </div>
@@ -365,7 +367,7 @@ function RecentlyDeletedCharts({ projects }) {
                                     <div class = "col col-3 px-0"><h5 class = "btnLabel">Restore</h5></div>
                                 </div>
                                 <h5 class="card-title">{chart6.project.nameProject}</h5>
-                                <p class="card-text">Recover Until: {toDate(chart6.project.stayTime)}</p>
+                                <p class="card-text">Recover Until: {toRecoverDate(chart6.project.dateMoved)}</p>
                             </div>
                         </div> : null}
                 </div>
