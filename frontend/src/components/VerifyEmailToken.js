@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import './VerifyEmail.css';
 
 const app_name = 'ganttify-5b581a9c8167';
@@ -29,11 +29,10 @@ function VerifyEmailToken() {
           return;
         }
 
-        setMessage('Your email has been successfully verified and you are now a team member!');
+        const res = await response.text();
+        setMessage(res);
       } catch (e) {
-        
         setMessage('There was an issue with your email verification.');
-        
       }
     };
 
@@ -41,7 +40,6 @@ function VerifyEmailToken() {
   }, [token]);
 
   return (
-    
     <div className="verify-email-container">
       <div className="verify-email-card">
         <h1 className="verify-email-title">Verify Email</h1>
@@ -51,7 +49,6 @@ function VerifyEmailToken() {
         </div>
       </div>
     </div>
-  
   );
 }
 
