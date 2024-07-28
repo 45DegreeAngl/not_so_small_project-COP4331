@@ -781,43 +781,224 @@ Date.prototype.addDays = function(days) {
     date.setDate(date.getDate() + days);
     return date;
 }
+
+// Delete a project
 router.delete("/projects/:id", async (req, res) => {
   const { id } = req.params;
   let error = "";
-  const today = new Date();
-  const deleteDate = today.addDays(30);
-  //console.log(deleteDate);
 
   try {
     const db = client.db("ganttify");
     const projectCollection = db.collection("projects");
-    const recentlyDeletedCollection = db.collection(
-      "recently_deleted_projects",
+    const taskCollection = db.collection("tasks");
+    const teamCollection = db.collection("teams");
+    const deletedProjectsCollection = db.collection("recently_deleted_projects");
+    const deletedTasksCollection = db.collection("recently_deleted_tasks");
+    const deletedTeamsCollection = db.collection("recently_deleted_teams");
+
+    // Ensure TTL index exists
+    await deletedProjectsCollection.createIndex(
+      { "dateMoved": 1 },
+      {
+        expireAfterSeconds: 2592000,
+        partialFilterExpression: { "flagDeletion": 1 }
+      }
     );
 
+    await deletedTasksCollection.createIndex(
+      { "dateMoved": 1 },
+      {
+        expireAfterSeconds: 2592000,
+        partialFilterExpression: { "flagDeletion": 1 }
+      }
+    );
+
+    await deletedTeamsCollection.createIndex(
+      { "dateMoved": 1 },
+      {
+        expireAfterSeconds: 2592000,
+        partialFilterExpression: { "flagDeletion": 1 }
+      }
+    );
 
     // Find the project to delete
     const project = await projectCollection.findOne({ _id: new ObjectId(id) });
+    console.log("Project data:", project); // Debugging line
 
     if (!project) {
       error = "Project not found";
       return res.status(404).json({ error });
     }
-    project['stayTime'] = deleteDate;
 
-    // Insert the project into recently deleted collection
-    await recentlyDeletedCollection.insertOne(project);
+    // Set flagDeletion to 1, add dateMoved and metadata fields
+    project.flagDeletion = 1;
+    project.dateMoved = new Date();
+    project.metadata = { projectId: id }; // Example metadata, adjust as needed
 
-    // Delete the project from main collection
-    const result = await projectCollection.deleteOne({ _id: new ObjectId(id) });
+    // Insert the project into the deleted_projects collection
+    await deletedProjectsCollection.insertOne(project);
 
-    res.status(200).json(result);
+    // Handle associated tasks
+    if (project.tasks && project.tasks.length > 0) {
+      const taskIds = project.tasks.map(taskId => new ObjectId(taskId));
+      console.log("Task IDs to move:", taskIds); // Debugging line
+      const tasks = await taskCollection.find({ _id: { $in: taskIds } }).toArray();
+      console.log("Tasks found:", tasks); // Debugging line
+      if (tasks.length > 0) {
+        // Set dateMoved and metadata for tasks
+        const tasksToMove = tasks.map(task => ({
+          ...task,
+          flagDeletion: 1,
+          dateMoved: new Date(),
+          metadata: { taskId: task._id }
+        }));
+        await deletedTasksCollection.insertMany(tasksToMove);
+        console.log("Tasks moved to deleted_tasks"); // Debugging line
+        // Delete the associated tasks from the main collection
+        await taskCollection.deleteMany({ _id: { $in: taskIds } });
+      } else {
+        console.log("No tasks found for the project"); // Debugging line
+      }
+    } else {
+      console.log("No tasks assigned to the project"); // Debugging line
+    }
+
+    // Handle associated team
+    if (project.team) {
+      const teamId = new ObjectId(project.team);
+      console.log("Team ID to move:", teamId); // Debugging line
+      const team = await teamCollection.findOne({ _id: teamId });
+      console.log("Team found:", team); // Debugging line
+      if (team) {
+        // Set dateMoved and metadata for the team
+        const teamToMove = {
+          ...team,
+          flagDeletion: 1,
+          dateMoved: new Date(),
+          metadata: { teamId: team._id }
+        };
+        await deletedTeamsCollection.insertOne(teamToMove);
+        console.log("Team moved to deleted_teams"); // Debugging line
+        // Delete the associated team from the main collection
+        await teamCollection.deleteOne({ _id: teamId });
+      } else {
+        console.log("Team not found for the project"); // Debugging line
+      }
+    } else {
+      console.log("No team assigned to the project"); // Debugging line
+    }
+
+    // Delete the project from the main collection
+    await projectCollection.deleteOne({ _id: new ObjectId(id) });
+
+    res.status(200).json({ message: "Project and associated data moved to deleted collections successfully" });
   } catch (error) {
     console.error("Error deleting project:", error);
     error = "Internal server error";
     res.status(500).json({ error });
   }
 });
+
+// Wipe a project
+router.delete("/wipeproject/:id", async (req, res) => {
+  const { id } = req.params;
+  let error = "";
+
+  try {
+    const db = client.db("ganttify");
+    const deletedProjectsCollection = db.collection("recently_deleted_projects");
+    const deletedTasksCollection = db.collection("recently_deleted_tasks");
+    const deletedTeamsCollection = db.collection("recently_deleted_teams");
+    const deleteAll = db.collection("VOID");
+
+    // Ensure TTL index exists
+    await deleteAll.createIndex(
+      { "dateMoved": 1 },
+      {
+        expireAfterSeconds: 0,
+        partialFilterExpression: { "flagDeletion": 1 }
+      }
+    );
+
+    // Find the project to delete
+    const project = await deletedProjectsCollection.findOne({ _id: new ObjectId(id) });
+    console.log("Project data:", project); // Debugging line
+
+    if (!project) {
+      error = "Project not found";
+      return res.status(404).json({ error });
+    }
+
+    // Set flagDeletion to 1, add dateMoved and metadata fields
+    project.flagDeletion = 1;
+    project.dateMoved = new Date();
+    project.metadata = { projectId: id }; // Example metadata, adjust as needed
+
+    // Insert the project into the deleted_projects collection
+    await deleteAll.insertOne(project);
+
+    // Handle associated tasks
+    if (project.tasks && project.tasks.length > 0) {
+      const taskIds = project.tasks.map(taskId => new ObjectId(taskId));
+      console.log("Task IDs to move:", taskIds); // Debugging line
+      const tasks = await deletedTasksCollection.find({ _id: { $in: taskIds } }).toArray();
+      console.log("Tasks found:", tasks); // Debugging line
+      if (tasks.length > 0) {
+        // Set dateMoved and metadata for tasks
+        const tasksToMove = tasks.map(task => ({
+          ...task,
+          flagDeletion: 1,
+          dateMoved: new Date(),
+          metadata: { taskId: task._id }
+        }));
+        await deleteAll.insertMany(tasksToMove);
+        console.log("Tasks moved to deleted_tasks"); // Debugging line
+        // Delete the associated tasks from the main collection
+        await deletedTasksCollection.deleteMany({ _id: { $in: taskIds } });
+      } else {
+        console.log("No tasks found for the project"); // Debugging line
+      }
+    } else {
+      console.log("No tasks assigned to the project"); // Debugging line
+    }
+
+    // Handle associated team
+    if (project.team) {
+      const teamId = new ObjectId(project.team);
+      console.log("Team ID to move:", teamId); // Debugging line
+      const team = await deletedTeamsCollection.findOne({ _id: teamId });
+      console.log("Team found:", team); // Debugging line
+      if (team) {
+        // Set dateMoved and metadata for the team
+        const teamToMove = {
+          ...team,
+          flagDeletion: 1,
+          dateMoved: new Date(),
+          metadata: { teamId: team._id }
+        };
+        await deleteAll.insertOne(teamToMove);
+        console.log("Team moved to deleted_teams"); // Debugging line
+        // Delete the associated team from the main collection
+        await deletedTeamsCollection.deleteOne({ _id: teamId });
+      } else {
+        console.log("Team not found for the project"); // Debugging line
+      }
+    } else {
+      console.log("No team assigned to the project"); // Debugging line
+    }
+
+    // Delete the project from the main collection
+    await deletedProjectsCollection.deleteOne({ _id: new ObjectId(id) });
+
+    res.status(200).json({ message: "Project and associated data have been wiped successfully" });
+  } catch (error) {
+    console.error("Error wiping project:", error);
+    error = "Internal server error";
+    res.status(500).json({ error });
+  }
+});
+
+// Forgot password
 router.post('/forgot-password', async (req, res) => 
 {
   const {email} = req.body;
@@ -1264,52 +1445,93 @@ router.get('/teams/:teamId/teaminfo', async (req, res) => {
   }
 });
 
-
-// Restore a recently deleted project
-router.post('/restore-project/:projectId', async (req, res) => {
-  const { projectId } = req.params;
-
-  if (!projectId) {
-    return res.status(400).json({ error: "Project ID is required" });
-  }
+// Restore a project
+router.post("/restore-project/:id", async (req, res) => {
+  const { id } = req.params;
+  let error = "";
 
   try {
     const db = client.db("ganttify");
-    const recentlyDeletedCollection = db.collection("recently_deleted_projects");
-    const projectsCollection = db.collection("projects");
+    const projectCollection = db.collection("projects");
+    const taskCollection = db.collection("tasks");
+    const teamCollection = db.collection("teams");
+    const deletedProjectsCollection = db.collection("recently_deleted_projects");
+    const deletedTasksCollection = db.collection("recently_deleted_tasks");
+    const deletedTeamsCollection = db.collection("recently_deleted_teams");
 
-    // Validate projectId
-    if (!ObjectId.isValid(projectId)) {
-      return res.status(400).json({ error: "Invalid Project ID format" });
+    // Find the project to restore
+    const project = await deletedProjectsCollection.findOne({ _id: new ObjectId(id) });
+    console.log("Project data:", project); // Debugging line
+
+    if (!project) {
+      error = "Project not found";
+      return res.status(404).json({ error });
     }
 
-    // Convert projectId to ObjectId
-    const projectObjectId = new ObjectId(projectId);
+    // Set flagDeletion to 1, add dateMoved and metadata fields
+    project.flagDeletion = 0;
+    delete project.dateMoved;
+    delete project.metadata; // Example metadata, adjust as needed
 
-    // Find the project in the recently_deleted_projects collection
-    const deletedProject = await recentlyDeletedCollection.findOne({ _id: projectObjectId });
-    if (!deletedProject) {
-      return res.status(404).json({ error: "Project not found in recently deleted projects" });
+    // Insert the project into the deleted_projects collection
+    await projectCollection.insertOne(project);
+
+    // Handle associated tasks
+    if (project.tasks && project.tasks.length > 0) {
+      const taskIds = project.tasks.map(taskId => new ObjectId(taskId));
+      console.log("Task IDs to move:", taskIds); // Debugging line
+      const tasks = await deletedTasksCollection.find({ _id: { $in: taskIds } }).toArray();
+      console.log("Tasks found:", tasks); // Debugging line
+      if (tasks.length > 0) {
+        // Set dateMoved and metadata for tasks
+        const tasksToMove = tasks.map(task => ({
+          ...task,
+          flagDeletion: 0
+        }));
+        await taskCollection.insertMany(tasksToMove);
+        console.log("Tasks moved to deleted_tasks"); // Debugging line
+        // Delete the associated tasks from the main collection
+        await deletedTasksCollection.deleteMany({ _id: { $in: taskIds } });
+      } else {
+        console.log("No tasks found for the project"); // Debugging line
+      }
+    } else {
+      console.log("No tasks assigned to the project"); // Debugging line
     }
 
-    // Remove the project from recently_deleted_projects collection
-    await recentlyDeletedCollection.deleteOne({ _id: projectObjectId });
-
-    // Update the flagDeletion field and restore the project to the projects collection
-    deletedProject.flagDeletion = 0;
-    const result = await projectsCollection.insertOne(deletedProject);
-
-    if (!result.insertedId) {
-      return res.status(500).json({ error: "Failed to restore project" });
+    // Handle associated team
+    if (project.team) {
+      const teamId = new ObjectId(project.team);
+      console.log("Team ID to move:", teamId); // Debugging line
+      const team = await deletedTeamsCollection.findOne({ _id: teamId });
+      console.log("Team found:", team); // Debugging line
+      if (team) {
+        // Set dateMoved and metadata for the team
+        const teamToMove = {
+          ...team,
+          flagDeletion: 0
+        };
+        await teamCollection.insertOne(teamToMove);
+        console.log("Team moved to deleted_teams"); // Debugging line
+        // Delete the associated team from the main collection
+        await deletedTeamsCollection.deleteOne({ _id: teamId });
+      } else {
+        console.log("Team not found for the project"); // Debugging line
+      }
+    } else {
+      console.log("No team assigned to the project"); // Debugging line
     }
 
-    return res.status(200).json({ message: "Project restored successfully", restoredProjectId: result.insertedId });
+    // Delete the project from the main collection
+    await deletedProjectsCollection.deleteOne({ _id: new ObjectId(id) });
+
+    res.status(200).json({ message: "Project and associated data restored to collections successfully" });
   } catch (error) {
     console.error("Error restoring project:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    error = "Internal server error";
+    res.status(500).json({ error });
   }
 });
-
 
 // Add members to a team
 router.put('/teams/:teamId/members', async (req, res) => {
