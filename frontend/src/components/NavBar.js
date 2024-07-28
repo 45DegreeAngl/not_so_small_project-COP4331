@@ -73,21 +73,16 @@ function NavBar(props) {
     pattern: "default-pattern"
   });
 
-
-  const [isEditor, setIsEditor] = useState(false);
-  const [founderId, setFounderId] = useState(null);
-  const [team, setTeam] = useState(null); 
-
-  var _ud = localStorage.getItem('user_data');
-  var ud = JSON.parse(_ud);
-  var userId = ud._id;
-
   let tempProjectId = useParams();
   let projectId = tempProjectId.id;
+  var userId = null;
 
   useEffect(() => {
     if (props.layout === 3) {
       fetchTeamMembers(projectId);
+      var _ud = localStorage.getItem('user_data');
+      var ud = JSON.parse(_ud);
+      userId = ud._id;
     }
   }, [props.layout, projectId]);
 
