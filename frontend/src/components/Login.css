@@ -1,87 +1,133 @@
+
+
 body{
-    font-family: "Inter", sans-serif;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto !important;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto !important;
 }
+
+
 .loginContainer{
-    min-height: 100vh;
-    background-color: #ffffff;
-    display: flex;
-    margin: 0 auto;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
 }
+
+
 .loginForm{
-    background: #FFEFD5;
-    padding: 2.5rem;
-    border-radius: 10px;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    max-width: 800px;
-    width: 100%;
-    margin-top: -350px;
-    border:none;
-    height:fit-content
+  background: #FFEFD5;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 100%;
+  margin-top: -223px;
+  border:none;
+  height:fit-content
 }
+
+
 .loginFormHeader{
-    background-color: #FFEFD5;
-    border:none;
+  background-color: #FFEFD5;
+  border:none;
 }   
+
+
 .loginTitle {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    position: relative;
-    display: inline-block;
-    color: #000;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  color: #000;
 }
+
+
 .loginTitle::before, .loginTitle::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 80px;
-    height: 2px;
-    background: #DC6B2C;
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 225px;
+  height: 2px;
+  background: #DC6B2C;
 }
+
 .loginTitle::before {
-    left: -90px;
+  left: -240px;
 }
+
+
 .loginTitle::after {
-    right: -90px;
+  right: -240px;
 }
 
 .formItem{
-    border-width: 1px;
-    padding:5px 20px !important;
-    width:100% !important;
-    border-radius: 3px !important;
+  border-width: 1px;
+  padding:5px 20px !important;
+  width:100% !important;
+  border-radius: 3px !important;
+  border: 2px solid #ccc;
 }
+
 .formLabel{
-    font-size: 20px;
+  font-size: 20px;
 }
+
 .formItem:valid, .formItem:invalid{
-    border-color: #000;
+  border-color: #000;
 }
+
 .formDescription{
-    font-style: italic;
-    font-size:16px;
-    text-align: center;
+  font-style: italic;
+  font-size:16px;
+  text-align: center;
 }
+
+
 .buttonDiv{
-    padding-top:10px;
+  padding-top:10px;
 }
+
+
 .submitButton{
-    background-color: #135C91;
-    color: white;
-    text-align: center;
-    padding:15px 30px;
-    border-radius: 5px;
-    border:none;
+  background-color: #135C91;
+  color: white;
+  text-align: center;
+  padding:15px 30px;
+  border-radius: 5px;
+  border:none;
 }
+
+
 .formMessage{
-    padding-top:15px;
-    font-style: italic;
-    font-size:18px;
-    text-align: center;
-    color:red;
+  padding-top:15px;
+  font-style: italic;
+  font-size:18px;
+  text-align: center;
+  color:red;
 }
+
+.row.justify-content-center {
+  display: flex;
+  justify-content: center;
+}
+
+.forgot-password-link {
+  display: block;
+  width: 37%;
+  margin: 0 auto;
+  padding-top: 10px;
+  color: #E78252;
+  text-align: center;
+  text-decoration: none;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
