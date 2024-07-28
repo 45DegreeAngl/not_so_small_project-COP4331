@@ -1657,7 +1657,7 @@ router.get('/teams/:teamId', async (req, res) => {
       const secret = process.env.JWT_SECRET + (user ? user.password : 'newuseraccount');
       const token = jwt.sign({ email, projectId }, secret, { expiresIn: '5m' });
       
-      const link = user ? `https://ganttify-5b581a9c8167.herokuapp.com` : `https://ganttify-5b581a9c8167.herokuapp.com/register/${token}`;
+      const link = user ? `https://ganttify-5b581a9c8167.herokuapp.com/accept-invite/${token}` : `https://ganttify-5b581a9c8167.herokuapp.com/register/${token}`;
   
       const transporter = nodeMailer.createTransport({
         service: 'gmail',
