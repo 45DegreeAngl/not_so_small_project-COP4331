@@ -5,6 +5,7 @@ import member_nb from '../Images/assets/team_member_icons/NB.png';
 import member_tk from '../Images/assets/team_member_icons/TK.jpg';
 import member_lr from '../Images/assets/team_member_icons/LR.jpg';
 import member_kr from '../Images/assets/team_member_icons/KR.jpg';
+import member_sw from '../Images/assets/team_member_icons/SW.jpg';
 const app_name = 'ganttify-5b581a9c8167';
 
 
@@ -99,7 +100,7 @@ function AboutUs() {
                     <p>Frontend and API developer</p>
                 </div>
             </div>
-            <img src="/images/kittens.webp" alt="Shane Welz" className="team-image"/>
+            <img src={member_sw} alt="Shane Welz" className="team-image"/>
         </div>
         </div>
     </div>
