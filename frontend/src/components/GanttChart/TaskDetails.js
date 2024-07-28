@@ -31,7 +31,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [dateError, setDateError] = useState('');
-  const [editProgressPermission, setProgressEditPermission] = useState(false)
+  const [progressEditPermission, setProgressEditPermission] = useState(false)
 
   const [originalTask, setOriginalTask] = useState(null);
   
@@ -65,8 +65,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       if (editMode) {
         resetTaskDetails(); 
         setEditMode(false);
-        setProgressEditPermission(false);
       }
+      setProgressEditPermission(false);
       onHide();
     }
   };
@@ -436,14 +436,18 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           <input type="color" className="form-control form-control-color" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value)} />
         </div>
       )}
+      {progressEditPermission?
       <div className="dropdownDetails">
-        <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{status}</a>
-        <div className="dropdown-menu" aria-labelledby="todoDropdown" aria-disabled = {!editProgressPermission}>
+        <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >{status}</a>
+        <div className="dropdown-menu" aria-labelledby="todoDropdown">
           <a className="dropdown-item" onClick={() => handleStatusChange('Not Started')}>Not Started</a>
           <a className="dropdown-item" onClick={() => handleStatusChange('In-Progress')}>In-Progress</a>
-          <a className="dropdown-item" onClick={() => handleStatusChange('Completed')}>Completed</a>
+          <a className="dropdown-item" onClick={() => handleStatusChange('Completed')}>Completed</a>:
         </div>
-      </div>
+      </div>:
+      <div className="dropdownDetails">
+        <a className="nav-link" id="todoDropdown" disabled aria-expanded="false" >{status}</a>
+      </div>}
 
 
 
