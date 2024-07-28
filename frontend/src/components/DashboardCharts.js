@@ -545,7 +545,7 @@ function DashboardCharts({ projects }) {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={()=>handleProjectDeleted()}></button>
                         </div>
                         <div class="modal-body">
-                            {projectIsDeleted  ? "You can also delete your project from the recently deleted page manually":"Your project will me moved to your recently deleted page for 30 days, then it is deleted permanantly"}
+                            {projectIsDeleted  ? "You can also delete your project from the recently deleted page manually":"Your project will be moved to your recently deleted page for 30 days, then it is deleted permanantly"}
                         </div>
                         <div class="modal-footer">
                         {projectIsDeleted?  <button type="button" class="btn deleteModalBtn" data-bs-dismiss="modal" onClick={()=>handleProjectDeleted()}>Got It!</button> : <button type="button" class="btn deleteModalBtn" onClick={doProjectDelete}>Yes, delete my project </button>}

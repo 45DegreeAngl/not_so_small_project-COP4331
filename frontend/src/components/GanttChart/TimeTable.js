@@ -10,6 +10,10 @@ import {
 import { months } from '../../constants';
 import TaskDetails from './TaskDetails';
 import './TimeTable.css';
+import Halftone_Density_3 from '../../Images/assets/accessible_patterns/halftone_family/Halftone_Density_3.png';
+import Halftone_Density_2 from '../../Images/assets/accessible_patterns/halftone_family/Halftone_Density_2.png';
+import Halftone_Density_1 from '../../Images/assets/accessible_patterns/halftone_family/Halftone_Density_1.png';
+import Diagonal_Right_Single_Line_Density_1 from '../../Images/assets/accessible_patterns/line_family/Diagonal_Right_Single_Line_Density_1.png';
 
 const app_name = 'ganttify-5b581a9c8167';
 
@@ -19,6 +23,16 @@ function buildPath(route) {
   } else {
     return 'http://localhost:5000/' + route;
   }
+}
+function isTaskHappeningNow(startDate,dueDate,dateToCheck){
+    const timestamp = new Date(dateToCheck+"T00:00:00.000Z");
+    const start = new Date(startDate);
+    const end = new Date(dueDate);
+    if(timestamp < start || timestamp > end){
+        return false;
+    }
+    return true;
+
 }
 
 export default function TimeTable({
@@ -30,6 +44,7 @@ export default function TimeTable({
   userId,
   projectId,
 }) {
+  const patterns = {'Halftone_Density_1.png':Halftone_Density_1,}
   const ganttRef = useRef(null);
 
   // Initializing the Gantt Chart's different states
@@ -346,6 +361,8 @@ export default function TimeTable({
 
   if (tasks) {
     tasks.forEach((task, index) => {
+      const startDate = task.startDateTime;
+      const dueDate = task.dueDateTime;
       let mnth = new Date(startMonth);
       for (let i = 0; i < numMonths; i++) {
         const curYear = mnth.getFullYear();
@@ -358,7 +375,7 @@ export default function TimeTable({
           
           const dayOfTheWeek = getDayOfWeek(curYear, curMonth - 1, j - 1);
           const formattedDate = createFormattedDateFromStr(curYear, curMonth, j);
-
+          const taskHappening = isTaskHappeningNow(startDate,dueDate,formattedDate);
           taskRow.push(
             <div
               key={`${task._id}-${j}`}
@@ -377,6 +394,7 @@ export default function TimeTable({
               onMouseEnter={() => setHoveredRow(task._id)} // Track hovered row
               onMouseLeave={() => setHoveredRow(null)} // Reset when mouse leaves
             >
+            <img id={`${task._id}+${formattedDate}`}src={Diagonal_Right_Single_Line_Density_1} class = "patternImg" hidden={!taskHappening}/>
               {taskDurations.map((el, i) => {
                 const elStartDate = el?.start.split('T')[0];
 
