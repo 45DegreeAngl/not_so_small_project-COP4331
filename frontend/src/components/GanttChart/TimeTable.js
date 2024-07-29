@@ -136,6 +136,7 @@ export default function TimeTable({
 
   // Handles the "resizing" of a singular task
   const handleResizeStart = (e, taskDurationId, direction) => {
+    //console.log("starting resize");
     e.stopPropagation();
     e.preventDefault();
     setResizingTask(taskDurationId);
@@ -151,6 +152,14 @@ export default function TimeTable({
 
       if (!taskDuration) {
         return;
+      }
+      turnOnPattern(taskDuration);
+      const endDate = new Date(taskDuration.end)
+      const startDate = new Date(taskDuration.start)
+      const id = taskDuration._id.slice(0,24);
+      for(let i = 1;i<15;i++){
+        togglePatternDate(endDate.addDays(i).toISOString().slice(0,10),id,true);
+        togglePatternDate(startDate.addDays(-i).toISOString().slice(0,10),id,true);
       }
 
       const obj = { startDateTime: taskDuration.start, dueDateTime: taskDuration.end };
@@ -185,6 +194,15 @@ export default function TimeTable({
       handleDragEnd(taskDurationElDraggedId);
     }
   };
+  function togglePatternDate(date,id,hide){
+    const pattern = document.getElementById(`pattern/${date}/${id}`);
+    if(hide){
+        pattern.setAttribute("hidden","true");
+    }
+    else{  
+        pattern.removeAttribute("hidden");
+    }
+  }
 
   // Updates the task's dates based off of the user's mouse's position 
   const handleMouseMove = (e) => {
@@ -210,13 +228,30 @@ export default function TimeTable({
 
       if (closestDateCell.cell) {
         const newDate = closestDateCell.cell.getAttribute('data-date');
+        const id = taskDuration._id.slice(0,24);
 
         if (resizeDirection === 'left') {
           if (new Date(newDate) <= new Date(taskDuration.end)) {
+            if(new Date(newDate) > new Date(taskDuration.start)){
+                let patternDate = new Date(newDate).addDays(-1);
+                let formattedPatternDate = patternDate.toISOString().slice(0,10);
+                togglePatternDate(formattedPatternDate,id,true)
+            }
+            else if(new Date(newDate) < new Date(taskDuration.start)){
+                togglePatternDate(newDate,id,false)
+            }
             taskDuration.start = newDate;
           }
         } else if (resizeDirection === 'right') {
           if (new Date(newDate) >= new Date(taskDuration.start)) {
+            if(new Date(newDate) < new Date(taskDuration.end)){
+                let patternDate = new Date(newDate).addDays(1);
+                let formattedPatternDate = patternDate.toISOString().slice(0,10);
+                togglePatternDate(formattedPatternDate,id,true)
+            }
+            else if(new Date(newDate) > new Date(taskDuration.end)){
+                togglePatternDate(newDate,id,false)
+            }
             taskDuration.end = newDate;
           }
         }
