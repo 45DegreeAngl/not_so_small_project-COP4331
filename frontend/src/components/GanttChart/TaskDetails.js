@@ -417,7 +417,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     <div id="task-details-sidebar" className="task-details-sidebar">
       <div className="task-details-header">
         <div className="icon-button-container">
-          // Edit button and delete button.
           {isEditable && <button type="button" className="edit-button" onClick={() => setEditMode(!editMode)}><img alt="EditTaskIcon" src={EditTaskButton} width="25%" height="25%"/></button>}
           {isEditable && <button type="button" className="delete-button" onClick={handleDeleteClick}><img alt="DeleteTaskIcon" src={DeleteTaskButton} width="25%" height="25%"/></button>}
           <button type="button" className="close" onClick={handleCloseClick}>&times;</button>
