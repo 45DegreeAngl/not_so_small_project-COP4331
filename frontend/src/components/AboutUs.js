@@ -6,6 +6,7 @@ import member_tk from '../Images/assets/team_member_icons/TK.jpg';
 import member_lr from '../Images/assets/team_member_icons/LR.jpg';
 import member_kr from '../Images/assets/team_member_icons/KR.jpg';
 import member_sw from '../Images/assets/team_member_icons/SW.jpg';
+import member_oc from '../Images/assets/team_member_icons/OC.jpg';
 const app_name = 'ganttify-5b581a9c8167';
 
 
@@ -23,9 +24,11 @@ function AboutUs() {
   return (
    
 <div>
-    <div className="topDiv">
-        <h1>About Us</h1>
-    </div>
+
+    <br></br>
+    <br></br>
+    <br></br>
+
     <div className="bottomDiv">
 
         <div className = "box">
@@ -86,7 +89,7 @@ function AboutUs() {
         </div>
 
         <div className="team-member">
-            <img src="/images/kittens.webp" alt="Omar Castro" className="team-image"/>
+            <img src={member_oc} alt="Omar Castro" className="team-image"/>
             <div className="member-info">
                 <h2>Omar Castro</h2>
                 <p>Frontend developer</p>
