@@ -39,6 +39,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   
   useEffect(() => {
     if (task) {
+      setProgressEditPermission(false);
       setStatus(task.progress);
       setColor(task.color); 
       fetchTaskCreator(task.taskCreatorId);
@@ -68,7 +69,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         resetTaskDetails(); 
         setEditMode(false);
       }
-      setProgressEditPermission(false);
       onHide();
     }
   };

@@ -21,11 +21,16 @@ import Single_Vertical_Line_Density_1 from '../../Images/assets/accessible_patte
 import Solid_Single_Circle_Density_1 from  '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Circle_Density_1.png';
 import Solid_Single_Dot_Density_1 from '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Dot_Density_1.png';
 import Solid_Single_Rhombus_Density_1 from '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Rhombus_Density_1.png';
-/*
-'../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Rhombus_Density_1Solid_Single_Square_Density_1.png';
-"Solid_Single_Star_Density_1.png';
-"Solid_Single_Triangle_Density_1.png';
-*/
+import Solid_Single_Square_Density_1 from '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Square_Density_1.png';
+import Solid_Single_Star_Density_1 from '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Star_Density_1.png';
+import Solid_Single_Triangle_Density_1 from '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Triangle_Density_1.png';
+import Hollow_Single_Circle_Density_1 from '../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Circle_Density_1.png';
+import Hollow_Single_Dot_Density_1 from'../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Dot_Density_1.png';
+import Hollow_Single_Rhombus_Density_1 from '../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Rhombus_Density_1.png';
+import Hollow_Single_Square_Density_1 from '../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Square_Density_1.png';
+import Hollow_Single_Star_Density_1 from '../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Star_Density_1.png';
+import Hollow_Single_Triangle_Density_1 from '../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Triangle_Density_1.png';
+
 const app_name = 'ganttify-5b581a9c8167';
 
 function buildPath(route) {
@@ -45,6 +50,11 @@ function isTaskHappeningNow(startDate,dueDate,dateToCheck){
     return true;
 
 }
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
 
 export default function TimeTable({
   timeRange,
@@ -55,7 +65,19 @@ export default function TimeTable({
   userId,
   projectId,
 }) {
-  const patterns = {'Halftone_Density_1.png':Halftone_Density_1 , }
+  const patterns = {
+    'Halftone_Density_1.png':Halftone_Density_1 , 'Halftone_Density_2.png':Halftone_Density_2,
+    'Halftone_Density_3.png':Halftone_Density_3,  'Diagonal_Right_Single_Line_Density_1.png':Diagonal_Right_Single_Line_Density_1,
+    'Diagonal_Left_Single_Line_Density_1.png':Diagonal_Left_Single_Line_Density_1, 'Diagonal_Left_Single_Line_Density_1.png':Diagonal_Left_Single_Line_Density_1,
+    'Diagonal_Woven_Line_Density_1':Diagonal_Woven_Line_Density_1, 'Single_Horizontal_Line_Density_1.png':Single_Horizontal_Line_Density_1,
+    'Single_Vertical_Line_Density_1.png':Single_Vertical_Line_Density_1,'Solid_Single_Circle_Density_1.png':Solid_Single_Circle_Density_1,
+    'Solid_Single_Dot_Density_1.png':Solid_Single_Dot_Density_1,'Solid_Single_Rhombus_Density_1.png':Solid_Single_Rhombus_Density_1,
+    'Solid_Single_Square_Density_1.png':Solid_Single_Square_Density_1,'Solid_Single_Star_Density_1.png':Solid_Single_Star_Density_1,
+    'Solid_Single_Triangle_Density_1.png':Solid_Single_Triangle_Density_1,'Hollow_Single_Circle_Density_1.png':Hollow_Single_Circle_Density_1,
+    'Hollow_Single_Dot_Density_1.png':Hollow_Single_Dot_Density_1,'Hollow_Single_Rhombus_Density_1.png':Hollow_Single_Rhombus_Density_1,
+    'Hollow_Single_Square_Density_1.png':Hollow_Single_Square_Density_1,'Hollow_Single_Star_Density_1.png':Hollow_Single_Star_Density_1,
+    'Hollow_Single_Triangle_Density_1.png':Hollow_Single_Triangle_Density_1
+}
   const ganttRef = useRef(null);
 
   // Initializing the Gantt Chart's different states
@@ -174,7 +196,6 @@ export default function TimeTable({
       if (!taskDuration) {
         return;
       }
-
       const dateCells = Array.from(document.querySelectorAll('[data-date]'));
       const closestDateCell = dateCells.reduce((closest, cell) => {
         const box = cell.getBoundingClientRect();
@@ -386,7 +407,10 @@ export default function TimeTable({
           
           const dayOfTheWeek = getDayOfWeek(curYear, curMonth - 1, j - 1);
           const formattedDate = createFormattedDateFromStr(curYear, curMonth, j);
-          const taskHappening = isTaskHappeningNow(startDate,dueDate,formattedDate);
+          var taskHappening=false;
+          if(task['pattern'] && task['pattern'].localeCompare('default-pattern') !== 0){
+            taskHappening = isTaskHappeningNow(startDate,dueDate,formattedDate);
+          }
           taskRow.push(
             <div
               key={`${task._id}-${j}`}
@@ -405,7 +429,7 @@ export default function TimeTable({
               onMouseEnter={() => setHoveredRow(task._id)} // Track hovered row
               onMouseLeave={() => setHoveredRow(null)} // Reset when mouse leaves
             >
-            <img id={`${task._id}+${formattedDate}`}src={Diagonal_Right_Single_Line_Density_1} class = "patternImg" hidden={!taskHappening}/>
+            <img id={`pattern/${formattedDate}/${task._id}`}src={patterns[task.pattern]} class = "patternImg" hidden={!taskHappening}/>
               {taskDurations.map((el, i) => {
                 const elStartDate = el?.start.split('T')[0];
 
@@ -525,6 +549,23 @@ export default function TimeTable({
       
     }
   }
+  function turnOffPattern(taskDurationId){
+    const taskDuration = taskDurations.find(
+        (taskDuration) => taskDuration._id === taskDurationId
+    );
+
+    if (!taskDuration) {
+        return;
+    }
+    const startDate = new Date(taskDuration.start);
+    const endDate = new Date(taskDuration.end);
+    var day = startDate;
+    while(day <= endDate){
+        let pattern = document.getElementById(`pattern/${day.toISOString().slice(0,10)}/${taskDurationId.slice(0,24)}`)
+        pattern.setAttribute("hidden",true)
+        day = day.addDays(1);
+    }
+  }
 
   function handleDragStart(taskDurationId) {
     if (!resizingTask) {
@@ -533,6 +574,7 @@ export default function TimeTable({
       setHoveredTask(null);
       setIsDragging(true);
       console.log("Drag started for taskDurationId:", taskDurationId);
+      turnOffPattern(taskDurationId);
     }
   }
 
@@ -541,12 +583,24 @@ export default function TimeTable({
       
       setTaskDurationElDraggedId(null);
 
-      
       setHoveredTask(null);
       
       setIsDragging(false);
       
       console.log("Drag ended for taskDurationId:", taskDurationId);
+    }
+  }
+  function turnOnPattern(taskDuration){
+    const id = (taskDuration._id).slice(0,24);
+    console.log(id);
+    const startDate = new Date(taskDuration.start);
+    const endDate = new Date(taskDuration.end);
+    var day = startDate;
+    while(day <= endDate){
+        let pattern = document.getElementById(`pattern/${day.toISOString().slice(0,10)}/${id}`);
+        console.log(pattern.id);
+        pattern.removeAttribute("hidden")
+        day = day.addDays(1);
     }
   }
 
@@ -566,6 +620,7 @@ export default function TimeTable({
     const targetTaskId = targetCell.getAttribute('data-task-id');
 
     if (taskDuration.task !== targetTaskId) {
+      turnOnPattern(taskDuration);
       console.log("Task can only be dropped within its respective row.");
       return;
     }
@@ -587,6 +642,7 @@ export default function TimeTable({
       taskDuration.task = dataTask;
       taskDuration.start = createFormattedDateFromDate(newStartDate);
       taskDuration.end = createFormattedDateFromDate(newEndDate);
+      turnOnPattern(taskDuration);
 
       const newTaskDurations = taskDurations.filter(
         (taskDuration) => taskDuration._id !== taskDurationElDraggedId
