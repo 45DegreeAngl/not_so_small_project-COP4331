@@ -14,7 +14,18 @@ import Halftone_Density_3 from '../../Images/assets/accessible_patterns/halftone
 import Halftone_Density_2 from '../../Images/assets/accessible_patterns/halftone_family/Halftone_Density_2.png';
 import Halftone_Density_1 from '../../Images/assets/accessible_patterns/halftone_family/Halftone_Density_1.png';
 import Diagonal_Right_Single_Line_Density_1 from '../../Images/assets/accessible_patterns/line_family/Diagonal_Right_Single_Line_Density_1.png';
-
+import Diagonal_Left_Single_Line_Density_1 from '../../Images/assets/accessible_patterns/line_family/Diagonal_Left_Single_Line_Density_1.png';
+import Diagonal_Woven_Line_Density_1 from '../../Images/assets/accessible_patterns/line_family/Diagonal_Woven_Line_Density_1.png';
+import Single_Horizontal_Line_Density_1 from '../../Images/assets/accessible_patterns/line_family/Single_Horizontal_Line_Density_1.png';
+import Single_Vertical_Line_Density_1 from '../../Images/assets/accessible_patterns/line_family/Single_Vertical_Line_Density_1.png'
+import Solid_Single_Circle_Density_1 from  '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Circle_Density_1.png';
+import Solid_Single_Dot_Density_1 from '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Dot_Density_1.png';
+import Solid_Single_Rhombus_Density_1 from '../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Rhombus_Density_1.png';
+/*
+'../../Images/assets/accessible_patterns/solid_shape_family/Solid_Single_Rhombus_Density_1Solid_Single_Square_Density_1.png';
+"Solid_Single_Star_Density_1.png';
+"Solid_Single_Triangle_Density_1.png';
+*/
 const app_name = 'ganttify-5b581a9c8167';
 
 function buildPath(route) {
@@ -44,7 +55,7 @@ export default function TimeTable({
   userId,
   projectId,
 }) {
-  const patterns = {'Halftone_Density_1.png':Halftone_Density_1,}
+  const patterns = {'Halftone_Density_1.png':Halftone_Density_1 , }
   const ganttRef = useRef(null);
 
   // Initializing the Gantt Chart's different states

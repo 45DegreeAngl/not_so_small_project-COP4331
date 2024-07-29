@@ -73,7 +73,7 @@ function Register() {
       return;
     }
 
-    var obj = { email: regEmail, name: regName, phone: regPhone, password: regPassword, username: regUser };
+    var obj = { email: regEmail.toLowerCase(), name: regName, phone: regPhone, password: regPassword, username: regUser };
     var js = JSON.stringify(obj);
     try {
       const response = await fetch(buildPath('api/register'), {
