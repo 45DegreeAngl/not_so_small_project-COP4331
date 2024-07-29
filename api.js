@@ -2153,5 +2153,46 @@ router.get('/verify-invite/:token', async (req, res) => {
   }
 });
 
+router.put("/tasks/:id/dates", async (req, res) => {
+
+  const { id } = req.params;
+  const { dueDateTime, startDateTime } = req.body;
+  let error = "";
+
+  if (!dueDateTime && !startDateTime) {
+    error = "Both dueDateTime and startDateTime are required";
+    return res.status(400).json({ error });
+  }
+
+  try {
+    const db = client.db("ganttify");
+    const taskCollection = db.collection("tasks");
+
+    const updateFields = {};
+    if (dueDateTime) {
+      updateFields.dueDateTime = new Date(dueDateTime);
+    }
+    if (startDateTime) {
+      updateFields.startDateTime = new Date(startDateTime);
+    }
+
+    const result = await taskCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updateFields },
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error updating task dates:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 
 module.exports = router;

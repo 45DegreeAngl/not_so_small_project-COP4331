@@ -13,11 +13,13 @@ body {
 }
 
 .bottomDiv {
-    background-color: #ffffff;
+    background-color: #f8cd62;
     padding: 25px 0;
     width: 100%;
+    height: 100%;
     margin: 0 auto;
     max-width: 1200px;
+    
 }
 
 .team-member-reverse {
@@ -78,14 +80,3 @@ body {
 }
 
 
-.box{
-    padding-top: 15px;
-    width: 150%;
-    height: 211vh;
-    background-color: #f8cd62;
-    border-radius: 10px;
-    padding: 20px;
-    margin-left: -17.5%;
-    margin-top: 10px;
-    opacity: 0.9;
-}
