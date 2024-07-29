@@ -59,3 +59,43 @@
     background: rgba(0, 0, 0, 0.5);
   }
   
+  .color-options {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    justify-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+  }
+  
+  .color-option:hover {
+    border-color: #000;
+  }
+  
+  .color-picker-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .form-control-color {
+    width: 100%;
+    max-width: 80px;
+    height: 35px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .form-label{
+    font-weight: bold;
+  }
+
