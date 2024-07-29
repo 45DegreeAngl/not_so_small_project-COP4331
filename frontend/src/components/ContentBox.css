@@ -30,16 +30,6 @@
 
 }
 
-/* ul{
-  display: flex;
-  flex: 1 1;
-  height: 600px;
-  margin-right: 50px;
-  position: relative;
-  top: 450px;
-  width: 100%;
-} */
-
 .Box{
     position: absolute;
     width: 100%;
@@ -148,7 +138,7 @@
 .endTag {
     position: relative;
     width: 100%;
-    height: 100%; 
+    height: 275%;
     background-color: #FDDC87; 
     color: white; 
     justify-content: center; 
