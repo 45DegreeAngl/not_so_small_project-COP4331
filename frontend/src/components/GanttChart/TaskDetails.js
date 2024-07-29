@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './TaskDetails.css';
+import DeleteTaskButton '.../Images/assets/action_buttons/Delete_Task_or_Chart.png';
+import EditTaskButton '...Images/assets/action_buttons/Edit_Task.png';
 
 const app_name = 'ganttify-5b581a9c8167';
 
@@ -415,8 +417,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     <div id="task-details-sidebar" className="task-details-sidebar">
       <div className="task-details-header">
         <div className="icon-button-container">
-          {isEditable && <button type="button" className="edit-button" onClick={() => setEditMode(!editMode)}>✎</button>}
-          {isEditable && <button type="button" className="delete-button" onClick={handleDeleteClick}>🗑</button>}
+          // Edit button and delete button.
+          {isEditable && <button type="button" className="edit-button" onClick={() => setEditMode(!editMode)}><img alt="EditTaskIcon" src={EditTaskButton}/></button>}
+          {isEditable && <button type="button" className="delete-button" onClick={handleDeleteClick}><img alt="DeleteTaskIcon" src={DeleteTaskButton}/></button>}
           <button type="button" className="close" onClick={handleCloseClick}>&times;</button>
         </div>
         <div className="task-title-container">
