@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './TaskDetails.css';
-import DeleteTaskButton from '../../Images/assets/action_buttons/Delete_Task_or_Chart.png';
-import EditTaskButton from '../../Images/assets/action_buttons/Edit_Task.png';
+import DeleteTaskButton from '../../Images/assets/action_buttons/Delete_Task_or_Chart_50x50.png';
+import EditTaskButton from '../../Images/assets/action_buttons/Edit_Task_50x50.png';
 
 const app_name = 'ganttify-5b581a9c8167';
 
@@ -417,8 +417,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     <div id="task-details-sidebar" className="task-details-sidebar">
       <div className="task-details-header">
         <div className="icon-button-container">
-          {isEditable && <button type="button" className="edit-button" onClick={() => setEditMode(!editMode)}><img alt="EditTaskIcon" src={EditTaskButton} width="25%" height="25%"/></button>}
-          {isEditable && <button type="button" className="delete-button" onClick={handleDeleteClick}><img alt="DeleteTaskIcon" src={DeleteTaskButton} width="25%" height="25%"/></button>}
+          {isEditable && <button type="button" className="edit-button" onClick={() => setEditMode(!editMode)}><img alt="EditTaskIcon" src={EditTaskButton}/></button>}
+          {isEditable && <button type="button" className="delete-button" onClick={handleDeleteClick}><img alt="DeleteTaskIcon" src={DeleteTaskButton}/></button>}
           <button type="button" className="close" onClick={handleCloseClick}>&times;</button>
         </div>
         <div className="task-title-container">
