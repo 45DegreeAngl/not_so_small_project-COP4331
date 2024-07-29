@@ -319,9 +319,6 @@ const allowedPatterns = {
     "Single_Vertical_Line_Density_1.png",
   ],
   solid_shape_family: [
-    "Solid_Halftone_Density_1.png",
-    "Solid_Halftone_Density_2.png",
-    "Solid_Halftone_Density_3.png",
     // "Solid_Mac_Noodle_Density_1.svg", // Removed.
     "Solid_Single_Circle_Density_1.png",
     "Solid_Single_Dot_Density_1.png",
