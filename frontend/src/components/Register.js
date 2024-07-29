@@ -181,6 +181,7 @@ function Register() {
     <div>
       <div>
         {formVisible ? (
+          
           <div class = "registerContainer">
                 <div class ="registerForm text-center mt-1">
                     <div class ="card-header registerFormHeader">

@@ -10,6 +10,8 @@ const RegisterPage = () =>{
             <br></br>
             <br></br>
             <br></br>
+            <br></br>
+            <br></br>
             <Register/>
         </div>
     );
