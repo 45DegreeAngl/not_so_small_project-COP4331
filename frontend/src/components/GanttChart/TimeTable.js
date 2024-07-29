@@ -31,7 +31,10 @@ import Hollow_Single_Square_Density_1 from '../../Images/assets/accessible_patte
 import Hollow_Single_Star_Density_1 from '../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Star_Density_1.png';
 import Hollow_Single_Triangle_Density_1 from '../../Images/assets/accessible_patterns/hollow_shape_family/Hollow_Single_Triangle_Density_1.png';
 
+
+
 const app_name = 'ganttify-5b581a9c8167';
+
 
 function buildPath(route) {
   if (process.env.NODE_ENV === 'production') {
@@ -40,6 +43,9 @@ function buildPath(route) {
     return 'http://localhost:5000/' + route;
   }
 }
+
+
+
 function isTaskHappeningNow(startDate,dueDate,dateToCheck){
     const timestamp = new Date(dateToCheck+"T00:00:00.000Z");
     const start = new Date(startDate);
@@ -48,8 +54,8 @@ function isTaskHappeningNow(startDate,dueDate,dateToCheck){
         return false;
     }
     return true;
-
 }
+
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
@@ -65,6 +71,8 @@ export default function TimeTable({
   userId,
   projectId,
 }) {
+
+
   const patterns = {
     'Halftone_Density_1.png':Halftone_Density_1 , 'Halftone_Density_2.png':Halftone_Density_2,
     'Halftone_Density_3.png':Halftone_Density_3,  'Diagonal_Right_Single_Line_Density_1.png':Diagonal_Right_Single_Line_Density_1,
@@ -76,9 +84,11 @@ export default function TimeTable({
     'Solid_Single_Triangle_Density_1.png':Solid_Single_Triangle_Density_1,'Hollow_Single_Circle_Density_1.png':Hollow_Single_Circle_Density_1,
     'Hollow_Single_Dot_Density_1.png':Hollow_Single_Dot_Density_1,'Hollow_Single_Rhombus_Density_1.png':Hollow_Single_Rhombus_Density_1,
     'Hollow_Single_Square_Density_1.png':Hollow_Single_Square_Density_1,'Hollow_Single_Star_Density_1.png':Hollow_Single_Star_Density_1,
-    'Hollow_Single_Triangle_Density_1.png':Hollow_Single_Triangle_Density_1,
-}
+    'Hollow_Single_Triangle_Density_1.png':Hollow_Single_Triangle_Density_1
+  }
+
   const ganttRef = useRef(null);
+
 
   // Initializing the Gantt Chart's different states
   const [taskDurationElDraggedId, setTaskDurationElDraggedId] = useState(null);
@@ -115,12 +125,15 @@ export default function TimeTable({
     fetchProjectData();
   }, [projectId, userId]);
 
+
+
   // Event handlers
   const handleOutsideClick = (e) => {
     if (e.target.closest('.task-duration') === null) {
       setHoveredTask(null);
     }
   };
+
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
@@ -134,6 +147,7 @@ export default function TimeTable({
     };
   }, []);
 
+
   // Handles the "resizing" of a singular task
   const handleResizeStart = (e, taskDurationId, direction) => {
     //console.log("starting resize");
@@ -142,7 +156,10 @@ export default function TimeTable({
     setResizingTask(taskDurationId);
     setResizeDirection(direction);
     setIsResizing(true);
+    setShowDetails(false);
   };
+
+
 
   const handleResizeEnd = async () => {
     if (resizingTask && resizeDirection) {
@@ -214,6 +231,7 @@ export default function TimeTable({
       if (!taskDuration) {
         return;
       }
+
       const dateCells = Array.from(document.querySelectorAll('[data-date]'));
       const closestDateCell = dateCells.reduce((closest, cell) => {
         const box = cell.getBoundingClientRect();
@@ -256,6 +274,7 @@ export default function TimeTable({
           }
         }
 
+
         setTaskDurations((prevDurations) =>
           prevDurations.map((duration) =>
             duration._id === taskDuration._id ? { ...taskDuration } : duration
@@ -263,6 +282,8 @@ export default function TimeTable({
         );
       }
     }
+
+
 
     if (isDragging) {
       const taskDuration = taskDurations.find(
@@ -275,6 +296,8 @@ export default function TimeTable({
 
       const dateCells = Array.from(document.querySelectorAll('[data-date]'));
 
+
+
       // Gets the cell date that is closest to the user's mouse
       const closestDateCell = dateCells.reduce((closest, cell) => {
         const box = cell.getBoundingClientRect();
@@ -285,7 +308,9 @@ export default function TimeTable({
         }
 
         return closest;
-      }, { cell: null, distance: Infinity });
+      }, 
+      { cell: null, distance: Infinity }
+    );
 
       // Update's the dates that is closest to the user's mouse's position
       if (closestDateCell.cell) {
@@ -359,6 +384,8 @@ export default function TimeTable({
   let taskRow = [];
   let currentDayIndex = 0;
   let dayCounter = -1;
+
+
 
   // Get the st, th, and rd for the respective numbers
   function getOrdinal(n) {
@@ -455,15 +482,18 @@ export default function TimeTable({
                   dayOfTheWeek === 'S' ? 'var(--color-tertiary)' : index % 2 === 0 ? '#f9f9f9' : '#ffffff',
                 ...(hoveredRow === task._id && { backgroundColor: '#f0f0f0' }),
               }}
+
               data-task={task?._id}
               data-date={formattedDate}
               data-task-id={task._id}
               onDrop={onTaskDurationDrop}
               onDragOver={(e) => e.preventDefault()}
               onDragEnter={(e) => e.preventDefault()}
-              onMouseEnter={() => setHoveredRow(task._id)} // Track hovered row
-              onMouseLeave={() => setHoveredRow(null)} // Reset when mouse leaves
+              onMouseEnter={() => setHoveredRow(task._id)} 
+              onMouseLeave={() => setHoveredRow(null)} 
             >
+
+
             <img id={`pattern/${formattedDate}/${task._id}`}src={patterns[task.pattern]} class = "patternImg" hidden={!taskHappening}/>
               {taskDurations.map((el, i) => {
                 const elStartDate = el?.start.split('T')[0];
@@ -496,9 +526,11 @@ export default function TimeTable({
                         border: hoveredTask === el?._id && !isResizing ? '2px solid black' : 'none',
                         cursor: isEditable && !isResizing ? 'move' : 'default'
                       }}
+
                       onKeyDown={isEditable ? (e) => deleteTaskDuration(e, el?.task) : null}
                       onClick={() => { setSelectedTask(task); setShowDetails(true); }}
                     >
+
                       {isEditable && (
                         <>
                         
@@ -554,6 +586,7 @@ export default function TimeTable({
 
     
     try {
+
       const response = await fetch(buildPath(`api/tasks/${taskId}`), {
         method: 'DELETE',
         headers: {
@@ -584,6 +617,8 @@ export default function TimeTable({
       
     }
   }
+
+
   function turnOffPattern(taskDurationId){
     const taskDuration = taskDurations.find(
         (taskDuration) => taskDuration._id === taskDurationId
@@ -602,6 +637,8 @@ export default function TimeTable({
     }
   }
 
+
+
   function handleDragStart(taskDurationId) {
     if (!resizingTask) {
       
@@ -613,7 +650,9 @@ export default function TimeTable({
     }
   }
 
+
   function handleDragEnd(taskDurationId) {
+
     if (!resizingTask) {
       
       setTaskDurationElDraggedId(null);
@@ -625,6 +664,8 @@ export default function TimeTable({
       console.log("Drag ended for taskDurationId:", taskDurationId);
     }
   }
+
+
   function turnOnPattern(taskDuration){
     const id = (taskDuration._id).slice(0,24);
     console.log(id);
@@ -646,9 +687,11 @@ export default function TimeTable({
       (taskDuration) => taskDuration._id === taskDurationElDraggedId
     );
 
+
     if (!taskDuration) {
       return;
     }
+
 
     const dataTask = targetCell.getAttribute('data-task');
     const dataDate = targetCell.getAttribute('data-date');
@@ -704,9 +747,12 @@ export default function TimeTable({
       } catch (error) {
         console.error('Error editing tasks: ', error);
       }
-    } else {
+    } 
+    
+    else {
       console.log("It's occupied!");
     }
+
     setTaskDurationElDraggedId(null);
   }
 
@@ -722,6 +768,7 @@ export default function TimeTable({
   }, [currentDayIndex]);
 
   return (
+
     <div
       id="gantt-grid-container__time"
       style={{ gridTemplateColumns: `repeat(${numMonths}, 1fr)` }}
@@ -740,11 +787,10 @@ export default function TimeTable({
           paddingBottom: '-100px',
         }}
 
-
+        
         onMouseMove={handleMouseMove}
         onMouseUp={handleResizeEnd}
         onDragOver={(e) => e.preventDefault()}
-          
       >
         {taskRows}
       </div>

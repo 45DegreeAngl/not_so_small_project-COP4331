@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './TaskDetails.css';
+
 import DeleteTaskButton from '../../Images/assets/action_buttons/Delete_Task_or_Chart_30x30.png';
 import EditTaskButton from '../../Images/assets/action_buttons/Edit_Task_30x30.png';
 
 const app_name = 'ganttify-5b581a9c8167';
+
 
 function buildPath(route) {
   if (process.env.NODE_ENV === 'production') {
@@ -13,11 +15,15 @@ function buildPath(route) {
   }
 }
 
+
+//Colors to choose from
 const colorOptions = [
   '#e81416', '#ffa500', '#faeb36', '#79c314', '#487de7', '#4b369d', '#70369d', 
   '#f47474', '#ffd580', '#fff77e','#b2e687', '#8fb9f9', '#9a86cc', '#b27fc6'
 ];
 
+
+//Initializes variables
 const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [status, setStatus] = useState('');
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -33,18 +39,19 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [dateError, setDateError] = useState('');
-  const [progressEditPermission, setProgressEditPermission] = useState(false)
+  const [progressEditPermission, setProgressEditPermission] = useState(false);
 
   const [originalTask, setOriginalTask] = useState(null);
-  
+  const [fetchedTask, setFetchedTask] = useState(null); 
+
   useEffect(() => {
-    if (task) {
+    if (task && show) {
       setProgressEditPermission(false);
       setStatus(task.progress);
       setColor(task.color); 
       fetchTaskCreator(task.taskCreatorId);
       fetchAssignedUsers(task.assignedTasksUsers);
-      fetchProjectData(task.tiedProjectId);
+      getProjectData(task.tiedProjectId);
       setTaskTitle(task.taskTitle);
       setTaskDescription(task.description);
       setCreatedDate(task.taskCreated);
@@ -60,8 +67,70 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         startDateTime: task.startDateTime,
         dueDateTime: task.dueDateTime
       });
+
+      fetchTaskFromAPI(task._id);
     }
-  }, [task]);
+  }, [task, show]); 
+
+
+  //Makes sure that task gets updated live
+  const fetchTaskFromAPI = async (taskId) => {
+
+
+    if (taskId) {
+      try {
+        const url = buildPath(`api/tasks/${taskId}`);
+        console.log("Request URL: ", url);
+        const response = await fetch(url);
+
+        console.log("Response: ", response);
+
+      
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new TypeError("Response not JSON");
+        }
+
+        const fetchedTask = await response.json();
+
+        console.log("fetched task? ", fetchedTask);
+
+        if (fetchedTask) {
+          setTaskDetails(fetchedTask);
+          setFetchedTask(fetchedTask); 
+        }
+      } catch (error) {
+        console.error('Error fetching task from API:', error);
+        
+      }
+    }
+  };
+
+
+  // re-sets the variables with the updated tasks
+  const setTaskDetails = (fetchedTask) => {
+    setProgressEditPermission(false);
+    setStatus(fetchedTask.progress);
+    setColor(fetchedTask.color);
+    fetchTaskCreator(fetchedTask.taskCreatorId);
+    fetchAssignedUsers(fetchedTask.assignedTasksUsers);
+    getProjectData(fetchedTask.tiedProjectId);
+    setTaskTitle(fetchedTask.taskTitle);
+    setTaskDescription(fetchedTask.description);
+    setCreatedDate(fetchedTask.taskCreated);
+    setStartDate(fetchedTask.startDateTime);
+    setDueDate(fetchedTask.dueDateTime);
+
+    setOriginalTask({
+      progress: fetchedTask.progress,
+      color: fetchedTask.color,
+      taskTitle: fetchedTask.taskTitle,
+      description: fetchedTask.description,
+      taskCreated: fetchedTask.taskCreated,
+      startDateTime: fetchedTask.startDateTime,
+      dueDateTime: fetchedTask.dueDateTime
+    });
+  };
 
   const handleClickOutside = (event) => {
     if (show && !document.getElementById('task-details-sidebar').contains(event.target)) {
@@ -73,6 +142,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     }
   };
 
+
+  // If the user clicks off of the sidebar, all of the values get reset
   const resetTaskDetails = () => {
     if (originalTask) {
       setStatus(originalTask.progress);
@@ -93,9 +164,14 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     };
   }, [show, onHide, editMode]);
 
+
+  //Resets the color picker
   useEffect(() => {
     const handleColorPickerClickOutside = (event) => {
-      if (showColorPicker && !document.getElementById('color-picker').contains(event.target) && !document.getElementById('color-circle').contains(event.target)) {
+      const colorPickerElement = document.getElementById('color-picker');
+      const colorCircleElement = document.getElementById('color-circle');
+
+      if (showColorPicker && colorPickerElement && colorCircleElement && !colorPickerElement.contains(event.target) && !colorCircleElement.contains(event.target)) {
         setShowColorPicker(false);
       }
     };
@@ -107,7 +183,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     };
   }, [showColorPicker]);
 
-  const fetchProjectData = async (projectId) => {
+
+
+  const getProjectData = async (projectId) => {
     try {
       const response = await fetch(buildPath(`api/getProjectDetails/${projectId}`));
       const project = await response.json();
@@ -118,6 +196,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
       const isFounder = project.founderId === userId;
       const isEditor = project.team.editors.includes(userId);
+
       //if a user is the founder ot editor they can change the progress of a task
       if(isFounder || isEditor){
         setProgressEditPermission(true);
@@ -128,6 +207,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       console.error('Error fetching project data:', error);
     }
   };
+
 
   const fetchTeamUsers = async (teamId) => {
     try {
@@ -194,8 +274,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const fetchAssignedUsers = async (userIds) => {
-
-
     try {
       const response = await fetch(buildPath('api/read/users'), {
         method: 'POST',
@@ -212,9 +290,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       const { usersInfo } = await response.json();
 
       if (Array.isArray(usersInfo)) {
-
-
-        const validUsers = usersInfo.filter(user=> user !== null);
+        const validUsers = usersInfo.filter(user => user !== null);
         const userNames = validUsers.map(user => user.name || 'User not found');
 
         setAssignedUserNames(userNames);
@@ -229,8 +305,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     } catch (error) {
       console.error('Error fetching assigned users:', error);
     }
-
-
   };
 
   const filterValidUsers = (users) => {
@@ -266,37 +340,16 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     }
   };
 
-  const handleColorChange = async (newColor) => {
-    //console.log(newColor);
+  const handleColorChange = (newColor) => {
     setColor(newColor); 
 
     var element = document.getElementById('color-circle');
     element.style.backgroundColor = newColor;
-
-    try {
-      const response = await fetch(buildPath(`api/tasks/${task._id}`), {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ color: newColor }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update task color');
-      }
-
-      const updatedTask = await response.json();
-      console.log('Task color updated successfully:', updatedTask);
-   
-      
-
-    } catch (error) {
-      console.error('Error updating task color:', error);
-    }
   };
 
   const handleSaveChanges = async () => {
+    if (!task) return;
+
     const currentDate = new Date();
     const threeMonthsBefore = new Date(currentDate.getFullYear(), currentDate.getMonth() - 3, 0);
     const threeMonthsAfter = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, 0);
@@ -306,7 +359,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       return;
     }
 
- 
     setDateError(''); // Clear the error message if dates are valid
 
     try {
@@ -364,16 +416,13 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleCheckboxChange = async (userName) => {
-    
-    setAssignedUserNames((prevAssignedUserNames) => { const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName): [...prevAssignedUserNames, userName];
+    setAssignedUserNames((prevAssignedUserNames) => { 
+      const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName): [...prevAssignedUserNames, userName];
 
-  
       const isChecked = !prevAssignedUserNames.includes(userName);
 
-    
       const userId = teamUsers.find(user => user.name === userName)._id;
 
-    
       updateSingleUserToDoList(task._id, userId, isChecked);
 
       return updatedAssignedUsers;
@@ -403,6 +452,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const handleCloseClick = () => {
     handleClickOutside(true); 
     onHide();
+    resetTaskDetails(); 
   };
 
   const handleDeleteClick = () => {
@@ -411,7 +461,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     }
   };
 
-  if (!show || !task) return null;
+  if (!show || !task || !fetchedTask) return null;
 
   return (
     <div id="task-details-sidebar" className="task-details-sidebar">
@@ -438,7 +488,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           <input type="color" className="form-control form-control-color" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value)} />
         </div>
       )}
-      {progressEditPermission?
+      {progressEditPermission ?
       <div className="dropdownDetails">
         <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >{status}</a>
         <div className="dropdown-menu" aria-labelledby="todoDropdown">
@@ -446,12 +496,10 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           <a className="dropdown-item" onClick={() => handleStatusChange('In-Progress')}>In-Progress</a>
           <a className="dropdown-item" onClick={() => handleStatusChange('Completed')}>Completed</a>:
         </div>
-      </div>:
+      </div> :
       <div className="dropdownDetails">
         <a className="nav-link" id="todoDropdown" disabled aria-expanded="false" >{status}</a>
       </div>}
-
-
 
       <div className="task-details-body">
         <div id="description-title">Description</div>
@@ -462,16 +510,18 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         )}
       </div>
 
-
-
-
       <div className="task-details-footer">
         <div className="details">
+
           <div className="details-header">Details</div>
           <div className="details-body">
+
+
             <p><strong>Task Creator:</strong> {taskCreatorName}</p>
+
             {editMode ? (
               <div>
+
                 <p><strong>Assigned Users:</strong></p>
                 <div className="checkbox-list">
                   {teamUsers.map(user => (
@@ -485,31 +535,47 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
                       <label htmlFor={`user-${user._id}`}>{user.name}</label>
                     </div>
                   ))}
+
+
                 </div>
+
                 <div id="placeholder-temp"></div>
               </div>
             ) : (
+
               <p><strong>Assigned Users:</strong> {assignedUserNames.join(', ')}</p>
+
+
             )}
-            
-            <p><strong>Created Date:</strong> {formatDate(task.taskCreated)}</p>
+
+
+            <p><strong>Created Date:</strong> {formatDate(fetchedTask.taskCreated)}</p>
             <p><strong>Start Date:</strong> {editMode ? (
+
+
               <input type="date" value={startDate.split('T')[0]} onChange={(e) => setStartDate(e.target.value)} />
             ) : (
-              formatDate(task.startDateTime)
+
+
+              formatDate(fetchedTask.startDateTime)
             )}</p>
+
+
             <p><strong>Due Date:</strong> {editMode ? (
               <input type="date" value={dueDate.split('T')[0]} onChange={(e) => setDueDate(e.target.value)} />
             ) : (
-              formatDate(task.dueDateTime)
+
+              formatDate(fetchedTask.dueDateTime)
+
             )}</p>
           </div>
 
-
-
           {dateError && <p className="error">{dateError}</p>}
+
         </div>
+
         {editMode && <button type="button" className="done-button" onClick={handleSaveChanges}>Done</button>}
+        
       </div>
     </div>
   );
