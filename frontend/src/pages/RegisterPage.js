@@ -6,12 +6,7 @@ import Register from '../components/Register'
 const RegisterPage = () =>{
     return(
         <div>
-            <NavBar pageTitle="Ganttify" layout={1}/>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
+            <NavBar layout={1}/>
             <Register/>
         </div>
     );
