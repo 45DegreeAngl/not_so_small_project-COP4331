@@ -22,7 +22,6 @@ function Login() {
     event.preventDefault();
 
     var obj = { email: loginEmail.toLowerCase(), password: loginPassword };
-    alert(obj.email);
     var js = JSON.stringify(obj);
 
     try {
