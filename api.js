@@ -2191,5 +2191,36 @@ router.put("/tasks/:id/dates", async (req, res) => {
 
 
 
+router.get("/tasks/:id", async (req, res) => {
+
+
+  const { id } = req.params;
+
+
+
+  try {
+
+    const db = client.db("ganttify");
+    const taskCollection = db.collection("tasks");
+    const task = await taskCollection.findOne({ _id: new ObjectId(id) });
+
+    
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+
+    res.status(200).json(task);
+
+    
+  } catch (error) {
+    console.error("Error fetching task:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+
 
 module.exports = router;
