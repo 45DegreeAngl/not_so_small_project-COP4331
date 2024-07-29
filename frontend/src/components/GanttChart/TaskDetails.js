@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './TaskDetails.css';
-import DeleteTaskButton from '..../Images/assets/action_buttons/Delete_Task_or_Chart.png';
-import EditTaskButton from '..../Images/assets/action_buttons/Edit_Task.png';
+import DeleteTaskButton from '../../Images/assets/action_buttons/Delete_Task_or_Chart.png';
+import EditTaskButton from '../../Images/assets/action_buttons/Edit_Task.png';
 
 const app_name = 'ganttify-5b581a9c8167';
 
