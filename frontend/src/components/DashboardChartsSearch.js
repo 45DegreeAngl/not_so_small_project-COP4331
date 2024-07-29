@@ -40,8 +40,15 @@ function DashboardChartsSearch(){
             var txt = await response.text();
             var res = JSON.parse(txt);
             //get list of project names and pass as prop to child
+            var toDelete = [];
             if(res.length>0){
-                setChartsToDisplay(<DashboardCharts projects={res}/>);
+                var modifiedRes = res.filter((project) => {
+                    if(project.founderId.localeCompare(userId) === 0 || project.isVisible === 1){
+                        return true;
+                    }
+                    return false;
+                });
+                setChartsToDisplay(<DashboardCharts projects={modifiedRes}/>);
             }
             else{
                 setChartsToDisplay(<DashboardCharts projects={empty}/>);

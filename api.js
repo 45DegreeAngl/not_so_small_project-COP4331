@@ -300,9 +300,6 @@ const isValidHexColor = (color) => /^#([0-9A-F]{3}){1,2}$/i.test(color);
 // Replaced the valid file as pngs instead of svgs.
 const allowedPatterns = {
   hollow_shape_family: [
-    "Hollow_Halftone_Density_1.png",
-    "Hollow_Halftone_Density_2.png",
-    "Hollow_Halftone_Density_3.png",
     // "Hollow_Mac_Noodle_Density_1.svg", // Removed
     "Hollow_Single_Circle_Density_1.png",
     "Hollow_Single_Dot_Density_1.png",
