@@ -135,6 +135,10 @@
 
 }
 
+menu {
+    list-style-type: none;
+}
+
 .endTag {
     position: relative;
     width: 100%;
