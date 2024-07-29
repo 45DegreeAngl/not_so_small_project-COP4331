@@ -76,7 +76,7 @@ export default function TimeTable({
     'Solid_Single_Triangle_Density_1.png':Solid_Single_Triangle_Density_1,'Hollow_Single_Circle_Density_1.png':Hollow_Single_Circle_Density_1,
     'Hollow_Single_Dot_Density_1.png':Hollow_Single_Dot_Density_1,'Hollow_Single_Rhombus_Density_1.png':Hollow_Single_Rhombus_Density_1,
     'Hollow_Single_Square_Density_1.png':Hollow_Single_Square_Density_1,'Hollow_Single_Star_Density_1.png':Hollow_Single_Star_Density_1,
-    'Hollow_Single_Triangle_Density_1.png':Hollow_Single_Triangle_Density_1
+    'Hollow_Single_Triangle_Density_1.png':Hollow_Single_Triangle_Density_1,
 }
   const ganttRef = useRef(null);
 
@@ -443,7 +443,7 @@ export default function TimeTable({
           const dayOfTheWeek = getDayOfWeek(curYear, curMonth - 1, j - 1);
           const formattedDate = createFormattedDateFromStr(curYear, curMonth, j);
           var taskHappening=false;
-          if(task['pattern'] && task['pattern'].localeCompare('default-pattern') !== 0){
+          if(task['pattern'] && (task['pattern'] in patterns)){
             taskHappening = isTaskHappeningNow(startDate,dueDate,formattedDate);
           }
           taskRow.push(

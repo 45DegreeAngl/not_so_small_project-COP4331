@@ -98,4 +98,11 @@
   .form-label{
     font-weight: bold;
   }
-
+.patternDropdownItem{
+    font-size: larger;;
+}
+.dropdownBtn{
+    background-color:white;
+    border-color: lightgrey;
+    border-style: groove;
+}
