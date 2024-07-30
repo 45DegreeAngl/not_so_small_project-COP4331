@@ -316,3 +316,12 @@ select[multiple] {
 .color-circle.clickable {
   cursor: pointer;
 }
+.patternDropdownItem{
+    font-size: larger;;
+}
+.dropdownBtn{
+    width:60%;
+    background-color:white;
+    border-color: lightgrey;
+    border-style: groove;
+}
