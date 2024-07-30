@@ -38,7 +38,7 @@ body {
 }
 
 .cta-button {
-  background-color: #ff6f00;
+  background-color: #135C91;
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -46,10 +46,11 @@ body {
   font-size: 1rem;
   cursor: pointer;
   text-decoration: none;
+  transition: background-color 0.2s ease;
 }
 
 .cta-button:hover {
-  background-color: #ff8500;
+  background-color: #DC6B2C;
 }
 
 .logo-image {
@@ -80,7 +81,7 @@ body {
 
 .cardContent img {
   width: 100%;
-  height: 200px;
+  height: 300px; 
   object-fit: cover;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -91,13 +92,13 @@ body {
 }
 
 .card-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
 .card-subtext {
-  font-size: 1rem;
+  font-size: 1.1rem; 
   color: #666;
 }
 
@@ -105,9 +106,7 @@ body {
   background-color: #fddc87;
   padding-bottom: 1px;
   text-align: center;
-
   height: 40px;
-  
 }
 
 .footer-links {
@@ -116,7 +115,6 @@ body {
   display: flex; 
   justify-content: center;
   align-items: center;
-  
 }
 
 .footer-links li {
@@ -141,7 +139,6 @@ body {
   background: none; 
   padding: 0; 
   cursor: pointer; 
-  
 }
 
 .footer-link:hover {
@@ -161,4 +158,18 @@ body {
 
 .animated-header-1{
   animation: slideInFromUp 2s ease-out;
+}
+
+.gantt-chart-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin-top: -70px;
+}
+
+.gantt-chart-icon-container svg {
+  width: 700px;
+  height: 700px; 
 }
