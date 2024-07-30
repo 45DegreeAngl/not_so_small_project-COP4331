@@ -1,6 +1,7 @@
 import React from 'react';
-import Start from '../Images/People_Working_Temp.jpg';
-import Plan from '../Images/People_Planning_Temp.jpg';
+import Start from '../Images/assets/backgrounds/Homepage_Start_Image.JPG';
+import Plan from '../Images/assets/backgrounds/Homepage_Plan_Image.JPG';
+import Complete from '../Images/assets/backgrounds/Homepage_Mobile_Image.png';
 import Logo from '../Images/assets/logo/Logo.png';
 import { Link } from "react-router-dom";
 import GanttChartIcon from "./GanttChartIcon.js";
@@ -35,7 +36,7 @@ function ContentBox() {
 
       <div className="cards-container">
         <div className="cardContent">
-          <img src={Start} alt="Start Placeholder" />
+          <img src={Start} alt="User dashaboard preview." />
           <div className="card-contentbox">
             <h2 className="card-title">Start Your Project</h2>
             <p className="card-subtext">Take advantage of Ganttify's simple onboarding process to plan your day! Everyone gets Ganttify and all of its features for free. Simply sign up with a valid email address.</p>
@@ -47,7 +48,7 @@ function ContentBox() {
         <br></br>
         <br></br>
         <div className="cardContent">
-          <img src={Plan} alt="Plan Placeholder" />
+          <img src={Plan} alt="View a chart and plan on it." />
           <div className="card-contentbox">
             <h2 className="card-title">Plan Efficiently</h2>
             <p className="card-subtext">Ganttify offers a single plan that's free, easy to use, and open to everyone! Divide and conquer by assigning team members to tasks within a chart. Use a color picker and pattern overlays for maximum visual contrast for task colors. If you do not want other users to see or team members to join your chart, simply make it private.</p>
@@ -59,7 +60,7 @@ function ContentBox() {
         <br></br>
         <br></br>
         <div className="cardContent">
-          <img src={Start} alt="Start Placeholder" />
+          <img src={Complete} alt="Mobile task list." />
           <div className="card-contentbox">
             <h2 className="card-title">Complete Tasks</h2>
             <p className="card-subtext">Simply toggle a task to indicate if it's done. You can mark tasks as complete on desktop or in our companion app.</p>
