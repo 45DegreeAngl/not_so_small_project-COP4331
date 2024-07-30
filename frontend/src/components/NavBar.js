@@ -95,10 +95,15 @@ function NavBar(props) {
 
 
 
-  var _ud = localStorage.getItem('user_data');
-  var ud = JSON.parse(_ud);
-  var userId = ud._id;
-
+ 
+  var _ud;
+  var ud;
+  var userId;
+  if(localStorage.getItem('user_data')){
+    _ud = localStorage.getItem('user_data');
+    ud = JSON.parse(_ud);
+    userId = ud._id;
+  }
 
 
   let tempProjectId = useParams();
