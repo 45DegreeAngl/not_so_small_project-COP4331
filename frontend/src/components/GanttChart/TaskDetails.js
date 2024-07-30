@@ -6,7 +6,6 @@ import EditTaskButton from '../../Images/assets/action_buttons/Edit_Task_30x30.p
 
 const app_name = 'ganttify-5b581a9c8167';
 
-
 function buildPath(route) {
   if (process.env.NODE_ENV === 'production') {
     return 'https://' + app_name + '.herokuapp.com/' + route;
@@ -15,10 +14,9 @@ function buildPath(route) {
   }
 }
 
-
-//Colors to choose from
+// Colors to choose from
 const colorOptions = [
-  '#e81416', '#ffa500', '#faeb36', '#79c314', '#487de7', '#4b369d', '#70369d', 
+  '#e81416', '#ffa500', '#faeb36', '#79c314', '#487de7', '#4b369d', '#70369d',
   '#f47474', '#ffd580', '#fff77e','#b2e687', '#8fb9f9', '#9a86cc', '#b27fc6'
 ];
 const patternDisplayNames = {
@@ -45,8 +43,7 @@ const patternDisplayNames = {
 }
 
 
-
-//Initializes variables
+// Initializes variables
 const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [status, setStatus] = useState('');
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -59,7 +56,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [editMode, setEditMode] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
-  const [teamUsers, setTeamUsers] = useState([]); 
+  const [teamUsers, setTeamUsers] = useState([]);
   const [createdDate, setCreatedDate] = useState('');
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -67,13 +64,18 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [progressEditPermission, setProgressEditPermission] = useState(false);
 
   const [originalTask, setOriginalTask] = useState(null);
+<<<<<<< HEAD
   const [fetchedTask, setFetchedTask] = useState(null); 
   
+=======
+  const [fetchedTask, setFetchedTask] = useState(null);
+
+>>>>>>> f698343ef274000bef3c851b1457948b37ba429e
   useEffect(() => {
     if (task && show) {
       setProgressEditPermission(false);
       setStatus(task.progress);
-      setColor(task.color); 
+      setColor(task.color);
       fetchTaskCreator(task.taskCreatorId);
       fetchAssignedUsers(task.assignedTasksUsers);
       getProjectData(task.tiedProjectId);
@@ -98,23 +100,22 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
       fetchTaskFromAPI(task._id);
     }
-  }, [task, show]); 
+  }, [task, show]);
 
-
-  //Makes sure that task gets updated live
+  // Makes sure that task gets updated live
   const fetchTaskFromAPI = async (taskId) => {
-
-
     if (taskId) {
       try {
-        const url = buildPath(`api/tasks/${taskId}`);
-        console.log("Request URL: ", url);
-        const response = await fetch(url);
+        const response = await fetch(buildPath(`api/tasks/${taskId}`));
 
         console.log("Response: ", response);
 
+<<<<<<< HEAD
       
         const contentType = await response.headers.get("content-type");
+=======
+        const contentType = response.headers.get("content-type");
+>>>>>>> f698343ef274000bef3c851b1457948b37ba429e
         if (!contentType || !contentType.includes("application/json")) {
           throw new TypeError("Response not JSON");
         }
@@ -125,17 +126,15 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
         if (fetchedTask) {
           setTaskDetails(fetchedTask);
-          setFetchedTask(fetchedTask); 
+          setFetchedTask(fetchedTask);
         }
       } catch (error) {
         console.error('Error fetching task from API:', error);
-        
       }
     }
   };
 
-
-  // re-sets the variables with the updated tasks
+  // Re-sets the variables with the updated tasks
   const setTaskDetails = (fetchedTask) => {
     setProgressEditPermission(false);
     setStatus(fetchedTask.progress);
@@ -166,13 +165,12 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const handleClickOutside = (event) => {
     if (show && !document.getElementById('task-details-sidebar').contains(event.target)) {
       if (editMode) {
-        resetTaskDetails(); 
+        resetTaskDetails();
         setEditMode(false);
       }
       onHide();
     }
   };
-
 
   // If the user clicks off of the sidebar, all of the values get reset
   const resetTaskDetails = () => {
@@ -195,11 +193,10 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     };
   }, [show, onHide, editMode]);
 
-
-  //Resets the color picker
+  // Resets the color picker
   useEffect(() => {
     const handleColorPickerClickOutside = (event) => {
-      const colorPickerElement = document.getElementById('color-picker');
+      const colorPickerElement = document.getElementById('color-picker-sidebar');
       const colorCircleElement = document.getElementById('color-circle');
 
       if (showColorPicker && colorPickerElement && colorCircleElement && !colorPickerElement.contains(event.target) && !colorCircleElement.contains(event.target)) {
@@ -214,10 +211,13 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     };
   }, [showColorPicker]);
 
+<<<<<<< HEAD
   
 
 
 
+=======
+>>>>>>> f698343ef274000bef3c851b1457948b37ba429e
   const getProjectData = async (projectId) => {
     try {
       const response = await fetch(buildPath(`api/getProjectDetails/${projectId}`));
@@ -230,8 +230,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       const isFounder = project.founderId === userId;
       const isEditor = project.team.editors.includes(userId);
 
-      //if a user is the founder ot editor they can change the progress of a task
-      if(isFounder || isEditor){
+      // If a user is the founder or editor they can change the progress of a task
+      if (isFounder || isEditor) {
         setProgressEditPermission(true);
       }
       setIsEditable(isFounder || isEditor);
@@ -241,24 +241,19 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     }
   };
 
-
   const fetchTeamUsers = async (teamId) => {
     try {
       const response = await fetch(buildPath(`api/teams/${teamId}`));
       const team = await response.json();
 
-  
       const founderId = team.founderId;
       const editors = Array.isArray(team.editors) ? team.editors : [];
       const members = Array.isArray(team.members) ? team.members : [];
 
-     
       const allUserIds = [founderId, ...editors, ...members];
 
-     
       const uniqueUserIds = [...new Set(allUserIds)];
 
-      
       const responseUsers = await fetch(buildPath('api/read/users'), {
         method: 'POST',
         headers: {
@@ -329,9 +324,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         const userNames = validUsers.map(user => user.name || 'User not found');
 
         setAssignedUserNames(userNames);
-        //if user is a  assigned to the task they can edit task progress
-        if(userIds.includes(userId)){
-            setProgressEditPermission(true);
+        // If user is assigned to the task they can edit task progress
+        if (userIds.includes(userId)) {
+          setProgressEditPermission(true);
         }
 
       } else {
@@ -378,7 +373,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleColorChange = (newColor) => {
-    setColor(newColor); 
+    setColor(newColor);
 
     var element = document.getElementById('color-circle');
     element.style.backgroundColor = newColor;
@@ -388,8 +383,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     if (!task) return;
 
     const currentDate = new Date();
-    const threeMonthsBefore = new Date(currentDate.getFullYear(), currentDate.getMonth() - 3, 0);
-    const threeMonthsAfter = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, 0);
 
     if (new Date(startDate) > new Date(dueDate)) {
       setDateError("Due date cannot be before start date.");
@@ -407,6 +400,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         body: JSON.stringify({
           taskTitle,
           description: taskDescription,
+          color, // Include color in the update
           assignedTasksUsers: assignedUserNames.map(name => teamUsers.find(user => user.name === name)?._id).filter(id => id),
           taskCreated: createdDate,
           startDateTime: startDate,
@@ -424,10 +418,10 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
       await updateUsersToDoList(task._id, assignedUserNames.map(name => teamUsers.find(user => user.name === name)._id).filter(id => id));
 
-      setEditMode(false); 
-      
-      window.location.reload(); 
-      
+      setEditMode(false);
+
+      window.location.reload();
+
     } catch (error) {
       console.error('Error updating task details:', error);
     }
@@ -459,9 +453,15 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleCheckboxChange = async (userName) => {
+<<<<<<< HEAD
     setAssignedUserNames((prevAssignedUserNames) => { 
       const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName): [...prevAssignedUserNames, userName];
   
+=======
+    setAssignedUserNames((prevAssignedUserNames) => {
+      const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName) : [...prevAssignedUserNames, userName];
+
+>>>>>>> f698343ef274000bef3c851b1457948b37ba429e
       const isChecked = !prevAssignedUserNames.includes(userName);
     
       const userId = teamUsers.find(user => user.name === userName)._id;
@@ -493,9 +493,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleCloseClick = () => {
-    handleClickOutside(true); 
+    handleClickOutside(true);
     onHide();
-    resetTaskDetails(); 
+    resetTaskDetails();
   };
 
   const handleDeleteClick = () => {
@@ -507,7 +507,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   if (!show || !task || !fetchedTask) return null;
 
   return (
+
     <div id="task-details-sidebar" className="task-details-sidebar">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>
       <div className="task-details-header">
         <div className="icon-button-container">
           {isEditable && <button type="button" className="edit-button" onClick={() => setEditMode(!editMode)}><img alt="EditTaskIcon" src={EditTaskButton}/></button>}
@@ -515,7 +517,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           <button type="button" className="close" onClick={handleCloseClick}>&times;</button>
         </div>
         <div className="task-title-container">
-          <div className={`color-circle ${editMode ? 'clickable' : ''}`} id="color-circle" style={{ backgroundColor: color }} onClick={() => editMode && setShowColorPicker(!showColorPicker)} />
+        <div className={`color-circle ${editMode ? 'clickable hover-highlight' : ''}`} id="color-circle" style={{ backgroundColor: color }} onClick={() => editMode && setShowColorPicker(!showColorPicker)} />
           {editMode ? (
             <input id="title-text" type="text" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} />
           ) : (
@@ -523,15 +525,23 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           )}
         </div>
       </div>
+
       {showColorPicker && (
-        <div id="color-picker" className="color-picker">
-          {colorOptions.map((colorOption) => (
-            <div key={colorOption} className="color-option" style={{ backgroundColor: colorOption }} onClick={() => handleColorChange(colorOption)} />
-          ))}
-          <input type="color" className="form-control form-control-color" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value)} />
-        </div>
+         <div id="color-picker-sidebar" className="color-picker-sidebar">
+         {colorOptions.map((colorOption) => (
+           <div key={colorOption} className="color-option-sidebar" style={{ backgroundColor: colorOption }} onClick={() => handleColorChange(colorOption)} />
+         ))}
+         <div className="color-picker-wrapper">
+           <i className="fas fa-eye-dropper"></i>
+           <input type="color" className="form-control form-control-color-sidebar" id="myColor" value={color} title="Choose a color" onChange={(e) => handleColorChange(e.target.value)} />
+         </div>
+       </div>
       )}
+<<<<<<< HEAD
       <div class="d-inline">
+=======
+
+>>>>>>> f698343ef274000bef3c851b1457948b37ba429e
       {progressEditPermission ?
       <div className="dropdownDetails">
         <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >{status}</a>
@@ -651,7 +661,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         </div>
 
         {editMode && <button type="button" className="done-button" onClick={handleSaveChanges}>Done</button>}
-        
+
       </div>
     </div>
   );
