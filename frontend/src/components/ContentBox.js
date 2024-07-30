@@ -3,6 +3,7 @@ import Start from '../Images/People_Working_Temp.jpg';
 import Plan from '../Images/People_Planning_Temp.jpg';
 import Logo from '../Images/assets/logo/Logo.png';
 import { Link } from "react-router-dom";
+import GanttChartIcon from "./GanttChartIcon.js";
 import './ContentBox.css';
 
 function ContentBox() {
@@ -10,12 +11,14 @@ function ContentBox() {
     <div>
       <div className="landing-page-container">
         <div className="left-column">
-          <h1 className="animated-header-1" >Never pay for Gantt charts again.</h1>
+          <h1 className="animated-header-1">Never pay for Gantt charts again.</h1>
           <p>At Ganttify, there's only one plan: free, simple and accessible to everyone.</p>
           <Link to="/register" className="cta-button">Get free Ganttify access</Link>
         </div>
         <div className="right-column">
-          <img src={Logo} alt="Placeholder" className="logo-image" />
+          <div className="gantt-chart-icon-container">
+            <GanttChartIcon />
+          </div>
         </div>
       </div>
 
@@ -29,7 +32,7 @@ function ContentBox() {
       <br></br>
       <br></br>
       <br></br>
-  
+
       <div className="cards-container">
         <div className="cardContent">
           <img src={Start} alt="Start Placeholder" />
@@ -51,10 +54,10 @@ function ContentBox() {
           </div>
         </div>
         <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
         <div className="cardContent">
           <img src={Start} alt="Start Placeholder" />
           <div className="card-contentbox">
@@ -68,10 +71,10 @@ function ContentBox() {
       <br></br>
 
       <footer className="footer">
-      <ul class="footer-links">
-        <li><a href="https://github.com/45DegreeAngl/not_so_small_project-COP4331" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a></li>
-        <li><a href="/about-us" class="footer-link">About Us</a></li>
-      </ul>
+        <ul className="footer-links">
+          <li><a href="https://github.com/45DegreeAngl/not_so_small_project-COP4331" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub</a></li>
+          <li><a href="/about-us" className="footer-link">About Us</a></li>
+        </ul>
       </footer>
     </div>
   );
