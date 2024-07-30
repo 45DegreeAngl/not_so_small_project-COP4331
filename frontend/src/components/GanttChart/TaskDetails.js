@@ -40,6 +40,7 @@ const patternDisplayNames = {
 	'Halftone_Density_1.png':'Halftone',
 	'Halftone_Density_2.png':'Light Halftone',
 	'Halftone_Density_3.png':'Dense Halftone',
+    'No Pattern':'No Pattern'
 }
 
 
@@ -551,6 +552,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
                         <a onClick={()=>handlePatternChange('Solid_Single_Star_Density_1.png','Solid Stars')} class = "dropdown-item patternDropdownItem">Solid Stars</a>
                         <a onClick={()=>handlePatternChange('Solid_Single_Triangle_Density_1.png','Solid Triangles')} class = "dropdown-item patternDropdownItem">Solid Triangles</a>
                         <a onClick={()=>handlePatternChange('Halftone_Density_1.png','Halftone')} class = "dropdown-item patternDropdownItem">Halftone</a>
+                        <a onClick={()=>handlePatternChange('No Pattern','No Pattern')} class = "dropdown-item patternDropdownItem">No Pattern</a>
                         </ul>
                   </div>:
                    <div className="dropdownDetails flex-fill mx-1">

@@ -297,6 +297,7 @@ const AddTaskButton = ({ projectId }) => {
                         {pattern}
                     </button>
                     <ul class="dropdown-menu">
+                        <a onClick={()=>handlePatternChange('No Pattern','No Pattern')} class = "dropdown-item patternDropdownItem">No Pattern</a>
                         <a onClick={()=>handlePatternChange('Hollow_Single_Dot_Density_1.png','Hollow Dots')} class = "dropdown-item patternDropdownItem patternDropdownItem">Hollow Dots</a>
                         <a onClick={()=>handlePatternChange('Hollow_Single_Rhombus_Density_1.png','Hollow Rhombuses')} class = "dropdown-item patternDropdownItem patternDropdownItem">Hollow Rhombuses</a>
                         <a onClick={()=>handlePatternChange('Hollow_Single_Square_Density_1.png','Hollow Squares')} class = "dropdown-item patternDropdownItem">Hollow Squares</a>
