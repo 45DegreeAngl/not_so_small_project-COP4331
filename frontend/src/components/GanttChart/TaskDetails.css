@@ -311,17 +311,22 @@ select[multiple] {
 .color-circle.clickable {
   cursor: pointer;
 }
-<<<<<<< HEAD
 .patternDropdownItem{
     font-size: larger;;
 }
 .dropdownBtn{
-    width:60%;
     background-color:white;
     border-color: lightgrey;
     border-style: groove;
+    display: inline-block;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    border-radius: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
-=======
 
 .color-option-sidebar {
   width: 20px;
@@ -374,4 +379,3 @@ select[multiple] {
   border: none;
   border-radius: 50%;
 }
->>>>>>> f698343ef274000bef3c851b1457948b37ba429e

@@ -64,13 +64,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [progressEditPermission, setProgressEditPermission] = useState(false);
 
   const [originalTask, setOriginalTask] = useState(null);
-<<<<<<< HEAD
-  const [fetchedTask, setFetchedTask] = useState(null); 
-  
-=======
   const [fetchedTask, setFetchedTask] = useState(null);
 
->>>>>>> f698343ef274000bef3c851b1457948b37ba429e
   useEffect(() => {
     if (task && show) {
       setProgressEditPermission(false);
@@ -110,12 +105,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
         console.log("Response: ", response);
 
-<<<<<<< HEAD
-      
-        const contentType = await response.headers.get("content-type");
-=======
         const contentType = response.headers.get("content-type");
->>>>>>> f698343ef274000bef3c851b1457948b37ba429e
         if (!contentType || !contentType.includes("application/json")) {
           throw new TypeError("Response not JSON");
         }
@@ -211,13 +201,6 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     };
   }, [showColorPicker]);
 
-<<<<<<< HEAD
-  
-
-
-
-=======
->>>>>>> f698343ef274000bef3c851b1457948b37ba429e
   const getProjectData = async (projectId) => {
     try {
       const response = await fetch(buildPath(`api/getProjectDetails/${projectId}`));
@@ -453,15 +436,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const handleCheckboxChange = async (userName) => {
-<<<<<<< HEAD
-    setAssignedUserNames((prevAssignedUserNames) => { 
-      const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName): [...prevAssignedUserNames, userName];
-  
-=======
     setAssignedUserNames((prevAssignedUserNames) => {
       const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName) : [...prevAssignedUserNames, userName];
 
->>>>>>> f698343ef274000bef3c851b1457948b37ba429e
       const isChecked = !prevAssignedUserNames.includes(userName);
     
       const userId = teamUsers.find(user => user.name === userName)._id;
@@ -537,11 +514,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
          </div>
        </div>
       )}
-<<<<<<< HEAD
-      <div class="d-inline">
-=======
-
->>>>>>> f698343ef274000bef3c851b1457948b37ba429e
+      <div class = "d-inline-flex">
       {progressEditPermission ?
       <div className="dropdownDetails">
         <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >{status}</a>
@@ -555,8 +528,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         <a className="nav-link" id="todoDropdown" disabled aria-expanded="false" >{status}</a>
       </div>}
       {editMode?
-      <div className="mb-4 dropdown dropdown-start dropdownDetails">
-                    <button class="=nav-link dropdownBtn dropdown-toggle" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false">
+      <div className="dropdownDetails flex-fill mx-1">
+                    <button class="nav-link dropdown-toggle dropdownBtn" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false">
                         {patternToDisplay}
                     </button>
                     <ul class="dropdown-menu">
@@ -580,8 +553,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
                         <a onClick={()=>handlePatternChange('Halftone_Density_1.png','Halftone')} class = "dropdown-item patternDropdownItem">Halftone</a>
                         </ul>
                   </div>:
-                   <div className="mb-4 dropup dropup-center d-grid gap-2">
-                   <button class="=nav-link dropdownBtn dropdown-toggle" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                   <div className="dropdownDetails flex-fill mx-1">
+                   <button class="nav-link dropdownBtn" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                        {patternToDisplay}
                    </button></div>}</div>
 
