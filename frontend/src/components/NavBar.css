@@ -1,11 +1,11 @@
-/*NavBar.css*/
+
 .base{
     background-color: #FDDC87;
     color: black;
 }
 .navbar{
     width: 100%;
-    height: 15%;
+    height: 9%;
     display : flex;
     align-items: center;
     justify-content: space-between;
@@ -28,8 +28,9 @@
 }
 
 .logo{
-    width: 175px;
+    width: 160px;
     padding: 0px 50px;
+    margin-top: -20px;
 }
 
 #button{
@@ -137,4 +138,12 @@ ul li{
     color: #000; 
     font-size: 1.5rem; 
     cursor: pointer;
+  }
+
+  .navbarHeader{
+    margin-top: -13px;
+  }
+
+  .navbarOptions {
+    margin-top: -3px;
   }
