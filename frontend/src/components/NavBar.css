@@ -16,7 +16,8 @@
 }
 .navbarDash{
     width: 100%;
-    height: auto;
+    height: 9%;
+    max-height: 76px;
     display : flex;
     align-items: center;
     justify-content: space-between;
@@ -144,6 +145,30 @@ ul li{
     margin-top: -13px;
   }
 
-  .navbarOptions {
-    margin-top: -3px;
+  .navbarOptionsDash {
+    margin-top: 8px;
   }
+
+  .navbarOptions {
+    margin-top: -5px;
+  }
+
+  .logoDash{
+    width: 160px;
+    padding: 0px 50px;
+    margin-top: -5px;
+}
+
+.navbarHeaderDash{
+    margin-top: 3px;
+}
+
+.navbarOptionsView{
+    margin-top: 8px;
+}
+
+.dashBoardButtons{
+    font-size: 20px !important;
+    margin-right:15px;
+    margin-left:-10px;
+}
