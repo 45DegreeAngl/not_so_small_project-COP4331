@@ -19,12 +19,37 @@ const colorOptions = [
   '#e81416', '#ffa500', '#faeb36', '#79c314', '#487de7', '#4b369d', '#70369d',
   '#f47474', '#ffd580', '#fff77e','#b2e687', '#8fb9f9', '#9a86cc', '#b27fc6'
 ];
+const patternDisplayNames = {
+	'Hollow_Single_Circle_Density_1.png':'Hollow Circles',
+	'Hollow_Single_Dot_Density_1.png':'Hollow Dots',
+	'Hollow_Single_Rhombus_Density_1.png':'Hollow Rhombuses',
+	'Hollow_Single_Square_Density_1.png':'Hollow Squares',
+	'Hollow_Single_Star_Density_1.png':'Hollow Stars',
+	'Hollow_Single_Triangle_Density_1.png':'Hollow Triangles',
+	'Diagonal_Left_Single_Line_Density_1.png':'Left Diagonal Lines',
+	'Diagonal_Right_Single_Line_Density_1.png':'Right Diagonal Lines',
+	'Diagonal_Woven_Line_Density_1.png':'Woven Diagonal Lines',
+	'Single_Horizontal_Line_Density_1.png':'Horizontal Line',
+	'Single_Vertical_Line_Density_1.png':'Vertical Line',
+	'Solid_Single_Circle_Density_1.png':'Solid Circles',
+	'Solid_Single_Dot_Density_1.png':'Solid Dots',
+	'Solid_Single_Rhombus_Density_1.png':'Solid Rhombuses',
+	'Solid_Single_Square_Density_1.png':'Solid Squares',
+	'Solid_Single_Star_Density_1.png':'Solid Stars',
+	'Solid_Single_Triangle_Density_1.png':'Solid Triangles',
+	'Halftone_Density_1.png':'Halftone',
+	'Halftone_Density_2.png':'Light Halftone',
+	'Halftone_Density_3.png':'Dense Halftone',
+}
+
 
 // Initializes variables
 const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   const [status, setStatus] = useState('');
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [color, setColor] = useState('white'); // Default color
+  const [pattern,setPattern] = useState('No Pattern');
+  const [patternToDisplay,setPatternToDisplay] = useState('No Pattern');
   const [taskCreatorName, setTaskCreatorName] = useState('');
   const [assignedUserNames, setAssignedUserNames] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
@@ -54,6 +79,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       setCreatedDate(task.taskCreated);
       setStartDate(task.startDateTime);
       setDueDate(task.dueDateTime);
+      setPattern(task.pattern);
+      setPatternToDisplay(patternDisplayNames[task.pattern])
 
       setOriginalTask({
         progress: task.progress,
@@ -62,7 +89,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
         description: task.description,
         taskCreated: task.taskCreated,
         startDateTime: task.startDateTime,
-        dueDateTime: task.dueDateTime
+        dueDateTime: task.dueDateTime,
+        pattern: task.pattern
       });
 
       fetchTaskFromAPI(task._id);
@@ -101,6 +129,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     setProgressEditPermission(false);
     setStatus(fetchedTask.progress);
     setColor(fetchedTask.color);
+    setPattern(fetchedTask.pattern);
     fetchTaskCreator(fetchedTask.taskCreatorId);
     fetchAssignedUsers(fetchedTask.assignedTasksUsers);
     getProjectData(fetchedTask.tiedProjectId);
@@ -109,6 +138,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     setCreatedDate(fetchedTask.taskCreated);
     setStartDate(fetchedTask.startDateTime);
     setDueDate(fetchedTask.dueDateTime);
+    setPatternToDisplay(patternDisplayNames[fetchedTask.pattern])
 
     setOriginalTask({
       progress: fetchedTask.progress,
@@ -117,7 +147,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       description: fetchedTask.description,
       taskCreated: fetchedTask.taskCreated,
       startDateTime: fetchedTask.startDateTime,
-      dueDateTime: fetchedTask.dueDateTime
+      dueDateTime: fetchedTask.dueDateTime,
+      pattern : fetchedTask.pattern
     });
   };
 
@@ -254,6 +285,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
   };
 
   const fetchAssignedUsers = async (userIds) => {
+
+
     try {
       const response = await fetch(buildPath('api/read/users'), {
         method: 'POST',
@@ -285,6 +318,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
     } catch (error) {
       console.error('Error fetching assigned users:', error);
     }
+
+
   };
 
   const filterValidUsers = (users) => {
@@ -336,7 +371,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       setDateError("Due date cannot be before start date.");
       return;
     }
-
+ 
     setDateError(''); // Clear the error message if dates are valid
 
     try {
@@ -352,7 +387,8 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
           assignedTasksUsers: assignedUserNames.map(name => teamUsers.find(user => user.name === name)?._id).filter(id => id),
           taskCreated: createdDate,
           startDateTime: startDate,
-          dueDateTime: dueDate
+          dueDateTime: dueDate,
+          pattern: pattern
         }),
       });
 
@@ -373,6 +409,11 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       console.error('Error updating task details:', error);
     }
   };
+  const handlePatternChange = async (newPattern,newPatternToDisplay) => {
+    console.log(newPattern);
+    setPatternToDisplay(newPatternToDisplay)
+    setPattern(newPattern);
+  }
 
   const updateUsersToDoList = async (taskId, userIds) => {
     try {
@@ -399,9 +440,9 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       const updatedAssignedUsers = prevAssignedUserNames.includes(userName) ? prevAssignedUserNames.filter((name) => name !== userName) : [...prevAssignedUserNames, userName];
 
       const isChecked = !prevAssignedUserNames.includes(userName);
-
+    
       const userId = teamUsers.find(user => user.name === userName)._id;
-
+    
       updateSingleUserToDoList(task._id, userId, isChecked);
 
       return updatedAssignedUsers;
@@ -473,7 +514,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
          </div>
        </div>
       )}
-
+      <div class = "d-inline-flex">
       {progressEditPermission ?
       <div className="dropdownDetails">
         <a className="nav-link dropdown-toggle" id="todoDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >{status}</a>
@@ -486,6 +527,38 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
       <div className="dropdownDetails">
         <a className="nav-link" id="todoDropdown" disabled aria-expanded="false" >{status}</a>
       </div>}
+      {editMode?
+      <div className="dropdownDetails flex-fill mx-1">
+                    <button class="nav-link dropdown-toggle dropdownBtn" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false">
+                        {patternToDisplay}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <a onClick={()=>handlePatternChange('Hollow_Single_Circle_Density_1.png','Hollow Circles')} class = "dropdown-item patternDropdownItem patternDropdownItem">Hollow Circles</a>
+                        <a onClick={()=>handlePatternChange('Hollow_Single_Dot_Density_1.png','Hollow Dots')} class = "dropdown-item patternDropdownItem patternDropdownItem">Hollow Dots</a>
+                        <a onClick={()=>handlePatternChange('Hollow_Single_Rhombus_Density_1.png','Hollow Rhombuses')} class = "dropdown-item patternDropdownItem patternDropdownItem">Hollow Rhombuses</a>
+                        <a onClick={()=>handlePatternChange('Hollow_Single_Square_Density_1.png','Hollow Squares')} class = "dropdown-item patternDropdownItem">Hollow Squares</a>
+                        <a onClick={()=>handlePatternChange('Hollow_Single_Star_Density_1.png','Hollow Stars')} class = "dropdown-item patternDropdownItem">Hollow Stars</a>
+                        <a onClick={()=>handlePatternChange('Hollow_Single_Triangle_Density_1.png','Hollow Triangles')} class = "dropdown-item patternDropdownItem">Hollow Triangles</a>
+                        <a onClick={()=>handlePatternChange('Diagonal_Left_Single_Line_Density_1.png','Left Diagonal Lines')} class = "dropdown-item patternDropdownItem">Left Diagonal Lines</a>
+                        <a onClick={()=>handlePatternChange('Diagonal_Right_Single_Line_Density_1.png','Right Diagonal Lines')} class = "dropdown-item patternDropdownItem">Right Diagonal Lines</a>
+                        <a onClick={()=>handlePatternChange('Diagonal_Woven_Line_Density_1.png','Woven Diagonal Lines')} class = "dropdown-item patternDropdownItem">Woven Diagonal Lines</a>
+                        <a onClick={()=>handlePatternChange('Single_Horizontal_Line_Density_1.png','Horizontal Line')} class = "dropdown-item patternDropdownItem">Horizontal Line</a>
+                        <a onClick={()=>handlePatternChange('Single_Vertical_Line_Density_1.png','Vertical Line')} class = "dropdown-item patternDropdownItem">Vertical Lines</a>
+                        <a onClick={()=>handlePatternChange('Solid_Single_Circle_Density_1.png','Solid Circles')} class = "dropdown-item patternDropdownItem">Solid Circles</a>
+                        <a onClick={()=>handlePatternChange('Solid_Single_Dot_Density_1.png','Solid Dots')} class = "dropdown-item patternDropdownItem">Solid Dots</a>
+                        <a onClick={()=>handlePatternChange('Solid_Single_Rhombus_Density_1.png','Solid Rhombuses')} class = "dropdown-item patternDropdownItem">Solid Rhombuses</a>
+                        <a onClick={()=>handlePatternChange('Solid_Single_Square_Density_1.png','Solid Squares')} class = "dropdown-item patternDropdownItem">Solid Squares</a>
+                        <a onClick={()=>handlePatternChange('Solid_Single_Star_Density_1.png','Solid Stars')} class = "dropdown-item patternDropdownItem">Solid Stars</a>
+                        <a onClick={()=>handlePatternChange('Solid_Single_Triangle_Density_1.png','Solid Triangles')} class = "dropdown-item patternDropdownItem">Solid Triangles</a>
+                        <a onClick={()=>handlePatternChange('Halftone_Density_1.png','Halftone')} class = "dropdown-item patternDropdownItem">Halftone</a>
+                        </ul>
+                  </div>:
+                   <div className="dropdownDetails flex-fill mx-1">
+                   <button class="nav-link dropdownBtn" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                       {patternToDisplay}
+                   </button></div>}</div>
+
+
 
       <div className="task-details-body">
         <div id="description-title">Description</div>
@@ -533,7 +606,7 @@ const TaskDetails = ({ show, onHide, task, handleDelete, userId }) => {
 
 
             )}
-
+            
 
             <p><strong>Created Date:</strong> {formatDate(fetchedTask.taskCreated)}</p>
             <p><strong>Start Date:</strong> {editMode ? (

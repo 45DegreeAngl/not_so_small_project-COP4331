@@ -101,8 +101,8 @@
 .patternDropdownItem{
     font-size: larger;;
 }
-.dropdownBtn{
-    background-color:white;
+.dropdownBtnAdd{
+    background-color:white !important;
     border-color: lightgrey;
     border-style: groove;
 }

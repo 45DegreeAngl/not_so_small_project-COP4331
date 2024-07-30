@@ -293,7 +293,7 @@ const AddTaskButton = ({ projectId }) => {
 
                   <div className="mb-4 dropup dropup-center d-grid gap-2">
                     <label htmlFor="pattern" className="form-label text-align-start">Pattern</label>
-                    <button class="=nav-link dropdownBtn dropdown-toggle" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="dropdownBtnAdd dropdown-toggle" type="button" id="pattern" data-bs-toggle="dropdown" aria-expanded="false">
                         {pattern}
                     </button>
                     <ul class="dropdown-menu">

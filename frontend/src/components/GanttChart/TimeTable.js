@@ -77,7 +77,7 @@ export default function TimeTable({
     'Halftone_Density_1.png':Halftone_Density_1 , 'Halftone_Density_2.png':Halftone_Density_2,
     'Halftone_Density_3.png':Halftone_Density_3,  'Diagonal_Right_Single_Line_Density_1.png':Diagonal_Right_Single_Line_Density_1,
     'Diagonal_Left_Single_Line_Density_1.png':Diagonal_Left_Single_Line_Density_1, 'Diagonal_Left_Single_Line_Density_1.png':Diagonal_Left_Single_Line_Density_1,
-    'Diagonal_Woven_Line_Density_1':Diagonal_Woven_Line_Density_1, 'Single_Horizontal_Line_Density_1.png':Single_Horizontal_Line_Density_1,
+    'Diagonal_Woven_Line_Density_1.png':Diagonal_Woven_Line_Density_1, 'Single_Horizontal_Line_Density_1.png':Single_Horizontal_Line_Density_1,
     'Single_Vertical_Line_Density_1.png':Single_Vertical_Line_Density_1,'Solid_Single_Circle_Density_1.png':Solid_Single_Circle_Density_1,
     'Solid_Single_Dot_Density_1.png':Solid_Single_Dot_Density_1,'Solid_Single_Rhombus_Density_1.png':Solid_Single_Rhombus_Density_1,
     'Solid_Single_Square_Density_1.png':Solid_Single_Square_Density_1,'Solid_Single_Star_Density_1.png':Solid_Single_Star_Density_1,
