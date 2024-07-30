@@ -7,6 +7,7 @@ import member_lr from '../Images/assets/team_member_icons/LR.jpg';
 import member_kr from '../Images/assets/team_member_icons/KR.jpg';
 import member_sw from '../Images/assets/team_member_icons/SW.jpg';
 import member_oc from '../Images/assets/team_member_icons/OC.jpg';
+import member_ak from '../Images/assets/team_member_icons/AK.PNG';
 const app_name = 'ganttify-5b581a9c8167';
 
 
@@ -49,7 +50,7 @@ function AboutUs() {
                     <p>Project Manager and Artist</p>
                 </div>
             </div>
-            <img src="/images/kittens.webp" alt="Ash Koltz" className="team-image"/>
+            <img src={member_ak} alt="Ash Koltz" className="team-image"/>
         </div>
 
         <div className="team-member">
